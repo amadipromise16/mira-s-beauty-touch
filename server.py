@@ -156,21 +156,27 @@ class MirasBeautyTouchHandler(SimpleHTTPRequestHandler):
 
 
 def print_banner(local_ip):
+    try:
+        if hasattr(sys.stdout, 'reconfigure'):
+            sys.stdout.reconfigure(encoding='utf-8')
+    except Exception:
+        pass
+
     print("\n" + "=" * 65)
-    print("  ✨  MIRA’S BEAUTY TOUCH — MULTI-DEVICE HOST (PYTHON)  ✨")
+    print("  *  MIRA'S BEAUTY TOUCH -- MULTI-DEVICE HOST (PYTHON)  *")
     print("=" * 65)
     print("  Status: ONLINE and ready for mobile phones & desktops\n")
-    print(f"  📱 On your Phone (same Wi-Fi or Hotspot):")
-    print(f"     👉 http://{local_ip}:{PORT}")
-    print(f"     👉 http://{local_ip}:5173  (Vite Dev)")
+    print(f"  * On your Phone (same Wi-Fi or Hotspot):")
+    print(f"     -> http://{local_ip}:{PORT}")
+    print(f"     -> http://{local_ip}:5173  (Vite Dev)")
     print()
-    print(f"  🌐 Online Public HTTPS URL (Any phone, anywhere in the world):")
-    print(f"     👉 https://miras-beauty-touch.loca.lt")
+    print(f"  * Online Public HTTPS URL (Any phone, worldwide):")
+    print(f"     -> https://miras-beauty-touch.loca.lt")
     print(f"     Password / IP (if prompted): 102.90.102.160")
     print()
-    print(f"  💻 On this Computer:")
-    print(f"     👉 http://localhost:{PORT}")
-    print(f"     👉 http://localhost:5173")
+    print(f"  * On this Computer:")
+    print(f"     -> http://localhost:{PORT}")
+    print(f"     -> http://localhost:5173")
     print()
     print("  Press Ctrl+C to stop the Python server")
     print("=" * 65 + "\n")
@@ -190,3 +196,4 @@ def run():
 
 if __name__ == "__main__":
     run()
+
