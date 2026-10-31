@@ -1,0 +1,274 @@
+import React, { useState } from 'react';
+import { 
+  MapPin, Phone, Mail, Clock, MessageCircle, 
+  Send, Sparkles, CheckCircle2, ChevronDown, ChevronUp 
+} from 'lucide-react';
+
+export function ContactPage() {
+  const [formState, setFormState] = useState({
+    name: '',
+    email: '',
+    phone: '',
+    subject: '',
+    message: ''
+  });
+  const [submitted, setSubmitted] = useState(false);
+  const [openFaq, setOpenFaq] = useState(null);
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    setSubmitted(true);
+    setTimeout(() => {
+      setSubmitted(false);
+      setFormState({ name: '', email: '', phone: '', subject: '', message: '' });
+    }, 4000);
+  };
+
+  const faqs = [
+    {
+      q: "How does the appointment booking and approval process work?",
+      a: "When you book a service, your request is submitted with a 'Pending' status and saved in our database. Our salon manager reviews our specialist availability and approves the request. You will immediately receive an in-app notification confirming your verified appointment date and time."
+    },
+    {
+      q: "Do I need to pay online before booking?",
+      a: "No! There is no online payment required or payment gateway needed to book. You book your preferred slot online, and pay at the salon upon completion of your service."
+    },
+    {
+      q: "How do I purchase perfumes from the catalogue?",
+      a: "Our perfume shop features our house blends and flacons priced in Nigerian Naira (₦). Simply click the 'Inquire / Order on WhatsApp' button on any product card, and our boutique concierge will coordinate delivery or store pickup in Nigeria."
+    },
+    {
+      q: "What is your cancellation or rescheduling policy?",
+      a: "You can view and cancel any pending appointments directly from your Customer Dashboard. If you need to reschedule an approved booking, please contact us at least 24 hours in advance."
+    }
+  ];
+
+  return (
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 space-y-16">
+      
+      {/* Page Title */}
+      <div className="text-center max-w-3xl mx-auto space-y-3">
+        <div className="inline-flex items-center space-x-1.5 px-3 py-1 rounded-full bg-[#F2E5DC] text-[#944E2E] text-xs font-semibold uppercase tracking-wider">
+          <Sparkles className="w-3.5 h-3.5 text-[#B87D65]" />
+          <span>Warm Hospitality & Inquiries</span>
+        </div>
+        <h1 className="font-serif text-3xl sm:text-5xl text-[#2C2420] font-normal uppercase tracking-wide">
+          CONNECT WITH MIRA’S
+        </h1>
+        <p className="text-xs sm:text-sm text-[#7A6B63] max-w-2xl mx-auto leading-relaxed">
+          We would love to hear from you. Visit our salon sanctuary in Lekki, call our concierge, or send us a message below.
+        </p>
+      </div>
+
+      {/* Contact Cards & Form Grid */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-10">
+        
+        {/* Left Column: Contact Cards */}
+        <div className="lg:col-span-5 space-y-4">
+          
+          {/* Card 1: Address */}
+          <div className="bg-white rounded-2xl p-6 border border-[#EBDCD4] shadow-warm-sm flex items-start space-x-4">
+            <div className="w-12 h-12 rounded-xl bg-[#FAF4F0] text-[#B87D65] flex items-center justify-center shrink-0 border border-[#DFC7B9]">
+              <MapPin className="w-6 h-6" />
+            </div>
+            <div>
+              <h4 className="font-serif text-base font-bold text-[#2C2420]">Salon Location</h4>
+              <p className="text-xs text-[#6E5D53] mt-1 leading-relaxed">
+                14 Admiralty Way, Lekki Phase 1, Lagos State, Nigeria
+              </p>
+              <p className="text-[11px] text-[#B87D65] font-semibold mt-2">
+                Convenient on-site parking available
+              </p>
+            </div>
+          </div>
+
+          {/* Card 2: Phone & WhatsApp */}
+          <div className="bg-white rounded-2xl p-6 border border-[#EBDCD4] shadow-warm-sm flex items-start space-x-4">
+            <div className="w-12 h-12 rounded-xl bg-[#FAF4F0] text-[#B87D65] flex items-center justify-center shrink-0 border border-[#DFC7B9]">
+              <Phone className="w-6 h-6" />
+            </div>
+            <div>
+              <h4 className="font-serif text-base font-bold text-[#2C2420]">Phone & Direct Concierge</h4>
+              <p className="text-xs text-[#6E5D53] mt-1">
+                Call: <a href="tel:+2348031234567" className="font-semibold text-[#2C2420] hover:text-[#B87D65]">+234 803 123 4567</a>
+              </p>
+              <div className="mt-2.5">
+                <a
+                  href="https://wa.me/2348031234567?text=Hello%20Mira's%20Beauty%20Touch,%20I%20have%20an%20inquiry."
+                  target="_blank"
+                  rel="noreferrer"
+                  className="inline-flex items-center space-x-1.5 px-3 py-1.5 bg-[#25D366] text-white text-xs font-semibold rounded-full shadow-xs hover:bg-[#20ba59] transition-colors"
+                >
+                  <MessageCircle className="w-3.5 h-3.5" />
+                  <span>Chat on WhatsApp</span>
+                </a>
+              </div>
+            </div>
+          </div>
+
+          {/* Card 3: Hours */}
+          <div className="bg-white rounded-2xl p-6 border border-[#EBDCD4] shadow-warm-sm flex items-start space-x-4">
+            <div className="w-12 h-12 rounded-xl bg-[#FAF4F0] text-[#B87D65] flex items-center justify-center shrink-0 border border-[#DFC7B9]">
+              <Clock className="w-6 h-6" />
+            </div>
+            <div>
+              <h4 className="font-serif text-base font-bold text-[#2C2420]">Salon Hours (WAT)</h4>
+              <div className="text-xs text-[#6E5D53] mt-1 space-y-0.5">
+                <p><strong>Mon – Sat:</strong> 9:00 AM – 7:30 PM</p>
+                <p><strong>Sunday:</strong> 1:00 PM – 6:00 PM (By Appointment)</p>
+              </div>
+            </div>
+          </div>
+
+          {/* Card 4: Email */}
+          <div className="bg-white rounded-2xl p-6 border border-[#EBDCD4] shadow-warm-sm flex items-start space-x-4">
+            <div className="w-12 h-12 rounded-xl bg-[#FAF4F0] text-[#B87D65] flex items-center justify-center shrink-0 border border-[#DFC7B9]">
+              <Mail className="w-6 h-6" />
+            </div>
+            <div>
+              <h4 className="font-serif text-base font-bold text-[#2C2420]">Email Inquiries</h4>
+              <p className="text-xs text-[#6E5D53] mt-1">
+                <a href="mailto:info@mirasbeautytouch.com" className="font-semibold text-[#2C2420] hover:text-[#B87D65]">
+                  info@mirasbeautytouch.com
+                </a>
+              </p>
+              <p className="text-[11px] text-[#8E766B] mt-1">We respond to emails within 2-4 hours.</p>
+            </div>
+          </div>
+
+        </div>
+
+        {/* Right Column: Send Message Form */}
+        <div className="lg:col-span-7 bg-white rounded-3xl p-8 border border-[#EBDCD4] shadow-warm-sm space-y-6">
+          <div className="border-b border-[#F2E5DC] pb-4">
+            <h3 className="font-serif text-2xl font-bold text-[#2C2420]">
+              Send Us A Message
+            </h3>
+            <p className="text-xs text-[#7A6B63] mt-1">
+              Have questions regarding our braids, bridal packages, or perfume ordering? Leave a note.
+            </p>
+          </div>
+
+          {submitted ? (
+            <div className="p-8 bg-[#FAF4F0] rounded-2xl border border-[#DFC7B9] text-center space-y-3">
+              <CheckCircle2 className="w-10 h-10 text-emerald-600 mx-auto" />
+              <h4 className="font-serif text-xl font-bold text-[#2C2420]">Message Sent!</h4>
+              <p className="text-xs text-[#6E5D53]">
+                Thank you for contacting Mira’s Beauty Touch. Our concierge will be in touch with you shortly.
+              </p>
+            </div>
+          ) : (
+            <form onSubmit={handleSubmit} className="space-y-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-xs font-medium text-[#4A3C35] mb-1">Your Name *</label>
+                  <input
+                    type="text"
+                    required
+                    value={formState.name}
+                    onChange={(e) => setFormState({ ...formState, name: e.target.value })}
+                    placeholder="Amaka Johnson"
+                    className="w-full px-3 py-2.5 bg-[#FAF7F2] border border-[#DFC7B9] rounded-xl text-xs text-[#2C2420] focus:outline-none focus:border-[#B87D65]"
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs font-medium text-[#4A3C35] mb-1">Email Address *</label>
+                  <input
+                    type="email"
+                    required
+                    value={formState.email}
+                    onChange={(e) => setFormState({ ...formState, email: e.target.value })}
+                    placeholder="amaka@example.com"
+                    className="w-full px-3 py-2.5 bg-[#FAF7F2] border border-[#DFC7B9] rounded-xl text-xs text-[#2C2420] focus:outline-none focus:border-[#B87D65]"
+                  />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-xs font-medium text-[#4A3C35] mb-1">Phone Number (Nigeria)</label>
+                  <input
+                    type="tel"
+                    value={formState.phone}
+                    onChange={(e) => setFormState({ ...formState, phone: e.target.value })}
+                    placeholder="+234 803 123 4567"
+                    className="w-full px-3 py-2.5 bg-[#FAF7F2] border border-[#DFC7B9] rounded-xl text-xs text-[#2C2420] focus:outline-none focus:border-[#B87D65]"
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs font-medium text-[#4A3C35] mb-1">Subject</label>
+                  <input
+                    type="text"
+                    value={formState.subject}
+                    onChange={(e) => setFormState({ ...formState, subject: e.target.value })}
+                    placeholder="e.g. Bridal Glam Consultation"
+                    className="w-full px-3 py-2.5 bg-[#FAF7F2] border border-[#DFC7B9] rounded-xl text-xs text-[#2C2420] focus:outline-none focus:border-[#B87D65]"
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-xs font-medium text-[#4A3C35] mb-1">Message *</label>
+                <textarea
+                  rows={4}
+                  required
+                  value={formState.message}
+                  onChange={(e) => setFormState({ ...formState, message: e.target.value })}
+                  placeholder="How can we assist you with your beauty touch today?..."
+                  className="w-full px-3 py-2.5 bg-[#FAF7F2] border border-[#DFC7B9] rounded-xl text-xs text-[#2C2420] focus:outline-none focus:border-[#B87D65]"
+                />
+              </div>
+
+              <button
+                type="submit"
+                className="w-full py-3.5 bg-[#B87D65] hover:bg-[#A36B53] text-white font-semibold text-xs tracking-wider uppercase rounded-xl shadow-warm-sm transition-colors flex items-center justify-center space-x-2"
+              >
+                <Send className="w-4 h-4" />
+                <span>Send Message</span>
+              </button>
+            </form>
+          )}
+
+        </div>
+
+      </div>
+
+      {/* Frequently Asked Questions */}
+      <section className="bg-[#FAF4F0] rounded-3xl p-8 sm:p-12 border border-[#EBDCD4] shadow-warm-sm space-y-8">
+        <div className="text-center max-w-xl mx-auto">
+          <span className="text-xs font-bold uppercase tracking-widest text-[#B87D65]">Help & Clarity</span>
+          <h2 className="font-serif text-3xl text-[#2C2420] font-normal uppercase tracking-wide mt-1">
+            FREQUENTLY ASKED QUESTIONS
+          </h2>
+        </div>
+
+        <div className="max-w-3xl mx-auto space-y-3">
+          {faqs.map((faq, idx) => {
+            const isOpen = openFaq === idx;
+            return (
+              <div
+                key={idx}
+                className="bg-white rounded-2xl border border-[#EBDCD4] overflow-hidden"
+              >
+                <button
+                  onClick={() => setOpenFaq(isOpen ? null : idx)}
+                  className="w-full p-4 text-left flex items-center justify-between text-xs font-semibold text-[#2C2420] hover:text-[#B87D65] transition-colors"
+                >
+                  <span>{faq.q}</span>
+                  {isOpen ? <ChevronUp className="w-4 h-4 shrink-0" /> : <ChevronDown className="w-4 h-4 shrink-0" />}
+                </button>
+                {isOpen && (
+                  <div className="p-4 pt-0 text-xs text-[#6E5D53] border-t border-[#F2E5DC] leading-relaxed">
+                    {faq.a}
+                  </div>
+                )}
+              </div>
+            );
+          })}
+        </div>
+      </section>
+
+    </div>
+  );
+}
+

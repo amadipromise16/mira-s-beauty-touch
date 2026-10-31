@@ -1,0 +1,67 @@
+@import "tailwindcss";
+
+@layer base {
+  body {
+    font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+    color: #2C2420;
+    background-color: #FAF7F2;
+    overflow-x: hidden;
+  }
+
+  h1, h2, h3, .font-serif {
+    font-family: 'Playfair Display', Georgia, serif;
+    letter-spacing: -0.01em;
+  }
+
+  .font-display {
+    font-family: 'Cormorant Garamond', 'Playfair Display', serif;
+  }
+}
+
+/* Custom architectural arch shapes from the reference screenshots */
+.arch-card {
+  border-top-left-radius: 100px;
+  border-top-right-radius: 100px;
+  border-bottom-left-radius: 16px;
+  border-bottom-right-radius: 16px;
+  overflow: hidden;
+}
+
+.arch-top {
+  border-top-left-radius: 120px;
+  border-top-right-radius: 120px;
+  overflow: hidden;
+}
+
+.arch-pill {
+  border-radius: 9999px;
+}
+
+/* Custom soft shadows and warm highlights */
+.shadow-warm-sm {
+  box-shadow: 0 4px 20px -2px rgba(184, 125, 101, 0.08);
+}
+
+.shadow-warm-md {
+  box-shadow: 0 12px 30px -4px rgba(184, 125, 101, 0.12);
+}
+
+.shadow-warm-lg {
+  box-shadow: 0 20px 40px -6px rgba(184, 125, 101, 0.16);
+}
+
+/* Elegant scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: #F4ECE6;
+}
+::-webkit-scrollbar-thumb {
+  background: #D8BCB0;
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #B87D65;
+}

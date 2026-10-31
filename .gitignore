@@ -1,0 +1,34 @@
+# Node dependencies
+node_modules/
+client/node_modules/
+server/node_modules/
+
+# Production build artifacts
+dist/
+client/dist/
+
+# Environment files
+.env
+server/.env
+*.local
+
+# SQLite Database
+server/*.db
+server/*.db-journal
+
+# Server runtime uploads (keep folder, ignore duplicate files)
+server/uploads/*
+!server/uploads/.gitkeep
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+*.log
+
+# Editor and OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
