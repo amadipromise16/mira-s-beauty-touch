@@ -2,14 +2,21 @@
   "name": "miras-beauty-touch",
   "version": "1.0.0",
   "description": "Full-Stack Web Platform for Mira's Beauty Touch - Salon & Perfume",
+  "main": "server/src/index.js",
   "scripts": {
+    "install:all": "npm --prefix server install && npm --prefix client install",
+    "build": "npm --prefix server install && npm --prefix client install && npm --prefix client run build",
+    "start": "node server/src/index.js",
     "start:server": "node server/src/index.js",
-    "start:client": "cd client && npm run dev",
-    "build:client": "cd client && npm run build",
+    "start:client": "npm --prefix client run dev",
+    "build:client": "npm --prefix client run build",
     "test": "node server/test-suite.js"
   },
+  "engines": {
+    "node": ">=22.5.0"
+  },
   "keywords": ["beauty-salon", "perfume", "nigeria", "full-stack", "react", "express", "sqlite"],
-  "author": "Antigravity",
+  "author": "Mira's Beauty Touch",
   "license": "ISC"
 }
 

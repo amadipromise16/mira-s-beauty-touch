@@ -2,6 +2,7 @@ require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const path = require('node:path');
+const fs = require('node:fs');
 const seedDatabase = require('./seed');
 
 // Run seed on startup if fresh
@@ -51,6 +52,20 @@ app.get('/api/health', (req, res) => {
     timestamp: new Date().toISOString()
   });
 });
+
+// Serve built frontend assets in production (Render / Cloud deployment)
+const clientDistPath = path.join(__dirname, '..', '..', 'client', 'dist');
+if (fs.existsSync(clientDistPath)) {
+  app.use(express.static(clientDistPath));
+
+  // SPA fallback for all frontend client routes (e.g. /gallery, /about, /book, /admin)
+  app.get('*', (req, res, next) => {
+    if (req.path.startsWith('/api') || req.path.startsWith('/uploads') || req.path.startsWith('/media')) {
+      return next();
+    }
+    res.sendFile(path.join(clientDistPath, 'index.html'));
+  });
+}
 
 // Central Error Handler
 app.use((err, req, res, next) => {
