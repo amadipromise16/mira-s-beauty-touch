@@ -59,11 +59,14 @@ if (fs.existsSync(clientDistPath)) {
   app.use(express.static(clientDistPath));
 
   // SPA fallback for all frontend client routes (e.g. /gallery, /about, /book, /admin)
-  app.get('*', (req, res, next) => {
+  app.use((req, res, next) => {
     if (req.path.startsWith('/api') || req.path.startsWith('/uploads') || req.path.startsWith('/media')) {
       return next();
     }
-    res.sendFile(path.join(clientDistPath, 'index.html'));
+    if (req.method === 'GET') {
+      return res.sendFile(path.join(clientDistPath, 'index.html'));
+    }
+    next();
   });
 }
 

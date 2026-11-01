@@ -12,17 +12,6 @@ export function AppointmentPage({ preselectedService, onBookingSuccess, onNaviga
   const [services, setServices] = useState([]);
   const [selectedService, setSelectedService] = useState(null);
   const [selectedCategory, setSelectedCategory] = useState('All');
-  
-  const [stylists] = useState([
-    { id: 1, name: 'Sarah K.', role: 'Senior Braiding Artisan', image: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=300&q=80' },
-    { id: 2, name: 'Maria R.', role: 'Master Nail Specialist', image: 'https://images.unsplash.com/photo-1580489944761-15a19d654956?auto=format&fit=crop&w=300&q=80' },
-    { id: 3, name: 'Chloe A.', role: 'Senior Makeup & Lashes', image: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=300&q=80' },
-    { id: 4, name: 'David W.', role: 'Luxury Hair Stylist', image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&q=80' },
-    { id: 5, name: 'Elena P.', role: 'Fragrance & Spa Consultant', image: 'https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=300&q=80' },
-    { id: 6, name: 'Any Available Specialist', role: 'First Available Artisan', image: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=300&q=80' }
-  ]);
-
-  const [selectedStylist, setSelectedStylist] = useState(stylists[0].name);
 
   // Calendar State (Default today / next available date)
   const [currentMonth, setCurrentMonth] = useState(new Date());
@@ -150,7 +139,7 @@ export function AppointmentPage({ preselectedService, onBookingSuccess, onNaviga
       const payload = {
         service_id: selectedService.id,
         service_name: selectedService.name,
-        stylist_name: selectedStylist,
+        stylist_name: 'Mira’s Beauty Touch Specialist',
         customer_name: fullName,
         customer_email: clientDetails.email || user.email,
         customer_phone: clientDetails.phone,
@@ -182,7 +171,7 @@ export function AppointmentPage({ preselectedService, onBookingSuccess, onNaviga
           BOOK YOUR MIRA’S EXPERIENCE
         </h1>
         <p className="text-xs sm:text-sm text-[#7A6B63] max-w-2xl mx-auto leading-relaxed">
-          Select your customized salon treatments, preferred stylist, and convenient date & time slot. Appointments are reviewed and approved directly by our team.
+          Select your customized salon treatments and convenient date & time slot. Appointments are reviewed and approved directly by our team.
         </p>
       </div>
 
@@ -214,8 +203,8 @@ export function AppointmentPage({ preselectedService, onBookingSuccess, onNaviga
               <span className="font-semibold text-[#2C2420]">{successBooking.service_name}</span>
             </div>
             <div className="flex justify-between">
-              <span className="text-[#8E766B]">Stylist:</span>
-              <span className="font-semibold text-[#2C2420]">{successBooking.stylist_name}</span>
+              <span className="text-[#8E766B]">Salon:</span>
+              <span className="font-semibold text-[#2C2420]">Mira’s Beauty Touch</span>
             </div>
             <div className="flex justify-between">
               <span className="text-[#8E766B]">Requested Date & Time:</span>
@@ -249,8 +238,8 @@ export function AppointmentPage({ preselectedService, onBookingSuccess, onNaviga
         /* Main Booking Grid matching Image 2 Reference */
         <form onSubmit={handleSubmitBooking} className="grid grid-cols-1 lg:grid-cols-12 gap-10">
           
-          {/* LEFT COLUMN: SELECT SERVICE & STYLIST */}
-          <div className="lg:col-span-6 space-y-8">
+          {/* LEFT COLUMN: SELECT SERVICE & SALON PROMISE */}
+          <div className="lg:col-span-6 space-y-6">
             
             {/* 1. SELECT SERVICE */}
             <div className="bg-white rounded-3xl p-6 border border-[#EBDCD4] shadow-warm-sm space-y-4">
@@ -270,16 +259,16 @@ export function AppointmentPage({ preselectedService, onBookingSuccess, onNaviga
                 <label className="block text-xs font-medium text-[#7A6B63]">
                   Choose Salon Treatment:
                 </label>
-                <div className="grid grid-cols-1 gap-2 max-h-72 overflow-y-auto pr-1">
+                <div className="grid grid-cols-1 gap-2 max-h-96 overflow-y-auto pr-1">
                   {services.map((s) => {
                     const isSelected = selectedService?.id === s.id;
                     return (
                       <div
                         key={s.id}
                         onClick={() => setSelectedService(s)}
-                        className={`p-3 rounded-xl border cursor-pointer transition-all flex items-center justify-between ${
+                        className={`p-3.5 rounded-xl border cursor-pointer transition-all flex items-center justify-between ${
                           isSelected
-                            ? 'bg-[#FAF4F0] border-[#B87D65] shadow-xs'
+                            ? 'bg-[#FAF4F0] border-[#B87D65] shadow-xs ring-1 ring-[#B87D65]/30'
                             : 'bg-white border-[#EBDCD4] hover:bg-[#FAF7F2]'
                         }`}
                       >
@@ -306,59 +295,45 @@ export function AppointmentPage({ preselectedService, onBookingSuccess, onNaviga
               </div>
             </div>
 
-            {/* 2. SELECT STYLIST / CONSULTANT (With Photos matching Reference) */}
-            <div className="bg-white rounded-3xl p-6 border border-[#EBDCD4] shadow-warm-sm space-y-4">
-              <div className="border-b border-[#F2E5DC] pb-3">
-                <h3 className="font-serif text-lg font-bold text-[#2C2420] uppercase tracking-wide">
-                  2. Select Stylist / Consultant
-                </h3>
+            {/* Salon Assurance Card */}
+            <div className="bg-[#FAF7F2] rounded-3xl p-6 border border-[#DFC7B9] space-y-3">
+              <div className="flex items-center space-x-2 text-[#944E2E]">
+                <Sparkles className="w-4 h-4 text-[#B87D65]" />
+                <span className="text-xs font-bold uppercase tracking-wider">The Mira’s Touch Promise</span>
               </div>
-
-              <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
-                {stylists.map((stylist) => {
-                  const isSelected = selectedStylist === stylist.name;
-                  return (
-                    <div
-                      key={stylist.id}
-                      onClick={() => setSelectedStylist(stylist.name)}
-                      className={`p-3 rounded-2xl border text-center cursor-pointer transition-all flex flex-col items-center justify-between ${
-                        isSelected
-                          ? 'bg-[#FAF4F0] border-[#B87D65] ring-2 ring-[#B87D65]/20'
-                          : 'bg-white border-[#EBDCD4] hover:bg-[#FAF7F2]'
-                      }`}
-                    >
-                      <div className="w-14 h-14 rounded-full overflow-hidden bg-[#FAF7F2] mb-2 border border-[#DFC7B9]">
-                        <img
-                          src={stylist.image}
-                          alt={stylist.name}
-                          className="w-full h-full object-cover"
-                        />
-                      </div>
-                      <p className="text-xs font-bold text-[#2C2420]">{stylist.name}</p>
-                      <p className="text-[9px] text-[#8E766B] mt-0.5 line-clamp-1">{stylist.role}</p>
-                      <input
-                        type="radio"
-                        name="selected_stylist"
-                        checked={isSelected}
-                        onChange={() => setSelectedStylist(stylist.name)}
-                        className="accent-[#B87D65] mt-2"
-                      />
-                    </div>
-                  );
-                })}
+              <p className="text-xs text-[#6E5D53] leading-relaxed">
+                Every appointment at Mira’s Beauty Touch is paired with certified care, sanitized premium equipment, and relaxing aromatherapy. Our dedicated team reviews your visit to ensure complete beauty and elegance.
+              </p>
+              <div className="grid grid-cols-2 gap-2 pt-2 text-[11px] text-[#4A3C35]">
+                <div className="flex items-center space-x-1.5">
+                  <CheckCircle2 className="w-3.5 h-3.5 text-[#B87D65] shrink-0" />
+                  <span>Tension-Free Styling</span>
+                </div>
+                <div className="flex items-center space-x-1.5">
+                  <CheckCircle2 className="w-3.5 h-3.5 text-[#B87D65] shrink-0" />
+                  <span>Hygienic Sterilization</span>
+                </div>
+                <div className="flex items-center space-x-1.5">
+                  <CheckCircle2 className="w-3.5 h-3.5 text-[#B87D65] shrink-0" />
+                  <span>Luxury Aromas & Scents</span>
+                </div>
+                <div className="flex items-center space-x-1.5">
+                  <CheckCircle2 className="w-3.5 h-3.5 text-[#B87D65] shrink-0" />
+                  <span>Prompt Salon Reception</span>
+                </div>
               </div>
             </div>
 
           </div>
 
           {/* RIGHT COLUMN: CALENDAR, TIME SLOTS & CLIENT DETAILS */}
-          <div className="lg:col-span-6 space-y-8">
+          <div className="lg:col-span-6 space-y-6">
             
-            {/* 3. SELECT DATE & TIME (Interactive Calendar matching Reference) */}
+            {/* 2. SELECT DATE & TIME */}
             <div className="bg-white rounded-3xl p-6 border border-[#EBDCD4] shadow-warm-sm space-y-5">
               <div className="border-b border-[#F2E5DC] pb-3 flex items-center justify-between">
                 <h3 className="font-serif text-lg font-bold text-[#2C2420] uppercase tracking-wide">
-                  3. Select Date & Time
+                  2. Select Date & Time
                 </h3>
                 <span className="text-xs font-semibold text-[#B87D65]">
                   {selectedDate}
@@ -465,11 +440,11 @@ export function AppointmentPage({ preselectedService, onBookingSuccess, onNaviga
 
             </div>
 
-            {/* 4. CLIENT DETAILS */}
+            {/* 3. CLIENT DETAILS */}
             <div className="bg-white rounded-3xl p-6 border border-[#EBDCD4] shadow-warm-sm space-y-4">
               <div className="border-b border-[#F2E5DC] pb-3">
                 <h3 className="font-serif text-lg font-bold text-[#2C2420] uppercase tracking-wide">
-                  4. Client Details
+                  3. Client Details
                 </h3>
               </div>
 
@@ -565,7 +540,7 @@ export function AppointmentPage({ preselectedService, onBookingSuccess, onNaviga
                   {loading ? 'Submitting Appointment...' : 'BOOK APPOINTMENT'}
                 </button>
                 <p className="text-[11px] text-center text-[#8E766B] mt-2.5">
-                  {selectedService?.name} • Specialist: {selectedStylist} • {selectedDate} at {selectedTime}
+                  {selectedService?.name} • {selectedDate} at {selectedTime}
                 </p>
               </div>
 

@@ -88,11 +88,9 @@ export function HomePage({ onNavigate, onSelectServiceForBooking }) {
               </div>
 
               {/* Social Proof Pill */}
-              <div className="pt-4 flex items-center space-x-4">
-                <div className="flex -space-x-2">
-                  <img className="w-9 h-9 rounded-full border-2 border-white object-cover" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=120&q=80" alt="Client" />
-                  <img className="w-9 h-9 rounded-full border-2 border-white object-cover" src="https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=120&q=80" alt="Client" />
-                  <img className="w-9 h-9 rounded-full border-2 border-white object-cover" src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=120&q=80" alt="Client" />
+              <div className="pt-4 flex items-center space-x-3.5">
+                <div className="w-10 h-10 rounded-2xl bg-[#F2E5DC] flex items-center justify-center border border-[#DFC7B9] text-[#944E2E] shadow-warm-xs">
+                  <Sparkles className="w-5 h-5 text-[#B87D65]" />
                 </div>
                 <div>
                   <div className="flex items-center space-x-1">
@@ -204,7 +202,7 @@ export function HomePage({ onNavigate, onSelectServiceForBooking }) {
           >
             <div className="arch-top h-64 overflow-hidden bg-[#F4ECE6] mb-4">
               <img
-                src="https://images.unsplash.com/photo-1605497788044-5a32c7078486?auto=format&fit=crop&w=700&q=80"
+                src="./media/knotless_braids.jpg"
                 alt="Hair Braiding"
                 className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
               />
@@ -228,7 +226,7 @@ export function HomePage({ onNavigate, onSelectServiceForBooking }) {
           >
             <div className="arch-top h-64 overflow-hidden bg-[#F4ECE6] mb-4">
               <img
-                src="/media/mira_nails_stiletto.jpg"
+                src="./media/mira_nails_stiletto.jpg"
                 alt="Nail Care & Extensions"
                 className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
               />
@@ -252,7 +250,7 @@ export function HomePage({ onNavigate, onSelectServiceForBooking }) {
           >
             <div className="arch-top h-64 overflow-hidden bg-[#F4ECE6] mb-4">
               <img
-                src="https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?auto=format&fit=crop&w=700&q=80"
+                src="./media/wispy_lashes.jpg"
                 alt="Makeup Artistry"
                 className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
               />
@@ -276,7 +274,7 @@ export function HomePage({ onNavigate, onSelectServiceForBooking }) {
           >
             <div className="arch-top h-64 overflow-hidden bg-[#F4ECE6] mb-4">
               <img
-                src="https://images.unsplash.com/photo-1592945403244-b3fbafd7f539?auto=format&fit=crop&w=700&q=80"
+                src="./media/haute_perfume_flacon.jpg"
                 alt="Perfume Consultations"
                 className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
               />
