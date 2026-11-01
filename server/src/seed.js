@@ -37,7 +37,8 @@ function seedDatabase() {
 
   // 2. Seed Services
   const servicesCount = db.prepare('SELECT COUNT(*) as count FROM services').get().count;
-  if (servicesCount === 0) {
+  if (servicesCount >= 0) {
+    db.prepare('DELETE FROM services').run();
     const insertService = db.prepare(`
       INSERT INTO services (name, category, description, price_ngn, duration_mins, image_url)
       VALUES (?, ?, ?, ?, ?, ?)
@@ -45,100 +46,84 @@ function seedDatabase() {
 
     const services = [
       {
-        name: 'Knotless Box Braids (Waist Length)',
-        category: 'Hair Braiding',
-        description: 'Painless, tension-free natural scalp finish with sleek parting and lightweight, premium braiding hair for versatile styling.',
-        price_ngn: 28000,
-        duration_mins: 180,
-        image_url: 'https://images.unsplash.com/photo-1605497788044-5a32c7078486?auto=format&fit=crop&w=800&q=80'
-      },
-      {
-        name: 'Goddess Bohemian Braids',
-        category: 'Hair Braiding',
-        description: 'Exquisite knotless braids adorned with luscious curls for a dreamy, ethereal aesthetic suited for occasions and everyday elegance.',
-        price_ngn: 35000,
-        duration_mins: 210,
-        image_url: 'https://images.unsplash.com/photo-1584297091622-af8e5bd81b21?auto=format&fit=crop&w=800&q=80'
-      },
-      {
-        name: 'Fulani & Cornrow Artistry',
-        category: 'Hair Braiding',
-        description: 'Traditional yet modern intricate stitch cornrows, custom tribal patterns, and bead or cuff accents for cultural grace.',
-        price_ngn: 20000,
-        duration_mins: 120,
-        image_url: 'https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?auto=format&fit=crop&w=800&q=80'
-      },
-      {
-        name: 'Deluxe Spa Pedicure & Scrub',
-        category: 'Manicures & Pedicures',
-        description: 'Warm herbal foot soak, exfoliating sea salt scrub, cuticle care, callused skin smoothing, hot towel wrap, and soothing massage.',
-        price_ngn: 18000,
-        duration_mins: 60,
-        image_url: 'https://images.unsplash.com/photo-1519014816548-bf5fe059798b?auto=format&fit=crop&w=800&q=80'
-      },
-      {
-        name: 'Classic Gel Manicure',
-        category: 'Manicures & Pedicures',
-        description: 'Precision nail shaping, gentle cuticle clean-up, nourishing hand massage, and long-lasting glossy gel polish under UV LED.',
-        price_ngn: 14000,
-        duration_mins: 50,
-        image_url: 'https://images.unsplash.com/photo-1632345031435-8727f6897d53?auto=format&fit=crop&w=800&q=80'
-      },
-      {
-        name: 'Acrylic Full Set & Nail Art',
-        category: 'Nail Enhancements',
-        description: 'Custom sculpted acrylic extensions tailored in length and shape (coffin, almond, stiletto) with trendy chrome or French art.',
+        name: 'Master Sculpted Gel & Acrylic Nail Artistry',
+        category: 'Nails & Foot Care',
+        description: 'Precision Russian cuticle manicure, custom sculpted acrylic extensions, trendy chrome accents, and ultra-gloss UV LED gel finish. Designed for strong, chip-free elegance that lasts 4+ weeks.',
         price_ngn: 22000,
         duration_mins: 75,
-        image_url: '/media/mira_nails_stiletto.jpg'
+        image_url: './media/mira_nails_video_service.mp4'
       },
       {
-        name: 'Gel-X Soft Gel Extension System',
-        category: 'Nail Enhancements',
-        description: 'Odorless, zero-damage full cover tips crafted from soak-off soft gel for strong, natural-feeling, seamless nail perfection.',
-        price_ngn: 25000,
-        duration_mins: 75,
-        image_url: 'https://images.unsplash.com/photo-1522337660859-02fbefca4702?auto=format&fit=crop&w=800&q=80'
+        name: 'Signature Knotless Bohemian Hair Braiding',
+        category: 'Hair Braiding',
+        description: 'Painless, tension-free scalp parting with soft cascading bohemian curl tendrils. Featherlight weight with natural movement, sealed with herbal scalp oil for long-lasting comfort and radiant shine.',
+        price_ngn: 28000,
+        duration_mins: 180,
+        image_url: './media/mira_hair_video_service.mp4'
       },
       {
-        name: 'Flawless Bridal Makeup Experience',
-        category: 'Professional Makeup',
-        description: 'High-definition, photography-ready bridal look with skin prep, waterproof base, contouring, bespoke eye artistry, and mink lashes.',
-        price_ngn: 65000,
-        duration_mins: 90,
-        image_url: 'https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?auto=format&fit=crop&w=800&q=80'
+        name: 'Club de Nuit Intense Man & Affection Love (Luxury Duo)',
+        category: 'Perfume Curation',
+        description: 'An iconic luxury fragrance pairing combining legendary masculine smoky pineapple, birch, and blackcurrant from Club de Nuit Intense Man with the intoxicating sweet berries, spun marshmallow vanilla, and floral musk of Affection Love by Amazon Pride.',
+        price_ngn: 18500,
+        duration_mins: 30,
+        image_url: './media/club_de_nuit_affection_service.jpg'
       },
       {
-        name: 'Soft Glam Occasion Makeup',
-        category: 'Professional Makeup',
-        description: 'Radiant dewy skin, gentle earthy tones, crisp brows, velvety nude lips, and fluttery lashes for weddings, birthdays, and dinners.',
-        price_ngn: 30000,
+        name: 'Lash & Hair Sanctuary Glam Combo',
+        category: 'Lash & Hair Combos',
+        description: 'Our bespoke dual transformation pairing precision protective braids with fluttery hybrid lash extensions. Enjoy a complete head-turning beauty makeover in a single pampering salon session.',
+        price_ngn: 45000,
+        duration_mins: 210,
+        image_url: './media/mira_lash_hair_combo_1.mp4'
+      },
+      {
+        name: 'Goddess Braids & Volume Flutter Lash Package',
+        category: 'Lash & Hair Combos',
+        description: 'Ethereal goddess braiding styled with loose curls and nourished scalp care, accompanied by weightless volume flutter eyelash extensions for undeniable beauty, elegance, and confidence.',
+        price_ngn: 48000,
+        duration_mins: 240,
+        image_url: './media/mira_lash_hair_combo_2.mp4'
+      },
+      {
+        name: 'Deluxe Herbal Spa Pedicure & Scrub',
+        category: 'Nails & Foot Care',
+        description: 'Warm marble foot basin soak with soothing eucalyptus, organic sea salt scrub, rose petal therapy, callused skin smoothing, cuticle refinement, hot towel wrap, and glossy nude gel finish.',
+        price_ngn: 18000,
         duration_mins: 60,
-        image_url: 'https://images.unsplash.com/photo-1512496015851-a90fb38ba796?auto=format&fit=crop&w=800&q=80'
+        image_url: './media/pedicure_nails_luxury.jpg'
       },
       {
-        name: 'Hybrid Volume Eyelash Extensions',
+        name: 'Sculpted Gel Manicure & Modern French Art',
+        category: 'Nails & Foot Care',
+        description: 'Flawless Russian cuticle preparation paired with sculpted almond gel nails featuring a modern baby boomer ombré gradient and delicate subtle gold metallic accents.',
+        price_ngn: 24000,
+        duration_mins: 70,
+        image_url: './media/manicure_nails_sculpted.jpg'
+      },
+      {
+        name: 'Wispy Hybrid Volume Eyelash Extensions',
         category: 'Eyelash Extensions',
-        description: 'The ideal blend of classic individual lashes and volume fans, delivering a textured, fluffy, multidimensional lash look.',
+        description: 'Textured, multidimensional lash fans tailored to client eye geometry. Alternating lengths with delicate spikes that deliver high-fashion flutter without heavy weight.',
         price_ngn: 26000,
         duration_mins: 80,
-        image_url: 'https://images.unsplash.com/photo-1583001931096-959e9a1a6223?auto=format&fit=crop&w=800&q=80'
+        image_url: './media/lash_extensions_wispy.jpg'
       },
       {
-        name: 'Classic Natural Eyelash Set',
+        name: 'Classic Natural Flutter Lashes & Brow Framing',
         category: 'Eyelash Extensions',
-        description: 'One-by-one lash application matching your eye shape to add timeless length, curl, and natural eye-opening elegance.',
+        description: 'Individual one-by-one single lash extension application designed to accentuate your natural eye shape with timeless elegance, paired with gentle brow sculpting.',
         price_ngn: 20000,
         duration_mins: 60,
-        image_url: 'https://images.unsplash.com/photo-1526045612212-70caf35c14df?auto=format&fit=crop&w=800&q=80'
+        image_url: './media/lash_extensions_classic.jpg'
       },
       {
-        name: 'Bespoke Scent Discovery Consultation',
-        category: 'Fragrance & Wellness',
-        description: 'Private 1-on-1 fragrance profiling session exploring olfactive families to uncover your signature perfume pairing.',
-        price_ngn: 15000,
-        duration_mins: 45,
-        image_url: 'https://images.unsplash.com/photo-1592945403244-b3fbafd7f539?auto=format&fit=crop&w=800&q=80'
+        name: 'Intricate Fulani & Stitch Cornrow Artistry',
+        category: 'Hair Braiding',
+        description: 'Precision geometric stitch cornrows crafted with symmetrical feed-in technique, paired with protective plaits in the back for royal poise.',
+        price_ngn: 20000,
+        duration_mins: 120,
+        image_url: './media/mira_hair_braids_video_7.mp4'
       }
     ];
 
