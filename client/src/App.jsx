@@ -62,7 +62,10 @@ function MainLayout() {
           />
         )}
         {currentPage === 'gallery' && (
-          <GalleryPage />
+          <GalleryPage 
+            onNavigate={navigateTo}
+            onBookService={handleBookWithService}
+          />
         )}
         {currentPage === 'book' && (
           <AppointmentPage 

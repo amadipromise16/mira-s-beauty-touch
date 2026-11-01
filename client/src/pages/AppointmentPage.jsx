@@ -1,16 +1,17 @@
 import React, { useState, useEffect } from 'react';
 import { api } from '../services/api';
 import { useAuth } from '../context/AuthContext';
+import { initialServicesData } from '../data/servicesData';
 import { 
   Calendar as CalendarIcon, Clock, User, Phone, Mail, 
-  Sparkles, CheckCircle2, AlertCircle, ChevronLeft, ChevronRight 
+  Sparkles, CheckCircle2, AlertCircle, ChevronLeft, ChevronRight, Scissors 
 } from 'lucide-react';
 
 export function AppointmentPage({ preselectedService, onBookingSuccess, onNavigate }) {
   const { user, openAuth } = useAuth();
 
-  const [services, setServices] = useState([]);
-  const [selectedService, setSelectedService] = useState(null);
+  const [services, setServices] = useState(initialServicesData);
+  const [selectedService, setSelectedService] = useState(preselectedService || initialServicesData[0]);
   const [selectedCategory, setSelectedCategory] = useState('All');
 
   // Calendar State (Default today / next available date)
@@ -62,17 +63,30 @@ export function AppointmentPage({ preselectedService, onBookingSuccess, onNaviga
     }
   }, [user]);
 
-  // Load services
+  // When preselectedService arrives from Gallery ("Book This Hairstyle")
+  useEffect(() => {
+    if (preselectedService) {
+      setSelectedService(preselectedService);
+      setServices(prev => {
+        const exists = prev.some(s => s.name === preselectedService.name || (s.id && s.id === preselectedService.id));
+        return exists ? prev : [preselectedService, ...prev];
+      });
+    }
+  }, [preselectedService]);
+
+  // Load backend services if online
   useEffect(() => {
     api.services.getAll().then(res => {
-      const allServices = res.services || [];
-      setServices(allServices);
-      if (preselectedService) {
-        setSelectedService(preselectedService);
-      } else if (allServices.length > 0) {
-        setSelectedService(allServices[0]);
+      if (res && res.services && res.services.length > 0) {
+        setServices(res.services);
+        if (preselectedService) {
+          const match = res.services.find(s => s.name === preselectedService.name) || preselectedService;
+          setSelectedService(match);
+        }
       }
-    }).catch(console.error);
+    }).catch(() => {
+      // Keep initialServicesData fallback
+    });
   }, [preselectedService]);
 
   // Check booked slots for selectedDate
@@ -253,6 +267,36 @@ export function AppointmentPage({ preselectedService, onBookingSuccess, onNaviga
                   </span>
                 )}
               </div>
+
+              {/* Hairstyle Direct Selection Banner */}
+              {preselectedService && (
+                <div className="p-4 rounded-2xl bg-gradient-to-r from-[#FAF4F0] to-[#F5ECE5] border border-[#B87D65]/40 flex items-start space-x-3 shadow-xs">
+                  <div className="w-8 h-8 rounded-full bg-[#B87D65] text-white flex items-center justify-center shrink-0 mt-0.5">
+                    <Scissors className="w-4 h-4" />
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center space-x-2">
+                      <span className="text-[10px] font-bold uppercase tracking-wider text-[#944E2E] bg-white px-2 py-0.5 rounded-full border border-[#DFC7B9]">
+                        Selected From Gallery
+                      </span>
+                    </div>
+                    <p className="font-serif text-sm font-bold text-[#2C2420] mt-1 truncate">
+                      {selectedService?.name}
+                    </p>
+                    <p className="text-[11px] text-[#6E5D53] line-clamp-2 mt-0.5">
+                      {selectedService?.description}
+                    </p>
+                  </div>
+                  <div className="text-right shrink-0">
+                    <span className="text-xs font-bold text-[#944E2E] block">
+                      ₦{selectedService?.price_ngn?.toLocaleString()}
+                    </span>
+                    <span className="text-[10px] text-[#8E766B]">
+                      ~{selectedService?.duration_mins} mins
+                    </span>
+                  </div>
+                </div>
+              )}
 
               {/* Service Dropdown & Radios */}
               <div className="space-y-3">
