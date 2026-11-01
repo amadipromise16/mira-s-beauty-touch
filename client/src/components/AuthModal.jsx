@@ -136,32 +136,7 @@ export function AuthModal() {
             {authModalTab === 'forgot' && 'Enter your email to receive recovery instructions.'}
           </p>
 
-          {/* Quick Demo Credentials Pill */}
-          {authModalTab === 'login' && (
-            <div className="mt-3 p-2 bg-[#F4ECE6] rounded-lg text-left text-[11px] text-[#5A4D45] border border-[#E8DACF]">
-              <p className="font-bold text-[#944E2E]">Demo Accounts Available:</p>
-              <div className="flex justify-between mt-1">
-                <span>Client: <code>client@example.com</code> / <code>ClientPass123!</code></span>
-                <button
-                  type="button"
-                  onClick={() => setFormData(p => ({ ...p, email: 'client@example.com', password: 'ClientPass123!' }))}
-                  className="text-[#B87D65] font-semibold hover:underline"
-                >
-                  Fill Client
-                </button>
-              </div>
-              <div className="flex justify-between mt-1">
-                <span>Admin: <code>admin@mirasbeautytouch.com</code> / <code>AdminMira2026!</code></span>
-                <button
-                  type="button"
-                  onClick={() => setFormData(p => ({ ...p, email: 'admin@mirasbeautytouch.com', password: 'AdminMira2026!' }))}
-                  className="text-[#B87D65] font-semibold hover:underline"
-                >
-                  Fill Admin
-                </button>
-              </div>
-            </div>
-          )}
+          {/* Header Description */}
         </div>
 
         {/* Feedback Messages */}

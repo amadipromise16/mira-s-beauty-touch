@@ -4,22 +4,28 @@ const db = require('./db');
 function seedDatabase() {
   console.log('Seeding Mira’s Beauty Touch database...');
 
-  // 1. Seed Users (Admin + Demo Client)
+  // 1. Seed Users (Admin: mirabeautytouch@gmail.com / miratouch)
   const salt = bcrypt.genSaltSync(10);
-  const adminPasswordHash = bcrypt.hashSync('AdminMira2026!', salt);
+  const adminPasswordHash = bcrypt.hashSync('miratouch', salt);
   const clientPasswordHash = bcrypt.hashSync('ClientPass123!', salt);
 
-  const checkAdmin = db.prepare("SELECT id FROM users WHERE email = 'admin@mirasbeautytouch.com'").get();
+  // Remove old admin if exists
+  db.prepare("DELETE FROM users WHERE email = 'admin@mirasbeautytouch.com'").run();
+
+  const checkAdmin = db.prepare("SELECT id FROM users WHERE email = 'mirabeautytouch@gmail.com'").get();
   let adminId = checkAdmin ? checkAdmin.id : null;
 
   if (!checkAdmin) {
     const insertAdmin = db.prepare(`
       INSERT INTO users (full_name, email, phone, password_hash, role)
-      VALUES ('Mira Johnson (Admin)', 'admin@mirasbeautytouch.com', '+234 803 123 4567', ?, 'admin')
+      VALUES ('Mira Johnson (Admin)', 'mirabeautytouch@gmail.com', '+234 803 123 4567', ?, 'admin')
     `);
     const res = insertAdmin.run(adminPasswordHash);
     adminId = res.lastInsertRowid;
-    console.log('Created Admin user: admin@mirasbeautytouch.com');
+    console.log('Created Admin user: mirabeautytouch@gmail.com');
+  } else {
+    // Update password to miratouch
+    db.prepare("UPDATE users SET password_hash = ? WHERE email = 'mirabeautytouch@gmail.com'").run(adminPasswordHash);
   }
 
   const checkClient = db.prepare("SELECT id FROM users WHERE email = 'client@example.com'").get();
