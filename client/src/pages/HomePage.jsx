@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { api } from '../services/api';
 import { useAuth } from '../context/AuthContext';
+import { initialPerfumesData } from '../data/perfumesData';
 import { 
   Sparkles, Star, Calendar, Heart, ArrowRight, Play, 
   CheckCircle, ShieldCheck, Gem, Flame, ChevronRight 
@@ -9,7 +10,7 @@ import {
 export function HomePage({ onNavigate, onSelectServiceForBooking }) {
   const { user, openAuth } = useAuth();
   const [featuredServices, setFeaturedServices] = useState([]);
-  const [featuredPerfumes, setFeaturedPerfumes] = useState([]);
+  const [featuredPerfumes, setFeaturedPerfumes] = useState(initialPerfumesData.slice(0, 3));
   const [recentGallery, setRecentGallery] = useState([]);
   const [isVideoModalOpen, setIsVideoModalOpen] = useState(false);
 
