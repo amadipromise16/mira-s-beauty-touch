@@ -5,7 +5,7 @@ import { initialGalleryData } from '../data/galleryData';
 import { 
   Heart, Sparkles, Play, Pause, Volume2, VolumeX, Maximize2, 
   X, ChevronLeft, ChevronRight, Image as ImageIcon, Video, 
-  Share2, Check, Eye, Calendar, Scissors, SunMedium 
+  Share2, Check, Eye, Calendar, Scissors, SunMedium, EyeOff 
 } from 'lucide-react';
 
 export function GalleryPage({ onNavigate, onBookService }) {
@@ -21,7 +21,7 @@ export function GalleryPage({ onNavigate, onBookService }) {
     }
   });
 
-  // Gallery items state
+  // Gallery items state (100% authentic user media, all AI pictures removed)
   const [gallery, setGallery] = useState(() => {
     return initialGalleryData.map(item => ({
       ...item,
@@ -42,14 +42,13 @@ export function GalleryPage({ onNavigate, onBookService }) {
   const [copiedLink, setCopiedLink] = useState(false);
   const modalVideoRef = useRef(null);
 
+  // Clean Categories matching authentic client services
   const categories = [
     'All',
-    'Salon Showcase',
+    'Lash Extensions',
     'Hair Braiding',
     'Nails & Art',
-    'Makeup Artistry',
-    'Lash Extensions',
-    'Perfume Curation'
+    'Salon Showcase'
   ];
 
   // Persist local likes
@@ -69,7 +68,7 @@ export function GalleryPage({ onNavigate, onBookService }) {
       type: selectedType
     }).then(res => {
       if (isMounted && res && res.gallery && res.gallery.length > 0) {
-        // Merge API data with local like states
+        // Merge API data with initial data & local likes
         const merged = res.gallery.map(item => {
           const matchingInit = initialGalleryData.find(i => i.id === item.id || i.title === item.title);
           const isLiked = !!localLikes[item.id] || item.user_has_liked;
@@ -107,7 +106,6 @@ export function GalleryPage({ onNavigate, onBookService }) {
     const currentlyLiked = !!localLikes[itemId];
     const newLiked = !currentlyLiked;
 
-    // Update local state immediately
     setLocalLikes(prev => {
       const next = { ...prev };
       if (newLiked) {
@@ -138,7 +136,6 @@ export function GalleryPage({ onNavigate, onBookService }) {
       }));
     }
 
-    // If backend is active and user logged in, sync with server
     if (user) {
       try {
         await api.gallery.toggleLike(itemId);
@@ -223,6 +220,13 @@ export function GalleryPage({ onNavigate, onBookService }) {
   const videoItemsCount = gallery.filter(i => i.media_type === 'video').length;
   const photoItemsCount = gallery.filter(i => i.media_type === 'image').length;
 
+  const getBookButtonLabel = (category) => {
+    if (category === 'Hair Braiding') return 'Book This Hairstyle';
+    if (category === 'Lash Extensions') return 'Book This Lash Look';
+    if (category === 'Nails & Art') return 'Book This Nail Set';
+    return 'Book This Look';
+  };
+
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 space-y-10">
       
@@ -230,13 +234,13 @@ export function GalleryPage({ onNavigate, onBookService }) {
       <div className="text-center max-w-3xl mx-auto space-y-3">
         <div className="inline-flex items-center space-x-1.5 px-3.5 py-1 rounded-full bg-[#F2E5DC] text-[#944E2E] text-xs font-semibold uppercase tracking-wider">
           <Sparkles className="w-3.5 h-3.5 text-[#B87D65]" />
-          <span>Mira’s Visual Portfolio • Hair & Salon Artistry</span>
+          <span>Authentic Salon Artistry • Real Client Portfolio</span>
         </div>
         <h1 className="font-serif text-3xl sm:text-5xl text-[#2C2420] font-normal uppercase tracking-wide">
           THE ARTISTRY GALLERY
         </h1>
         <p className="text-xs sm:text-sm text-[#7A6B63] max-w-2xl mx-auto leading-relaxed">
-          Watch our high-definition hair braiding videos, protective styling transformations, sculpted nails, and luxury scent experience. Click any video to view in brightened cinema clarity, show your appreciation with a like, or book an appointment for that exact hairstyle.
+          Experience our high-definition salon films showcasing lash extensions, master hair braiding, sculpted nail transformations, and our private scent sanctuary. All videos are rendered with ultra-bright cinema clarity.
         </p>
       </div>
 
@@ -280,9 +284,9 @@ export function GalleryPage({ onNavigate, onBookService }) {
             </button>
           </div>
 
-          <div className="flex items-center space-x-2 text-[11px] text-[#8E766B] bg-[#FAF7F2] px-3 py-1 rounded-full border border-[#DFC7B9]/60">
-            <SunMedium className="w-3.5 h-3.5 text-[#B87D65]" />
-            <span>Enhanced Bright Cinema Clarity</span>
+          <div className="flex items-center space-x-2 text-[11px] text-[#8E766B] bg-[#FAF7F2] px-3.5 py-1 rounded-full border border-[#DFC7B9]/60 shadow-xs">
+            <SunMedium className="w-3.5 h-3.5 text-amber-500 animate-pulse" />
+            <span className="font-medium text-[#2C2420]">Ultra-Bright HD Video Mode</span>
           </div>
         </div>
 
@@ -323,7 +327,6 @@ export function GalleryPage({ onNavigate, onBookService }) {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-7">
           {filteredGallery.map((item) => {
             const isVideo = item.media_type === 'video';
-            const isHair = item.category === 'Hair Braiding';
 
             return (
               <div
@@ -332,8 +335,8 @@ export function GalleryPage({ onNavigate, onBookService }) {
                 className="group cursor-pointer bg-white rounded-3xl overflow-hidden border border-[#EBDCD4] shadow-warm-sm hover:shadow-warm-lg transition-all duration-300 flex flex-col justify-between"
               >
                 <div>
-                  {/* Media Frame with Brightening Filter */}
-                  <div className="relative aspect-[4/3] bg-[#1E1714] overflow-hidden">
+                  {/* Media Frame with Maximum Brightness Enhancement Filter */}
+                  <div className="relative aspect-[4/3] bg-[#FAF5F0] overflow-hidden">
                     {isVideo ? (
                       <video
                         src={item.media_url}
@@ -342,7 +345,7 @@ export function GalleryPage({ onNavigate, onBookService }) {
                         playsInline
                         preload="metadata"
                         style={{
-                          filter: 'brightness(1.22) contrast(1.06) saturate(1.05)'
+                          filter: 'brightness(1.32) contrast(1.08) saturate(1.08)'
                         }}
                         className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
                         onMouseEnter={(e) => {
@@ -361,8 +364,8 @@ export function GalleryPage({ onNavigate, onBookService }) {
                       />
                     )}
 
-                    {/* Gentle gradient overlay (kept light so videos stay bright) */}
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/35 via-transparent to-transparent opacity-40 group-hover:opacity-15 transition-opacity" />
+                    {/* Subtle transparent overlay at the very bottom only */}
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent opacity-25 group-hover:opacity-10 transition-opacity" />
 
                     {/* Top Badges */}
                     <div className="absolute top-3.5 left-3.5 right-3.5 flex items-center justify-between pointer-events-none">
@@ -402,7 +405,7 @@ export function GalleryPage({ onNavigate, onBookService }) {
                     )}
                   </div>
 
-                  {/* Card Content & Hairstyle Details */}
+                  {/* Card Content & Details */}
                   <div className="p-5 space-y-3">
                     <div className="space-y-1">
                       <h3 className="font-serif text-lg font-bold text-[#2C2420] group-hover:text-[#B87D65] transition-colors leading-snug">
@@ -415,8 +418,8 @@ export function GalleryPage({ onNavigate, onBookService }) {
                       )}
                     </div>
 
-                    {/* Hairstyle Specific Highlight (Say about the hair just a little) */}
-                    {isHair && (
+                    {/* Category-specific styling callout */}
+                    {item.category === 'Hair Braiding' && (
                       <div className="bg-[#FAF4F0] rounded-2xl p-3 border border-[#F2E5DC] text-[11px] text-[#6E5D53] space-y-1.5">
                         <div className="flex items-center space-x-1.5 text-[#944E2E] font-bold uppercase tracking-wider text-[10px]">
                           <Scissors className="w-3 h-3 text-[#B87D65]" />
@@ -424,6 +427,30 @@ export function GalleryPage({ onNavigate, onBookService }) {
                         </div>
                         <p className="leading-relaxed text-[#5A4D45]">
                           {item.hair_summary || "Painless scalp-friendly parting, lightweight bounce, and clean protective finish."}
+                        </p>
+                      </div>
+                    )}
+
+                    {item.category === 'Lash Extensions' && (
+                      <div className="bg-[#FAF4F0] rounded-2xl p-3 border border-[#F2E5DC] text-[11px] text-[#6E5D53] space-y-1.5">
+                        <div className="flex items-center space-x-1.5 text-[#944E2E] font-bold uppercase tracking-wider text-[10px]">
+                          <Sparkles className="w-3 h-3 text-[#B87D65]" />
+                          <span>Lash Flutter & Volume</span>
+                        </div>
+                        <p className="leading-relaxed text-[#5A4D45]">
+                          {item.hair_summary || "Weightless flutter lash application tailored to elevate natural beauty."}
+                        </p>
+                      </div>
+                    )}
+
+                    {item.category === 'Nails & Art' && (
+                      <div className="bg-[#FAF4F0] rounded-2xl p-3 border border-[#F2E5DC] text-[11px] text-[#6E5D53] space-y-1.5">
+                        <div className="flex items-center space-x-1.5 text-[#944E2E] font-bold uppercase tracking-wider text-[10px]">
+                          <Sparkles className="w-3 h-3 text-[#B87D65]" />
+                          <span>Nail Sculpting & Polish</span>
+                        </div>
+                        <p className="leading-relaxed text-[#5A4D45]">
+                          {item.description || "Sculpted acrylics, gel-x extensions, and high-gloss topcoat care."}
                         </p>
                       </div>
                     )}
@@ -462,13 +489,13 @@ export function GalleryPage({ onNavigate, onBookService }) {
                     </span>
                   </div>
 
-                  {/* Primary "Book This Hairstyle" Button under each card */}
+                  {/* Dedicated 1-Click Booking Button */}
                   <button
                     onClick={(e) => handleBookLook(item, e)}
                     className="w-full flex items-center justify-center space-x-2 py-2.5 px-4 rounded-2xl bg-[#B87D65] hover:bg-[#A36B53] text-white text-xs font-semibold uppercase tracking-wider shadow-xs hover:shadow-warm-sm transition-all"
                   >
                     <Calendar className="w-3.5 h-3.5 text-white/90" />
-                    <span>{isHair ? 'Book This Hairstyle' : 'Book This Look'}</span>
+                    <span>{getBookButtonLabel(item.category)}</span>
                   </button>
 
                 </div>
@@ -479,9 +506,9 @@ export function GalleryPage({ onNavigate, onBookService }) {
         </div>
       )}
 
-      {/* CINEMA LIGHTBOX MODAL WITH BRIGHTENED HD VIDEO */}
+      {/* CINEMA LIGHTBOX MODAL WITH ULTRA-BRIGHTENED HD VIDEO */}
       {activeModalItem && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-6 bg-black/90 backdrop-blur-md animate-fade-in">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-6 bg-black/92 backdrop-blur-md animate-fade-in">
           
           {/* Top Bar Controls */}
           <div className="absolute top-4 left-4 right-4 flex items-center justify-between text-white z-20">
@@ -489,9 +516,9 @@ export function GalleryPage({ onNavigate, onBookService }) {
               <span className="text-xs uppercase tracking-widest font-bold text-[#F2E5DC] bg-white/10 px-3 py-1 rounded-full backdrop-blur-md">
                 {activeModalItem.category}
               </span>
-              <span className="text-xs text-white/70 hidden sm:inline flex items-center space-x-1">
-                <SunMedium className="w-3.5 h-3.5 text-amber-300" />
-                <span>Enhanced HD Cinema Mode</span>
+              <span className="text-xs text-white/80 hidden sm:inline flex items-center space-x-1">
+                <SunMedium className="w-3.5 h-3.5 text-amber-400" />
+                <span>Ultra-Bright Cinema HD</span>
               </span>
             </div>
 
@@ -535,7 +562,7 @@ export function GalleryPage({ onNavigate, onBookService }) {
           {/* Modal Container */}
           <div className="w-full max-w-4xl bg-[#1C1613] rounded-3xl overflow-hidden border border-white/15 shadow-2xl flex flex-col z-10 max-h-[92vh]">
             
-            {/* Media Display Area */}
+            {/* Media Display Area with High Brightness Filter */}
             <div className="relative bg-black flex items-center justify-center flex-1 min-h-[300px] sm:min-h-[460px] max-h-[64vh] overflow-hidden">
               {activeModalItem.media_type === 'video' ? (
                 <video
@@ -545,7 +572,7 @@ export function GalleryPage({ onNavigate, onBookService }) {
                   controls
                   playsInline
                   style={{
-                    filter: 'brightness(1.22) contrast(1.06) saturate(1.05)'
+                    filter: 'brightness(1.30) contrast(1.08) saturate(1.08)'
                   }}
                   className="w-full h-full max-h-[64vh] object-contain"
                 />
@@ -558,14 +585,12 @@ export function GalleryPage({ onNavigate, onBookService }) {
               )}
             </div>
 
-            {/* Bottom Meta, Hairstyle Description & Booking Action Bar */}
+            {/* Bottom Meta & Booking Action Bar */}
             <div className="p-5 sm:p-6 bg-[#241D19] border-t border-white/10 text-white flex flex-col sm:flex-row sm:items-center justify-between gap-4">
               <div className="space-y-1.5 max-w-xl">
-                <div className="flex items-center space-x-2">
-                  <h3 className="font-serif text-xl sm:text-2xl font-bold text-white">
-                    {activeModalItem.title}
-                  </h3>
-                </div>
+                <h3 className="font-serif text-xl sm:text-2xl font-bold text-white">
+                  {activeModalItem.title}
+                </h3>
                 {activeModalItem.hair_summary && (
                   <p className="text-xs text-[#E8D4C8] leading-relaxed">
                     ✨ {activeModalItem.hair_summary}
@@ -605,7 +630,7 @@ export function GalleryPage({ onNavigate, onBookService }) {
                 >
                   <Calendar className="w-4 h-4 text-white" />
                   <span>
-                    {activeModalItem.category === 'Hair Braiding' ? 'Book This Hairstyle' : 'Book This Look'}
+                    {getBookButtonLabel(activeModalItem.category)}
                   </span>
                 </button>
               </div>
@@ -623,7 +648,7 @@ export function GalleryPage({ onNavigate, onBookService }) {
           Love What You See?
         </h3>
         <p className="text-xs text-[#7A6B63] max-w-md mx-auto">
-          Reserve your appointment with our master braiders and stylists today. Every service includes certified care, scalp nourishment, and pure elegance.
+          Reserve your visit with our master stylists and technicians today. Every appointment includes certified care, scalp nourishment, and pure elegance.
         </p>
         <div className="pt-2">
           <button

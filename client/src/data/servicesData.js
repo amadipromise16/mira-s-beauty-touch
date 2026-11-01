@@ -100,3 +100,4 @@ export const initialServicesData = [
     image_url: './media/perfume_presentation_bar.jpg'
   }
 ];
+
