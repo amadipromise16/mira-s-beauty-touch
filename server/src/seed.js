@@ -405,7 +405,7 @@ function seedDatabase() {
       ['phone', "+234 803 123 4567"],
       ['whatsapp', "+2348031234567"],
       ['email', "info@mirasbeautytouch.com"],
-      ['address', "14 Admiralty Way, Lekki Phase 1, Lagos, Nigeria"],
+      ['address', "Plot 12, Commercial Avenue, Owerri, Imo State, Nigeria"],
       ['hours_weekdays', "Monday – Saturday: 9:00 AM – 7:30 PM"],
       ['hours_sunday', "Sunday: 1:00 PM – 6:00 PM (By Appointment)"]
     ];

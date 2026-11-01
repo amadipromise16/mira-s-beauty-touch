@@ -116,20 +116,21 @@ export function HomePage({ onNavigate, onSelectServiceForBooking }) {
                 {/* Arched Hero Image */}
                 <div className="arch-top shadow-warm-lg border-4 border-white overflow-hidden bg-[#EBDCD4] aspect-[4/5] relative group">
                   <img
-                    src="https://images.unsplash.com/photo-1560066984-138dadb4c035?auto=format&fit=crop&w=900&q=80"
-                    alt="Mira's Beauty Touch Salon Styling"
+                    src="./media/mira_palace_interior_hero.jpg"
+                    alt="Mira's Beauty Palace Owerri Luxury Salon"
+                    style={{ filter: 'brightness(1.04) contrast(1.03)' }}
                     className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-700"
                   />
                   
-                  {/* Floating Perfume Pill Overlay */}
-                  <div className="absolute bottom-5 right-5 bg-white/90 backdrop-blur-md px-4 py-2.5 rounded-2xl shadow-warm-md border border-[#F2E5DC] flex items-center space-x-3">
+                  {/* Floating Salon & Location Pill Overlay */}
+                  <div className="absolute bottom-5 right-5 bg-white/95 backdrop-blur-md px-4 py-2.5 rounded-2xl shadow-warm-md border border-[#F2E5DC] flex items-center space-x-3">
                     <div className="w-10 h-10 rounded-xl bg-[#F4ECE6] flex items-center justify-center text-[#B87D65]">
-                      <Gem className="w-5 h-5" />
+                      <Sparkles className="w-5 h-5" />
                     </div>
                     <div>
-                      <p className="text-[10px] uppercase tracking-wider text-[#8E766B] font-bold">Signature Fragrance</p>
-                      <p className="text-xs font-serif font-bold text-[#2C2420]">L'Élixir de Mira</p>
-                      <p className="text-[11px] font-semibold text-[#B87D65]">₦48,000</p>
+                      <p className="text-[10px] uppercase tracking-wider text-[#8E766B] font-bold">📍 Owerri, Imo State</p>
+                      <p className="text-xs font-serif font-bold text-[#2C2420]">Mira’s Beauty Palace</p>
+                      <p className="text-[11px] font-semibold text-[#B87D65]">Beauty • Elegance • Confidence</p>
                     </div>
                   </div>
                 </div>
@@ -203,12 +204,21 @@ export function HomePage({ onNavigate, onSelectServiceForBooking }) {
           >
             <div className="arch-top h-64 overflow-hidden bg-[#FAF5F0] mb-4 relative">
               <video
+                ref={(el) => {
+                  if (el) {
+                    el.defaultMuted = true;
+                    el.muted = true;
+                    el.setAttribute('playsinline', 'true');
+                    el.setAttribute('webkit-playsinline', 'true');
+                    el.play().catch(() => {});
+                  }
+                }}
                 src="./media/mira_home_hair_braiding.mp4"
                 autoPlay
                 muted
                 loop
                 playsInline
-                preload="metadata"
+                preload="auto"
                 style={{ filter: 'brightness(1.28) contrast(1.08) saturate(1.06)' }}
                 className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
               />
@@ -264,12 +274,21 @@ export function HomePage({ onNavigate, onSelectServiceForBooking }) {
           >
             <div className="arch-top h-64 overflow-hidden bg-[#FAF5F0] mb-4 relative">
               <video
+                ref={(el) => {
+                  if (el) {
+                    el.defaultMuted = true;
+                    el.muted = true;
+                    el.setAttribute('playsinline', 'true');
+                    el.setAttribute('webkit-playsinline', 'true');
+                    el.play().catch(() => {});
+                  }
+                }}
                 src="./media/mira_home_makeup_lashes.mp4"
                 autoPlay
                 muted
                 loop
                 playsInline
-                preload="metadata"
+                preload="auto"
                 style={{ filter: 'brightness(1.28) contrast(1.08) saturate(1.06)' }}
                 className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
               />
@@ -354,11 +373,21 @@ export function HomePage({ onNavigate, onSelectServiceForBooking }) {
 
             {/* Video Player Box / Modal Trigger */}
             <div className="lg:col-span-6">
-              <div className="relative rounded-2xl overflow-hidden shadow-2xl border-4 border-white/20 bg-black/40 aspect-video group">
+              <div className="relative rounded-2xl overflow-hidden shadow-2xl border-4 border-white/20 bg-black aspect-video group">
                 <video
-                  src="/media/mira_salon_scent_experience.mp4"
-                  poster="/media/haute_perfume_flacon.jpg"
+                  ref={(el) => {
+                    if (el) {
+                      el.setAttribute('playsinline', 'true');
+                      el.setAttribute('webkit-playsinline', 'true');
+                    }
+                  }}
+                  src="./media/mira_salon_experience_main.mp4"
+                  poster="./media/mira_palace_interior_hero.jpg"
                   controls
+                  playsInline
+                  webkit-playsinline="true"
+                  preload="auto"
+                  style={{ filter: 'brightness(1.25) contrast(1.08) saturate(1.06)' }}
                   className="w-full h-full object-cover"
                 />
               </div>

@@ -44,6 +44,19 @@ export function AdminDashboard({ onNavigate }) {
     if (isAdmin) {
       loadAllData();
     }
+
+    const handleDataEvent = () => {
+      if (isAdmin) {
+        loadAllData();
+      }
+    };
+
+    window.addEventListener('mbt_data_change', handleDataEvent);
+    window.addEventListener('storage', handleDataEvent);
+    return () => {
+      window.removeEventListener('mbt_data_change', handleDataEvent);
+      window.removeEventListener('storage', handleDataEvent);
+    };
   }, [isAdmin]);
 
   const loadAllData = async () => {

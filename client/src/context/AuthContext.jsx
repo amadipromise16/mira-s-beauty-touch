@@ -178,6 +178,13 @@ export function AuthProvider({ children }) {
       const storedUsers = JSON.parse(localStorage.getItem('mbt_client_accounts') || '[]');
       storedUsers.push({ ...newClientUser, password: userData.password });
       localStorage.setItem('mbt_client_accounts', JSON.stringify(storedUsers));
+
+      const dirUsers = JSON.parse(localStorage.getItem('mbt_users') || '[]');
+      if (!dirUsers.some(u => (u.email || '').toLowerCase() === cleanEmail)) {
+        dirUsers.push(newClientUser);
+        localStorage.setItem('mbt_users', JSON.stringify(dirUsers));
+      }
+      window.dispatchEvent(new CustomEvent('mbt_data_change', { detail: { type: 'user_registered', user: newClientUser } }));
     } catch (e) {}
 
     const clientToken = 'mbt_client_token_' + Date.now();

@@ -153,12 +153,22 @@ export function ServicesPage({ onBookService }) {
                   <div className="rounded-2xl overflow-hidden bg-[#FAF5F0] h-60 mb-4 relative border border-[#F2E5DC] shadow-xs">
                     {isVideo ? (
                       <video
+                        ref={(el) => {
+                          if (el) {
+                            el.defaultMuted = true;
+                            el.muted = true;
+                            el.setAttribute('playsinline', 'true');
+                            el.setAttribute('webkit-playsinline', 'true');
+                            el.play().catch(() => {});
+                          }
+                        }}
                         src={service.image_url}
                         autoPlay
                         muted
                         loop
                         playsInline
-                        preload="metadata"
+                        webkit-playsinline="true"
+                        preload="auto"
                         style={{
                           filter: 'brightness(1.28) contrast(1.08) saturate(1.06)'
                         }}

@@ -338,23 +338,34 @@ export function GalleryPage({ onNavigate, onBookService }) {
                   {/* Media Frame with Maximum Brightness Enhancement Filter */}
                   <div className="relative aspect-[4/3] bg-[#FAF5F0] overflow-hidden">
                     {isVideo ? (
-                      <video
-                        src={item.media_url}
-                        muted
-                        loop
-                        playsInline
-                        preload="metadata"
-                        style={{
-                          filter: 'brightness(1.32) contrast(1.08) saturate(1.08)'
-                        }}
-                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
-                        onMouseEnter={(e) => {
-                          try { e.target.play(); } catch (_) {}
-                        }}
-                        onMouseLeave={(e) => {
-                          try { e.target.pause(); } catch (_) {}
-                        }}
-                      />
+                      <div className="relative w-full h-full">
+                        <video
+                          ref={(el) => {
+                            if (el) {
+                              el.defaultMuted = true;
+                              el.muted = true;
+                              el.setAttribute('playsinline', 'true');
+                              el.setAttribute('webkit-playsinline', 'true');
+                              el.play().catch(() => {});
+                            }
+                          }}
+                          src={item.media_url}
+                          autoPlay
+                          muted
+                          loop
+                          playsInline
+                          webkit-playsinline="true"
+                          preload="auto"
+                          style={{
+                            filter: 'brightness(1.32) contrast(1.08) saturate(1.08)'
+                          }}
+                          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+                        />
+                        <div className="absolute bottom-2.5 right-2.5 bg-black/60 backdrop-blur-xs text-white text-[10px] font-semibold px-2 py-0.5 rounded-full flex items-center space-x-1 shadow-sm pointer-events-none">
+                          <Play className="w-2.5 h-2.5 fill-current" />
+                          <span>Video</span>
+                        </div>
+                      </div>
                     ) : (
                       <img
                         src={item.media_url}
@@ -566,11 +577,26 @@ export function GalleryPage({ onNavigate, onBookService }) {
             <div className="relative bg-black flex items-center justify-center flex-1 min-h-[300px] sm:min-h-[460px] max-h-[64vh] overflow-hidden">
               {activeModalItem.media_type === 'video' ? (
                 <video
-                  ref={modalVideoRef}
+                  ref={(el) => {
+                    modalVideoRef.current = el;
+                    if (el) {
+                      el.setAttribute('playsinline', 'true');
+                      el.setAttribute('webkit-playsinline', 'true');
+                      const playPromise = el.play();
+                      if (playPromise !== undefined) {
+                        playPromise.catch(() => {
+                          el.muted = true;
+                          el.play().catch(() => {});
+                        });
+                      }
+                    }
+                  }}
                   src={activeModalItem.media_url}
                   autoPlay
                   controls
                   playsInline
+                  webkit-playsinline="true"
+                  preload="auto"
                   style={{
                     filter: 'brightness(1.30) contrast(1.08) saturate(1.08)'
                   }}

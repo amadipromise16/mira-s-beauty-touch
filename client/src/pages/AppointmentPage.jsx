@@ -159,6 +159,7 @@ export function AppointmentPage({ preselectedService, onBookingSuccess, onNaviga
         customer_phone: clientDetails.phone,
         requested_date: selectedDate,
         requested_time: selectedTime,
+        price_ngn: selectedService.price_ngn || 18000,
         customer_notes: clientDetails.notes
       };
 

@@ -89,29 +89,50 @@ class MirasBeautyTouchHandler(SimpleHTTPRequestHandler):
 
     def serve_file(self, filepath, content_type=None):
         try:
+            file_size = os.path.getsize(filepath)
+            ext = os.path.splitext(filepath)[1].lower()
+            types = {
+                ".html": "text/html; charset=utf-8",
+                ".js": "application/javascript",
+                ".css": "text/css",
+                ".json": "application/json",
+                ".png": "image/png",
+                ".jpg": "image/jpeg",
+                ".jpeg": "image/jpeg",
+                ".svg": "image/svg+xml",
+                ".mp4": "video/mp4",
+                ".webp": "image/webp",
+            }
+            ctype = content_type or types.get(ext, "application/octet-stream")
+
+            # Handle Byte-Range requests for mobile Safari & Chrome video streaming
+            range_header = self.headers.get("Range")
+            if range_header and ext in (".mp4", ".webm", ".ogg"):
+                parts = range_header.replace("bytes=", "").split("-")
+                start = int(parts[0]) if parts[0] else 0
+                end = int(parts[1]) if len(parts) > 1 and parts[1] else file_size - 1
+                length = end - start + 1
+
+                self.send_response(206)
+                self.send_header("Content-Type", ctype)
+                self.send_header("Content-Range", f"bytes {start}-{end}/{file_size}")
+                self.send_header("Content-Length", str(length))
+                self.send_header("Accept-Ranges", "bytes")
+                self.send_header("Access-Control-Allow-Origin", "*")
+                self.end_headers()
+
+                with open(filepath, "rb") as f:
+                    f.seek(start)
+                    self.wfile.write(f.read(length))
+                return
+
             with open(filepath, "rb") as f:
                 data = f.read()
 
             self.send_response(200)
-            if content_type:
-                self.send_header("Content-Type", content_type)
-            else:
-                ext = os.path.splitext(filepath)[1].lower()
-                types = {
-                    ".html": "text/html; charset=utf-8",
-                    ".js": "application/javascript",
-                    ".css": "text/css",
-                    ".json": "application/json",
-                    ".png": "image/png",
-                    ".jpg": "image/jpeg",
-                    ".jpeg": "image/jpeg",
-                    ".svg": "image/svg+xml",
-                    ".mp4": "video/mp4",
-                    ".webp": "image/webp",
-                }
-                self.send_header("Content-Type", types.get(ext, "application/octet-stream"))
-
+            self.send_header("Content-Type", ctype)
             self.send_header("Content-Length", str(len(data)))
+            self.send_header("Accept-Ranges", "bytes")
             self.send_header("Access-Control-Allow-Origin", "*")
             self.end_headers()
             self.wfile.write(data)

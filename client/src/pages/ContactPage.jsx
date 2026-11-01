@@ -56,7 +56,7 @@ export function ContactPage() {
           CONNECT WITH MIRA’S
         </h1>
         <p className="text-xs sm:text-sm text-[#7A6B63] max-w-2xl mx-auto leading-relaxed">
-          We would love to hear from you. Visit our salon sanctuary in Lekki, call our concierge, or send us a message below.
+          We would love to hear from you. Visit our salon sanctuary in Owerri, Imo State, call our concierge, or send us a message below.
         </p>
       </div>
 
@@ -74,10 +74,10 @@ export function ContactPage() {
             <div>
               <h4 className="font-serif text-base font-bold text-[#2C2420]">Salon Location</h4>
               <p className="text-xs text-[#6E5D53] mt-1 leading-relaxed">
-                14 Admiralty Way, Lekki Phase 1, Lagos State, Nigeria
+                Plot 12, Commercial Avenue, Owerri, Imo State, Nigeria
               </p>
               <p className="text-[11px] text-[#B87D65] font-semibold mt-2">
-                Convenient on-site parking available
+                Convenient on-site parking available • Heart of Owerri
               </p>
             </div>
           </div>

@@ -125,7 +125,7 @@ export function Footer({ onNavigate }) {
             <div className="space-y-3 text-xs text-[#F2D7CB]">
               <div className="flex items-start space-x-2">
                 <MapPin className="w-4 h-4 text-[#FAD5C5] mt-0.5 shrink-0" />
-                <span>14 Admiralty Way, Lekki Phase 1, Lagos, Nigeria</span>
+                <span>Plot 12, Commercial Avenue, Owerri, Imo State, Nigeria</span>
               </div>
               <div className="flex items-center space-x-2">
                 <Phone className="w-4 h-4 text-[#FAD5C5] shrink-0" />
