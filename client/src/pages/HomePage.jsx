@@ -193,26 +193,34 @@ export function HomePage({ onNavigate, onSelectServiceForBooking }) {
           </button>
         </div>
 
-        {/* 4 Arched Preview Cards */}
+        {/* 4 Arched Preview Cards matching Image 1 Reference */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
           
-          {/* Card 1: Braids & Styling */}
+          {/* Card 1: Hair Braiding (User Video) */}
           <div 
             onClick={() => onNavigate('services')}
             className="group cursor-pointer bg-white rounded-2xl p-4 border border-[#EBDCD4] hover:shadow-warm-md transition-all duration-300"
           >
-            <div className="arch-top h-64 overflow-hidden bg-[#F4ECE6] mb-4">
-              <img
-                src="./media/knotless_braids.jpg"
-                alt="Hair Braiding"
+            <div className="arch-top h-64 overflow-hidden bg-[#FAF5F0] mb-4 relative">
+              <video
+                src="./media/mira_home_hair_braiding.mp4"
+                autoPlay
+                muted
+                loop
+                playsInline
+                preload="metadata"
+                style={{ filter: 'brightness(1.28) contrast(1.08) saturate(1.06)' }}
                 className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
               />
+              <div className="absolute top-3 left-3 bg-white/95 backdrop-blur-md text-[10px] uppercase font-bold tracking-wider px-2.5 py-1 rounded-full text-[#944E2E] shadow-xs">
+                Hair Braiding
+              </div>
             </div>
             <h3 className="font-serif text-lg font-semibold text-[#2C2420] group-hover:text-[#B87D65] transition-colors">
               Hair Braiding
             </h3>
-            <p className="text-xs text-[#7A6B63] mt-1 line-clamp-2">
-              Beautifully crafted, stylish, and protective hairstyles for every occasion.
+            <p className="text-xs text-[#7A6B63] mt-1 line-clamp-2 leading-relaxed">
+              Beautifully crafted, stylish, and protective hairstyles. Expert knotless braiding, bohemian plaits, and gentle scalp-care techniques for every occasion.
             </p>
             <div className="mt-4 flex items-center justify-between">
               <span className="text-xs font-bold text-[#B87D65]">From ₦15,000</span>
@@ -220,23 +228,28 @@ export function HomePage({ onNavigate, onSelectServiceForBooking }) {
             </div>
           </div>
 
-          {/* Card 2: Nails & Pedicure */}
+          {/* Card 2: Nails & Pedicure (Left as is) */}
           <div 
             onClick={() => onNavigate('services')}
             className="group cursor-pointer bg-white rounded-2xl p-4 border border-[#EBDCD4] hover:shadow-warm-md transition-all duration-300"
           >
-            <div className="arch-top h-64 overflow-hidden bg-[#F4ECE6] mb-4">
+            <div className="arch-top h-64 overflow-hidden bg-[#FAF5F0] mb-4 relative">
               <img
                 src="./media/mira_nails_stiletto.jpg"
                 alt="Nail Care & Extensions"
+                loading="lazy"
+                style={{ filter: 'brightness(1.08) contrast(1.04)' }}
                 className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
               />
+              <div className="absolute top-3 left-3 bg-white/95 backdrop-blur-md text-[10px] uppercase font-bold tracking-wider px-2.5 py-1 rounded-full text-[#944E2E] shadow-xs">
+                Nails & Pedicures
+              </div>
             </div>
             <h3 className="font-serif text-lg font-semibold text-[#2C2420] group-hover:text-[#B87D65] transition-colors">
               Nails & Pedicures
             </h3>
-            <p className="text-xs text-[#7A6B63] mt-1 line-clamp-2">
-              Expert nail and foot care for a polished, refreshed look, plus stunning nail extensions, creative designs, and flawless finishes.
+            <p className="text-xs text-[#7A6B63] mt-1 line-clamp-2 leading-relaxed">
+              Expert nail and foot care for a polished, refreshed look, plus stunning sculpted extensions, creative designs, and flawless high-gloss finishes.
             </p>
             <div className="mt-4 flex items-center justify-between">
               <span className="text-xs font-bold text-[#B87D65]">From ₦14,000</span>
@@ -244,23 +257,31 @@ export function HomePage({ onNavigate, onSelectServiceForBooking }) {
             </div>
           </div>
 
-          {/* Card 3: Makeup & Lashes */}
+          {/* Card 3: Makeup & Lashes (User Video) */}
           <div 
             onClick={() => onNavigate('services')}
             className="group cursor-pointer bg-white rounded-2xl p-4 border border-[#EBDCD4] hover:shadow-warm-md transition-all duration-300"
           >
-            <div className="arch-top h-64 overflow-hidden bg-[#F4ECE6] mb-4">
-              <img
-                src="./media/wispy_lashes.jpg"
-                alt="Makeup Artistry"
+            <div className="arch-top h-64 overflow-hidden bg-[#FAF5F0] mb-4 relative">
+              <video
+                src="./media/mira_home_makeup_lashes.mp4"
+                autoPlay
+                muted
+                loop
+                playsInline
+                preload="metadata"
+                style={{ filter: 'brightness(1.28) contrast(1.08) saturate(1.06)' }}
                 className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
               />
+              <div className="absolute top-3 left-3 bg-white/95 backdrop-blur-md text-[10px] uppercase font-bold tracking-wider px-2.5 py-1 rounded-full text-[#944E2E] shadow-xs">
+                Makeup & Lashes
+              </div>
             </div>
             <h3 className="font-serif text-lg font-semibold text-[#2C2420] group-hover:text-[#B87D65] transition-colors">
               Makeup & Lashes
             </h3>
-            <p className="text-xs text-[#7A6B63] mt-1 line-clamp-2">
-              Elegant makeup artistry for weddings, special occasions, and everyday glamour, with gorgeous lashes that enhance your natural beauty.
+            <p className="text-xs text-[#7A6B63] mt-1 line-clamp-2 leading-relaxed">
+              Elegant makeup artistry for weddings, special celebrations, and everyday glamour, with gorgeous fluttery lash extensions that enhance your natural beauty.
             </p>
             <div className="mt-4 flex items-center justify-between">
               <span className="text-xs font-bold text-[#B87D65]">From ₦20,000</span>
@@ -268,23 +289,33 @@ export function HomePage({ onNavigate, onSelectServiceForBooking }) {
             </div>
           </div>
 
-          {/* Card 4: Perfume Bar */}
+          {/* Card 4: Luxury Perfumes (User Perfume Photo: Al Faris) */}
           <div 
             onClick={() => onNavigate('perfumes')}
             className="group cursor-pointer bg-white rounded-2xl p-4 border border-[#EBDCD4] hover:shadow-warm-md transition-all duration-300"
           >
-            <div className="arch-top h-64 overflow-hidden bg-[#F4ECE6] mb-4">
+            <div className="arch-top h-64 overflow-hidden bg-[#FAF5F0] mb-4 relative">
               <img
-                src="./media/haute_perfume_flacon.jpg"
-                alt="Perfume Consultations"
+                src="./media/al_faris_arabiyat_perfume.jpg"
+                alt="Al Faris by Arabiyat My Perfumes"
+                loading="lazy"
+                style={{ filter: 'brightness(1.12) contrast(1.05)' }}
                 className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
               />
+              <div className="absolute top-3 left-3 bg-white/95 backdrop-blur-md text-[10px] uppercase font-bold tracking-wider px-2.5 py-1 rounded-full text-[#944E2E] shadow-xs">
+                Luxury Perfumes
+              </div>
             </div>
-            <h3 className="font-serif text-lg font-semibold text-[#2C2420] group-hover:text-[#B87D65] transition-colors">
-              Luxury Perfumes
-            </h3>
-            <p className="text-xs text-[#7A6B63] mt-1 line-clamp-2">
-              A delightful selection of captivating fragrances for every personality and occasion to leave a lasting impression.
+            <div className="space-y-0.5">
+              <h3 className="font-serif text-lg font-semibold text-[#2C2420] group-hover:text-[#B87D65] transition-colors">
+                Luxury Perfumes
+              </h3>
+              <p className="text-[11px] font-semibold text-[#944E2E] truncate">
+                Al Faris (Arabiyat by My Perfumes)
+              </p>
+            </div>
+            <p className="text-xs text-[#7A6B63] mt-1 line-clamp-2 leading-relaxed">
+              An aristocratic oriental fragrance blending fresh citrus, warm spices, golden amber, and noble oud in an iconic horse-crested flacon.
             </p>
             <div className="mt-4 flex items-center justify-between">
               <span className="text-xs font-bold text-[#B87D65]">From ₦15,000</span>

@@ -4,6 +4,18 @@
 
 export const initialPerfumesData = [
   {
+    id: 14,
+    name: "Al Faris (Arabiyat)",
+    brand: "Arabiyat by My Perfumes",
+    description: "An aristocratic, noble oriental fragrance celebrating chivalry and charisma. Opens with sparkling iced citrus and invigorating herbal zest, unfolding into a rich heart of spices, golden amber, patchouli, and noble agarwood (oud). Presented in a magnificent midnight flacon crowned with a silver equestrian emblem.",
+    fragrance_notes: "Top: Italian Bergamot, Crisp Apple, Fresh Citrus | Heart: Aromatic Spices, Lavender, Geranium | Base: Warm Golden Amber, Patchouli, Noble Oud, White Musk",
+    size: "100ml Eau de Parfum (3.4 Fl. Oz.)",
+    price_ngn: 17500,
+    stock_quantity: 20,
+    image_url: "./media/al_faris_arabiyat_perfume.jpg",
+    is_featured: 1
+  },
+  {
     id: 1,
     name: "Queen of Arabia (Luxury Gift Set)",
     brand: "Lattafa Pride",

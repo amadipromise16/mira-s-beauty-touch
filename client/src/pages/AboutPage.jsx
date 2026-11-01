@@ -76,11 +76,13 @@ export function AboutPage({ onNavigate }) {
         {/* Right Column: Brand Sanctuary & Perfume Lounge */}
         <div className="lg:col-span-5 bg-white rounded-3xl p-6 sm:p-8 border border-[#EBDCD4] shadow-warm-sm flex flex-col justify-between">
           <div>
-            <div className="rounded-2xl overflow-hidden bg-[#FAF7F2] h-64 mb-5 border border-[#F2E5DC]">
+            <div className="rounded-2xl overflow-hidden bg-[#FAF7F2] h-64 mb-5 border border-[#F2E5DC] shadow-xs group">
               <img
-                src="./media/perfume_presentation_bar.jpg"
-                alt="Mira's Beauty Touch Luxury Sanctuary"
-                className="w-full h-full object-cover"
+                src="./media/mira_beauty_touch_salon_sanctuary.jpg"
+                alt="Mira's Beauty Touch Salon Sanctuary"
+                loading="lazy"
+                style={{ filter: 'brightness(1.06) contrast(1.04)' }}
+                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
               />
             </div>
             <span className="text-[10px] uppercase tracking-widest text-[#B87D65] font-bold">
