@@ -152,31 +152,6 @@ export function HomePage({ onNavigate, onSelectServiceForBooking }) {
         </div>
       </section>
 
-      {/* 2. VALUE PROPOSITION STRIP */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 p-6 bg-white rounded-2xl border border-[#EBDCD4] shadow-warm-sm">
-          <div className="text-center p-3">
-            <span className="text-2xl mb-1 block">✨</span>
-            <h4 className="text-xs font-bold uppercase tracking-wider text-[#2C2420]">Hair Braiding</h4>
-            <p className="text-[11px] text-[#7A6B63] mt-0.5">Beautifully crafted, stylish & protective</p>
-          </div>
-          <div className="text-center p-3">
-            <span className="text-2xl mb-1 block">💅</span>
-            <h4 className="text-xs font-bold uppercase tracking-wider text-[#2C2420]">Manicures & Pedicures</h4>
-            <p className="text-[11px] text-[#7A6B63] mt-0.5">Polished, refreshed nail & foot care</p>
-          </div>
-          <div className="text-center p-3">
-            <span className="text-2xl mb-1 block">💄</span>
-            <h4 className="text-xs font-bold uppercase tracking-wider text-[#2C2420]">Makeup & Lashes</h4>
-            <p className="text-[11px] text-[#7A6B63] mt-0.5">Flawless glam & gorgeous lash extensions</p>
-          </div>
-          <div className="text-center p-3">
-            <span className="text-2xl mb-1 block">🌸</span>
-            <h4 className="text-xs font-bold uppercase tracking-wider text-[#2C2420]">Luxury Perfumes</h4>
-            <p className="text-[11px] text-[#7A6B63] mt-0.5">Captivating scents priced in Naira (₦)</p>
-          </div>
-        </div>
-      </section>
 
       {/* 3. KEY SERVICES (The Palace Experience - 2x2 Grid on Mobile Matching Image 2 Reference) */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
