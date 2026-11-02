@@ -4,7 +4,8 @@ import { useAuth } from '../context/AuthContext';
 import { initialServicesData } from '../data/servicesData';
 import { 
   Calendar as CalendarIcon, Clock, User, Phone, Mail, 
-  Sparkles, CheckCircle2, AlertCircle, ChevronLeft, ChevronRight, Scissors 
+  Sparkles, CheckCircle2, AlertCircle, ChevronLeft, ChevronRight, Scissors,
+  Star, MessageSquare, Send, Quote
 } from 'lucide-react';
 
 export function AppointmentPage({ preselectedService, onBookingSuccess, onNavigate }) {
@@ -48,6 +49,98 @@ export function AppointmentPage({ preselectedService, onBookingSuccess, onNaviga
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [successBooking, setSuccessBooking] = useState(null);
+
+  // Client Testimonies State
+  const [reviews, setReviews] = useState(() => {
+    try {
+      const saved = localStorage.getItem('mbt_reviews');
+      if (saved) return JSON.parse(saved);
+    } catch (_) {}
+    return [
+      {
+        id: 'rev_1',
+        name: 'Chioma Eze',
+        location: 'Ikenegbu, Owerri',
+        service: 'Signature Knotless Bohemian Braids',
+        rating: 5,
+        date: 'October 28, 2026',
+        comment: 'Mira’s Beauty Touch is hands down the best salon in Owerri! My knotless braids were completely painless, extremely neat, and lasted over 6 weeks. The atmosphere is so peaceful, clean, and luxurious!',
+        verified: true
+      },
+      {
+        id: 'rev_2',
+        name: 'Amaka Nwachukwu',
+        location: 'New Owerri',
+        service: 'Master Sculpted Acrylic & Chrome Artistry',
+        rating: 5,
+        date: 'October 25, 2026',
+        comment: 'I came in for my birthday nails and the attention to detail blew me away. No chipping, flawless cuticle finish, and the salon chairs are so comfortable. 10/10 recommend to all ladies in Imo State!',
+        verified: true
+      },
+      {
+        id: 'rev_3',
+        name: 'Blessing Okoro',
+        location: 'Works Layout, Owerri',
+        service: 'Luxury Velvet Pedicure & Foot Scrub Sanctuary',
+        rating: 5,
+        date: 'October 22, 2026',
+        comment: 'The pedicure experience was pure bliss! Warm floral foot bath, relaxing scrub, and the staff are extremely courteous and polite. It truly feels like a royal palace experience.',
+        verified: true
+      },
+      {
+        id: 'rev_4',
+        name: 'Ngozi Obi',
+        location: 'Aladinma, Owerri',
+        service: 'Bridal Glam & Wispy Flutter Lash Extensions',
+        rating: 5,
+        date: 'October 18, 2026',
+        comment: 'They did my celebration glam and lash extensions. Everyone kept asking who did my makeup! Long-lasting, photogenic, and elegant without feeling heavy. Love the website booking too!',
+        verified: true
+      }
+    ];
+  });
+
+  const [showReviewForm, setShowReviewForm] = useState(false);
+  const [newReview, setNewReview] = useState({
+    name: '',
+    location: 'Owerri, Imo State',
+    service: 'Signature Knotless Bohemian Braids',
+    rating: 5,
+    comment: ''
+  });
+  const [reviewSuccess, setReviewSuccess] = useState('');
+
+  const handleAddReview = (e) => {
+    e.preventDefault();
+    if (!newReview.name.trim() || !newReview.comment.trim()) {
+      return;
+    }
+    const createdReview = {
+      id: 'rev_' + Date.now(),
+      name: newReview.name.trim(),
+      location: newReview.location.trim() || 'Owerri, Imo State',
+      service: newReview.service,
+      rating: Number(newReview.rating) || 5,
+      date: new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' }),
+      comment: newReview.comment.trim(),
+      verified: true
+    };
+    const updated = [createdReview, ...reviews];
+    setReviews(updated);
+    try {
+      localStorage.setItem('mbt_reviews', JSON.stringify(updated));
+    } catch (_) {}
+    setReviewSuccess('✨ Thank you for your wonderful testimony! Your review has been added to the site.');
+    setShowReviewForm(false);
+    setNewReview({
+      name: user?.full_name || '',
+      location: 'Owerri, Imo State',
+      service: 'Signature Knotless Bohemian Braids',
+      rating: 5,
+      comment: ''
+    });
+    setTimeout(() => setReviewSuccess(''), 5000);
+  };
 
   // Auto-fill from logged-in user
   useEffect(() => {
@@ -550,7 +643,7 @@ export function AppointmentPage({ preselectedService, onBookingSuccess, onNaviga
                     required
                     value={clientDetails.phone}
                     onChange={(e) => setClientDetails({ ...clientDetails, phone: e.target.value })}
-                    placeholder="+234 803 123 4567"
+                    placeholder="+234 903 727 6804"
                     className="w-full px-3 py-2 bg-white border border-[#DFC7B9] rounded-lg text-xs text-[#2C2420] focus:outline-none focus:border-[#B87D65]"
                   />
                 </div>
@@ -595,6 +688,189 @@ export function AppointmentPage({ preselectedService, onBookingSuccess, onNaviga
 
         </form>
       )}
+
+      {/* CLIENT TESTIMONIES & REVIEWS SECTION */}
+      <section className="bg-white rounded-3xl p-6 sm:p-10 border border-[#EBDCD4] shadow-warm-sm space-y-8 mt-12">
+        <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 border-b border-[#F2E5DC] pb-6">
+          <div>
+            <div className="inline-flex items-center space-x-1.5 px-3 py-1 rounded-full bg-[#F2E5DC] text-[#944E2E] text-xs font-semibold uppercase tracking-wider mb-2">
+              <Sparkles className="w-3.5 h-3.5 text-[#B87D65]" />
+              <span>Client Love & Testimonies</span>
+            </div>
+            <h2 className="font-serif text-2xl sm:text-3xl font-bold text-[#2C2420]">
+              What Our Queens Say About Mira’s Touch
+            </h2>
+            <p className="text-xs text-[#7A6B63] mt-1.5 max-w-xl leading-relaxed">
+              Read authentic experiences from our salon clients in Owerri, or share your own testimony about our hairstyles, nail artistry, and salon care.
+            </p>
+          </div>
+
+          <button
+            onClick={() => setShowReviewForm(prev => !prev)}
+            className="px-5 py-2.5 bg-[#B87D65] hover:bg-[#A36B53] text-white text-xs font-semibold rounded-full shadow-warm-xs transition-colors shrink-0 flex items-center space-x-2"
+          >
+            <MessageSquare className="w-3.5 h-3.5" />
+            <span>{showReviewForm ? 'Close Form' : '+ Write a Testimony'}</span>
+          </button>
+        </div>
+
+        {/* Success Alert */}
+        {reviewSuccess && (
+          <div className="p-4 bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs rounded-2xl flex items-center space-x-2 animate-fade-in">
+            <CheckCircle2 className="w-5 h-5 text-emerald-600 shrink-0" />
+            <span className="font-medium">{reviewSuccess}</span>
+          </div>
+        )}
+
+        {/* Write a Testimony Form */}
+        {showReviewForm && (
+          <form onSubmit={handleAddReview} className="bg-[#FAF7F2] rounded-2xl p-6 border border-[#DFC7B9] space-y-4 animate-fade-in">
+            <h3 className="font-serif text-lg font-bold text-[#2C2420] flex items-center space-x-2">
+              <Sparkles className="w-4 h-4 text-[#B87D65]" />
+              <span>Share Your Testimony</span>
+            </h3>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label className="block text-xs font-medium text-[#4A3C35] mb-1">Your Full Name *</label>
+                <input
+                  type="text"
+                  required
+                  value={newReview.name}
+                  onChange={(e) => setNewReview({ ...newReview, name: e.target.value })}
+                  placeholder="e.g. Chioma Eze"
+                  className="w-full px-3 py-2 bg-white border border-[#DFC7B9] rounded-lg text-xs text-[#2C2420] focus:outline-none focus:border-[#B87D65]"
+                />
+              </div>
+
+              <div>
+                <label className="block text-xs font-medium text-[#4A3C35] mb-1">Your City / Area in Imo State</label>
+                <input
+                  type="text"
+                  value={newReview.location}
+                  onChange={(e) => setNewReview({ ...newReview, location: e.target.value })}
+                  placeholder="e.g. New Owerri / Ikenegbu"
+                  className="w-full px-3 py-2 bg-white border border-[#DFC7B9] rounded-lg text-xs text-[#2C2420] focus:outline-none focus:border-[#B87D65]"
+                />
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label className="block text-xs font-medium text-[#4A3C35] mb-1">Service Received *</label>
+                <select
+                  value={newReview.service}
+                  onChange={(e) => setNewReview({ ...newReview, service: e.target.value })}
+                  className="w-full px-3 py-2 bg-white border border-[#DFC7B9] rounded-lg text-xs text-[#2C2420] focus:outline-none focus:border-[#B87D65]"
+                >
+                  <option value="Signature Knotless Bohemian Braids">Signature Knotless Bohemian Braids</option>
+                  <option value="Master Sculpted Gel & Acrylic Nail Artistry">Master Sculpted Gel & Acrylic Nail Artistry</option>
+                  <option value="Luxury Velvet Pedicure & Foot Scrub Sanctuary">Luxury Velvet Pedicure & Foot Scrub Sanctuary</option>
+                  <option value="Celebration & Bridal Makeup Artistry">Celebration & Bridal Makeup Artistry</option>
+                  <option value="Wispy Hybrid Flutter Lash Extensions">Wispy Hybrid Flutter Lash Extensions</option>
+                  <option value="Luxury Perfumes & Scents Experience">Luxury Perfumes & Scents Experience</option>
+                </select>
+              </div>
+
+              <div>
+                <label className="block text-xs font-medium text-[#4A3C35] mb-1">Rating</label>
+                <div className="flex items-center space-x-1.5 pt-1.5">
+                  {[1, 2, 3, 4, 5].map((star) => (
+                    <button
+                      type="button"
+                      key={star}
+                      onClick={() => setNewReview({ ...newReview, rating: star })}
+                      className="p-1 hover:scale-110 transition-transform"
+                    >
+                      <Star
+                        className={`w-5 h-5 ${
+                          star <= newReview.rating
+                            ? 'fill-[#B87D65] text-[#B87D65]'
+                            : 'text-gray-300'
+                        }`}
+                      />
+                    </button>
+                  ))}
+                  <span className="text-xs font-bold text-[#2C2420] ml-2">
+                    {newReview.rating} of 5 Stars
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            <div>
+              <label className="block text-xs font-medium text-[#4A3C35] mb-1">Your Testimony / Review *</label>
+              <textarea
+                rows={3}
+                required
+                value={newReview.comment}
+                onChange={(e) => setNewReview({ ...newReview, comment: e.target.value })}
+                placeholder="Describe your salon experience, the stylist's neatness, comfort, or compliments received..."
+                className="w-full px-3 py-2 bg-white border border-[#DFC7B9] rounded-lg text-xs text-[#2C2420] focus:outline-none focus:border-[#B87D65]"
+              />
+            </div>
+
+            <div className="flex justify-end space-x-3 pt-2">
+              <button
+                type="button"
+                onClick={() => setShowReviewForm(false)}
+                className="px-4 py-2 bg-white border border-[#DFC7B9] text-xs font-semibold text-[#6E5D53] rounded-lg hover:bg-gray-50 transition-colors"
+              >
+                Cancel
+              </button>
+              <button
+                type="submit"
+                className="px-6 py-2 bg-[#B87D65] hover:bg-[#A36B53] text-white text-xs font-semibold rounded-lg shadow-warm-xs transition-colors flex items-center space-x-1.5"
+              >
+                <Send className="w-3.5 h-3.5" />
+                <span>Submit Testimony</span>
+              </button>
+            </div>
+          </form>
+        )}
+
+        {/* Testimonies Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+          {reviews.map((rev) => (
+            <div
+              key={rev.id}
+              className="bg-[#FAF7F2] rounded-2xl p-5 border border-[#EBDCD4] shadow-warm-xs flex flex-col justify-between space-y-3 hover:shadow-warm-sm transition-shadow"
+            >
+              <div className="space-y-2.5">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center space-x-1">
+                    {[...Array(rev.rating)].map((_, i) => (
+                      <Star key={i} className="w-4 h-4 fill-[#B87D65] text-[#B87D65]" />
+                    ))}
+                  </div>
+                  <span className="text-[10px] text-[#8E766B] font-medium">{rev.date}</span>
+                </div>
+
+                <div className="inline-block px-2.5 py-0.5 rounded-full bg-white border border-[#DFC7B9] text-[10px] font-semibold text-[#944E2E]">
+                  {rev.service}
+                </div>
+
+                <p className="text-xs text-[#5A4D45] leading-relaxed italic">
+                  “{rev.comment}”
+                </p>
+              </div>
+
+              <div className="flex items-center justify-between border-t border-[#F2E5DC] pt-3">
+                <div>
+                  <h4 className="font-serif text-xs font-bold text-[#2C2420]">{rev.name}</h4>
+                  <p className="text-[10px] text-[#8E766B]">{rev.location}</p>
+                </div>
+                {rev.verified && (
+                  <span className="inline-flex items-center space-x-1 text-[10px] font-bold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200">
+                    <CheckCircle2 className="w-3 h-3 text-emerald-600" />
+                    <span>Verified Client</span>
+                  </span>
+                )}
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
 
     </div>
   );

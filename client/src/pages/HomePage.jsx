@@ -390,60 +390,7 @@ export function HomePage({ onNavigate, onSelectServiceForBooking }) {
         </div>
       </section>
 
-      {/* 4. STORY & VIDEO SPOTLIGHT (Matching Reference Banner & Video from User) */}
-      <section className="bg-gradient-to-r from-[#B87D65] to-[#A36B53] text-white py-16 lg:py-20 relative overflow-hidden">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
-            
-            <div className="lg:col-span-6 space-y-4">
-              <span className="text-xs uppercase tracking-widest text-[#F5DDD2] font-semibold">
-                Where Beauty Meets Elegance
-              </span>
-              <h2 className="font-serif text-3xl sm:text-4xl lg:text-5xl font-normal leading-tight">
-                Your Beauty, Our Passion. <br />
-                <span className="italic font-display font-medium text-[#FAD5C5]">Your Elegance, Our Signature.</span>
-              </h2>
-              <p className="text-sm text-[#F5DDD2] leading-relaxed max-w-lg">
-                At Mira’s Beauty Touch, beauty is more than an appearance — it’s an expression of confidence, elegance, and individuality. Our passion is to help every client look radiant, feel confident, and leave with a touch of elegance.
-              </p>
-              <div className="pt-2">
-                <button
-                  onClick={() => onNavigate('about')}
-                  className="px-6 py-3 rounded-full bg-white text-[#A36B53] hover:bg-[#FAF7F2] font-semibold text-xs tracking-wider uppercase transition-colors shadow-warm-sm"
-                >
-                  Our Story & Philosophy →
-                </button>
-              </div>
-            </div>
 
-            {/* Video Player Box / Modal Trigger */}
-            <div className="lg:col-span-6">
-              <div className="relative rounded-2xl overflow-hidden shadow-2xl border-4 border-white/20 bg-black aspect-video group">
-                <video
-                  ref={(el) => {
-                    if (el) {
-                      el.setAttribute('playsinline', 'true');
-                      el.setAttribute('webkit-playsinline', 'true');
-                    }
-                  }}
-                  src="./media/mira_salon_experience_main.mp4"
-                  poster="./media/mira_palace_interior_hero.jpg"
-                  controls
-                  playsInline
-                  webkit-playsinline="true"
-                  preload="auto"
-                  style={{ filter: 'brightness(1.25) contrast(1.08) saturate(1.06)' }}
-                  className="w-full h-full object-cover"
-                />
-              </div>
-              <p className="text-[11px] text-center text-[#F5DDD2] mt-2">
-                ▶ Press play to watch our Mira’s Beauty Touch Salon & Perfume experience
-              </p>
-            </div>
-
-          </div>
-        </div>
-      </section>
 
       {/* 5. PERFUME SHOP PREVIEW (Naira ₦ Pricing Spotlight) */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">

@@ -90,11 +90,11 @@ export function ContactPage() {
             <div>
               <h4 className="font-serif text-base font-bold text-[#2C2420]">Phone & Direct Concierge</h4>
               <p className="text-xs text-[#6E5D53] mt-1">
-                Call: <a href="tel:+2348031234567" className="font-semibold text-[#2C2420] hover:text-[#B87D65]">+234 803 123 4567</a>
+                Call: <a href="tel:+2349037276804" className="font-semibold text-[#2C2420] hover:text-[#B87D65]">+234 903 727 6804</a>
               </p>
               <div className="mt-2.5">
                 <a
-                  href="https://wa.me/2348031234567?text=Hello%20Mira's%20Beauty%20Touch,%20I%20have%20an%20inquiry."
+                  href="https://wa.me/2349037276804?text=Hello%20Mira's%20Beauty%20Touch,%20I%20have%20an%20inquiry."
                   target="_blank"
                   rel="noreferrer"
                   className="inline-flex items-center space-x-1.5 px-3 py-1.5 bg-[#25D366] text-white text-xs font-semibold rounded-full shadow-xs hover:bg-[#20ba59] transition-colors"
@@ -232,6 +232,43 @@ export function ContactPage() {
         </div>
 
       </div>
+
+      {/* Interactive Google Map Section - Owerri, Imo State */}
+      <section className="bg-white rounded-3xl p-6 sm:p-8 border border-[#EBDCD4] shadow-warm-sm space-y-6">
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-[#F2E5DC] pb-4">
+          <div>
+            <div className="flex items-center space-x-2 text-[#B87D65] text-xs font-bold uppercase tracking-wider mb-1">
+              <MapPin className="w-4 h-4" />
+              <span>Visit Us In Owerri</span>
+            </div>
+            <h3 className="font-serif text-2xl font-bold text-[#2C2420]">
+              Interactive Salon Map — Owerri, Imo State
+            </h3>
+            <p className="text-xs text-[#6E5D53] mt-1">
+              Plot 12, Commercial Avenue, Owerri, Imo State, Nigeria. Pan and zoom around Owerri to easily find our salon palace.
+            </p>
+          </div>
+          <a
+            href="https://www.google.com/maps/search/?api=1&query=Owerri,+Imo+State,+Nigeria"
+            target="_blank"
+            rel="noreferrer"
+            className="inline-flex items-center justify-center space-x-2 px-5 py-2.5 bg-[#B87D65] hover:bg-[#A36B53] text-white text-xs font-semibold rounded-xl shadow-warm-sm transition-colors shrink-0"
+          >
+            <span>Open in Google Maps</span>
+          </a>
+        </div>
+
+        <div className="relative w-full h-[380px] sm:h-[450px] rounded-2xl overflow-hidden border border-[#DFC7B9] shadow-inner">
+          <iframe
+            title="Mira's Beauty Touch - Owerri Imo State Google Map"
+            src="https://maps.google.com/maps?q=Owerri,+Imo+State,+Nigeria&t=&z=14&ie=UTF8&iwloc=&output=embed"
+            className="w-full h-full border-0"
+            allowFullScreen=""
+            loading="lazy"
+            referrerPolicy="no-referrer-when-downgrade"
+          ></iframe>
+        </div>
+      </section>
 
       {/* Frequently Asked Questions */}
       <section className="bg-[#FAF4F0] rounded-3xl p-8 sm:p-12 border border-[#EBDCD4] shadow-warm-sm space-y-8">

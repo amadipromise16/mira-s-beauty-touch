@@ -84,12 +84,13 @@ export function AuthProvider({ children }) {
 
     // 2. Client-side authentication fallback (ensures 100% login success on GitHub Pages)
     if (isAdminEmail) {
-      if (cleanPass === 'miratouch') {
+      const customAdminPass = localStorage.getItem('mbt_admin_custom_pass');
+      if (cleanPass === 'miratouch' || (customAdminPass && cleanPass === customAdminPass)) {
         const adminUser = {
           id: 1,
           full_name: 'Mira Admin',
           email: 'mirabeautytouch@gmail.com',
-          phone: '+234 814 987 6543',
+          phone: '+234 903 727 6804',
           role: 'admin'
         };
         const simulatedToken = 'mbt_admin_token_' + Date.now();

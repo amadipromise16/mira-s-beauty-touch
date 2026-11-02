@@ -129,8 +129,8 @@ export function Footer({ onNavigate }) {
               </div>
               <div className="flex items-center space-x-2">
                 <Phone className="w-4 h-4 text-[#FAD5C5] shrink-0" />
-                <a href="tel:+2348031234567" className="hover:text-white transition-colors">
-                  +234 803 123 4567
+                <a href="tel:+2349037276804" className="hover:text-white transition-colors">
+                  +234 903 727 6804
                 </a>
               </div>
               <div className="flex items-center space-x-2">

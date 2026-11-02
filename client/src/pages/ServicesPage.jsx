@@ -64,7 +64,7 @@ export function ServicesPage({ onBookService }) {
   });
 
   const handleWhatsAppInquiry = (service) => {
-    const phone = '2348149876543';
+    const phone = '2349037276804';
     const text = encodeURIComponent(
       `Hello Mira’s Beauty Touch, I am inquiring about "${service.name}" (${service.category}) priced at ₦${service.price_ngn?.toLocaleString()}. Please provide more information on availability and booking!`
     );

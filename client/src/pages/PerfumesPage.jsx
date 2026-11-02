@@ -117,7 +117,7 @@ export function PerfumesPage() {
 
   // WhatsApp Inquiry for a single perfume
   const handleSingleWhatsAppInquiry = (perfume) => {
-    const phone = '2348031234567';
+    const phone = '2349037276804';
     const text = encodeURIComponent(
       `Hello Mira’s Beauty Touch, I am inquiring about "${perfume.name}" (${perfume.brand}, ${perfume.size}) priced at ₦${perfume.price_ngn?.toLocaleString()}.\n\nPlease let me know if it is currently available for dispatch in Nigeria.`
     );
@@ -127,7 +127,7 @@ export function PerfumesPage() {
   // WhatsApp Order for full cart
   const handleCartWhatsAppOrder = () => {
     if (cart.length === 0) return;
-    const phone = '2348031234567';
+    const phone = '2349037276804';
     
     let itemsText = cart.map((item, idx) => 
       `${idx + 1}. ${item.name} (${item.brand}) - Qty: ${item.quantity} × ₦${item.price_ngn.toLocaleString()} = ₦${(item.price_ngn * item.quantity).toLocaleString()}`
@@ -224,7 +224,7 @@ export function PerfumesPage() {
               <span>Cart ({totalCartCount}) • ₦{totalCartAmount.toLocaleString()}</span>
             </button>
             <a
-              href="https://wa.me/2348031234567?text=Hello%20Mira%E2%80%99s%20Beauty%20Touch%2C%20I%20have%20an%20inquiry%20about%20your%20perfumes."
+              href="https://wa.me/2349037276804?text=Hello%20Mira%E2%80%99s%20Beauty%20Touch%2C%20I%20have%20an%20inquiry%20about%20your%20perfumes."
               target="_blank"
               rel="noreferrer"
               className="px-4 py-2 bg-[#25D366] hover:bg-[#20bd5a] text-white font-bold rounded-full text-xs transition-colors flex items-center space-x-1.5 shadow-warm-xs"

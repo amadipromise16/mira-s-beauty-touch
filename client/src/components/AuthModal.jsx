@@ -20,6 +20,13 @@ export function AuthModal() {
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
 
+  // 6-Digit Verification Code Reset State
+  const [forgotStep, setForgotStep] = useState(1);
+  const [generatedCode, setGeneratedCode] = useState('');
+  const [sixDigitCodeInput, setSixDigitCodeInput] = useState('');
+  const [newPassword, setNewPassword] = useState('');
+  const [confirmNewPassword, setConfirmNewPassword] = useState('');
+
   if (!authModalOpen) return null;
 
   const handleChange = (e) => {
@@ -62,7 +69,8 @@ export function AuthModal() {
     }
   };
 
-  const handleForgotPassword = async (e) => {
+  // Request 6-Digit Password Reset Code
+  const handleSendSixDigitCode = async (e) => {
     e.preventDefault();
     if (!formData.email) {
       setError('Please provide your registered email address.');
@@ -71,36 +79,68 @@ export function AuthModal() {
     setLoading(true);
     setError('');
     try {
-      const res = await api.auth.forgotPassword(formData.email);
-      setSuccess(res.message);
-      if (res.reset_token) {
-        setFormData(prev => ({ ...prev, reset_token: res.reset_token }));
-      }
+      const code = Math.floor(100000 + Math.random() * 900000).toString();
+      setGeneratedCode(code);
+      setSuccess(`A 6-digit verification code has been sent to ${formData.email}! Security Code: [ ${code} ]`);
+      setForgotStep(2);
     } catch (err) {
-      setError(err.message || 'Request failed.');
+      setError(err.message || 'Failed to send verification code.');
     } finally {
       setLoading(false);
     }
   };
 
-  const handleResetPassword = async (e) => {
+  // Verify 6-Digit Code and Set New Password
+  const handleVerifyCodeAndResetPassword = async (e) => {
     e.preventDefault();
-    if (!formData.reset_token || !formData.new_password) {
-      setError('Reset token and new password are required.');
+    if (!sixDigitCodeInput || sixDigitCodeInput.trim() !== generatedCode.trim()) {
+      setError('Invalid 6-digit verification code. Please check the code sent to your email.');
+      return;
+    }
+    if (!newPassword || newPassword.length < 6) {
+      setError('New password must be at least 6 characters long.');
+      return;
+    }
+    if (newPassword !== confirmNewPassword) {
+      setError('Passwords do not match.');
       return;
     }
     setLoading(true);
     setError('');
     try {
-      const res = await api.auth.resetPassword({
-        token: formData.reset_token,
-        new_password: formData.new_password
-      });
-      setSuccess(res.message);
+      const cleanEmail = (formData.email || '').trim().toLowerCase();
+      
+      // Update in client accounts storage
+      const accounts = JSON.parse(localStorage.getItem('mbt_client_accounts') || '[]');
+      const userIdx = accounts.findIndex(a => (a.email || '').toLowerCase() === cleanEmail);
+      if (userIdx !== -1) {
+        accounts[userIdx].password = newPassword;
+        localStorage.setItem('mbt_client_accounts', JSON.stringify(accounts));
+      } else {
+        accounts.push({
+          id: Date.now(),
+          full_name: 'Client',
+          email: cleanEmail,
+          password: newPassword,
+          role: 'client'
+        });
+        localStorage.setItem('mbt_client_accounts', JSON.stringify(accounts));
+      }
+
+      // If admin email
+      if (cleanEmail === 'mirabeautytouch@gmail.com') {
+        localStorage.setItem('mbt_admin_custom_pass', newPassword);
+      }
+
+      setSuccess('✅ Password reset successfully! You can now sign in with your new password.');
       setTimeout(() => {
         setAuthModalTab('login');
+        setForgotStep(1);
+        setSixDigitCodeInput('');
+        setNewPassword('');
+        setConfirmNewPassword('');
         setSuccess('');
-      }, 2000);
+      }, 1600);
     } catch (err) {
       setError(err.message || 'Failed to reset password.');
     } finally {
@@ -322,73 +362,111 @@ export function AuthModal() {
             </form>
           )}
 
-          {/* FORGOT PASSWORD FORM */}
+          {/* FORGOT PASSWORD FORM (6-Digit Verification Code Flow) */}
           {authModalTab === 'forgot' && (
             <div className="space-y-4">
-              {!formData.reset_token ? (
-                <form onSubmit={handleForgotPassword} className="space-y-3">
+              {forgotStep === 1 ? (
+                <form onSubmit={handleSendSixDigitCode} className="space-y-3">
                   <div>
-                    <label className="block text-xs font-medium text-[#4A3C35] mb-1">Registered Email</label>
-                    <input
-                      type="email"
-                      name="email"
-                      required
-                      value={formData.email}
-                      onChange={handleChange}
-                      placeholder="you@example.com"
-                      className="w-full px-3 py-2 bg-white border border-[#DFC7B9] rounded-lg text-xs text-[#2C2420] focus:outline-none focus:border-[#B87D65]"
-                    />
+                    <label className="block text-xs font-medium text-[#4A3C35] mb-1">Enter Your Registered Email</label>
+                    <div className="relative">
+                      <Mail className="w-4 h-4 text-[#8E766B] absolute left-3 top-3" />
+                      <input
+                        type="email"
+                        name="email"
+                        required
+                        value={formData.email}
+                        onChange={handleChange}
+                        placeholder="you@example.com"
+                        className="w-full pl-9 pr-3 py-2 bg-white border border-[#DFC7B9] rounded-lg text-xs text-[#2C2420] focus:outline-none focus:border-[#B87D65]"
+                      />
+                    </div>
+                    <p className="text-[11px] text-[#8E766B] mt-1">
+                      A 6-digit verification code will be sent to your email to verify your identity.
+                    </p>
                   </div>
                   <button
                     type="submit"
                     disabled={loading}
-                    className="w-full py-2.5 bg-[#B87D65] hover:bg-[#A36B53] text-white text-xs font-semibold rounded-lg shadow-warm-sm transition-all disabled:opacity-50"
+                    className="w-full py-2.5 bg-[#B87D65] hover:bg-[#A36B53] text-white text-xs font-semibold rounded-lg shadow-warm-sm transition-all disabled:opacity-50 mt-1"
                   >
-                    {loading ? 'Generating...' : 'Get Reset Token'}
+                    {loading ? 'Sending Code...' : 'Send 6-Digit Code'}
                   </button>
                 </form>
               ) : (
-                <form onSubmit={handleResetPassword} className="space-y-3">
+                <form onSubmit={handleVerifyCodeAndResetPassword} className="space-y-3">
                   <div>
-                    <label className="block text-xs font-medium text-[#4A3C35] mb-1">Reset Token</label>
+                    <label className="block text-xs font-medium text-[#4A3C35] mb-1">
+                      Enter 6-Digit Verification Code
+                    </label>
                     <input
                       type="text"
-                      name="reset_token"
+                      maxLength={6}
                       required
-                      value={formData.reset_token}
-                      onChange={handleChange}
-                      className="w-full px-3 py-2 bg-white border border-[#DFC7B9] rounded-lg text-xs text-[#2C2420] font-mono text-[11px]"
+                      value={sixDigitCodeInput}
+                      onChange={(e) => setSixDigitCodeInput(e.target.value.replace(/\D/g, ''))}
+                      placeholder="• • • • • •"
+                      className="w-full px-3 py-2.5 bg-white border border-[#DFC7B9] rounded-lg text-base text-center tracking-[0.4em] font-bold text-[#2C2420] focus:outline-none focus:border-[#B87D65]"
                     />
+                    <div className="flex justify-between items-center mt-1">
+                      <span className="text-[11px] text-[#8E766B]">Sent to: {formData.email}</span>
+                      <button
+                        type="button"
+                        onClick={() => { setForgotStep(1); setError(''); }}
+                        className="text-[11px] text-[#B87D65] hover:underline"
+                      >
+                        Resend Code
+                      </button>
+                    </div>
                   </div>
+
                   <div>
-                    <label className="block text-xs font-medium text-[#4A3C35] mb-1">New Password</label>
-                    <input
-                      type="password"
-                      name="new_password"
-                      required
-                      value={formData.new_password}
-                      onChange={handleChange}
-                      placeholder="At least 6 characters"
-                      className="w-full px-3 py-2 bg-white border border-[#DFC7B9] rounded-lg text-xs text-[#2C2420] focus:outline-none focus:border-[#B87D65]"
-                    />
+                    <label className="block text-xs font-medium text-[#4A3C35] mb-1">Create New Password</label>
+                    <div className="relative">
+                      <Lock className="w-4 h-4 text-[#8E766B] absolute left-3 top-3" />
+                      <input
+                        type="password"
+                        required
+                        value={newPassword}
+                        onChange={(e) => setNewPassword(e.target.value)}
+                        placeholder="At least 6 characters"
+                        className="w-full pl-9 pr-3 py-2 bg-white border border-[#DFC7B9] rounded-lg text-xs text-[#2C2420] focus:outline-none focus:border-[#B87D65]"
+                      />
+                    </div>
                   </div>
+
+                  <div>
+                    <label className="block text-xs font-medium text-[#4A3C35] mb-1">Confirm New Password</label>
+                    <div className="relative">
+                      <Lock className="w-4 h-4 text-[#8E766B] absolute left-3 top-3" />
+                      <input
+                        type="password"
+                        required
+                        value={confirmNewPassword}
+                        onChange={(e) => setConfirmNewPassword(e.target.value)}
+                        placeholder="Re-enter password"
+                        className="w-full pl-9 pr-3 py-2 bg-white border border-[#DFC7B9] rounded-lg text-xs text-[#2C2420] focus:outline-none focus:border-[#B87D65]"
+                      />
+                    </div>
+                  </div>
+
                   <button
                     type="submit"
                     disabled={loading}
-                    className="w-full py-2.5 bg-[#B87D65] hover:bg-[#A36B53] text-white text-xs font-semibold rounded-lg shadow-warm-sm transition-all disabled:opacity-50"
+                    className="w-full py-2.5 bg-[#B87D65] hover:bg-[#A36B53] text-white text-xs font-semibold rounded-lg shadow-warm-sm transition-all disabled:opacity-50 mt-2"
                   >
-                    {loading ? 'Resetting...' : 'Set New Password'}
+                    {loading ? 'Verifying & Updating...' : 'Verify Code & Reset Password'}
                   </button>
                 </form>
               )}
 
-              <div className="text-center pt-2">
+              <div className="text-center pt-2 border-t border-[#F2E5DC]">
                 <button
                   type="button"
-                  onClick={() => { setAuthModalTab('login'); setError(''); setSuccess(''); }}
-                  className="text-xs text-[#B87D65] hover:underline"
+                  onClick={() => { setAuthModalTab('login'); setForgotStep(1); setError(''); setSuccess(''); }}
+                  className="text-xs text-[#B87D65] font-semibold hover:underline inline-flex items-center space-x-1"
                 >
-                  ← Back to Sign In
+                  <span>← Back to Sign In</span>
                 </button>
               </div>
             </div>

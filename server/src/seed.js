@@ -18,7 +18,7 @@ function seedDatabase() {
   if (!checkAdmin) {
     const insertAdmin = db.prepare(`
       INSERT INTO users (full_name, email, phone, password_hash, role)
-      VALUES ('Mira Johnson (Admin)', 'mirabeautytouch@gmail.com', '+234 803 123 4567', ?, 'admin')
+      VALUES ('Mira Johnson (Admin)', 'mirabeautytouch@gmail.com', '+234 903 727 6804', ?, 'admin')
     `);
     const res = insertAdmin.run(adminPasswordHash);
     adminId = res.lastInsertRowid;
@@ -402,7 +402,7 @@ function seedDatabase() {
     const defaultSettings = [
       ['brand_name', "Mira's Beauty Touch"],
       ['tagline', "Where Beauty Meets Elegance"],
-      ['phone', "+234 803 123 4567"],
+      ['phone', "+234 903 727 6804"],
       ['whatsapp', "+2348031234567"],
       ['email', "info@mirasbeautytouch.com"],
       ['address', "Plot 12, Commercial Avenue, Owerri, Imo State, Nigeria"],

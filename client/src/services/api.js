@@ -26,7 +26,7 @@ const SEED_USERS = [
     id: 1,
     full_name: "Mira Admin",
     email: "mirabeautytouch@gmail.com",
-    phone: "+234 814 987 6543",
+    phone: "+234 903 727 6804",
     role: "admin",
     total_appointments: 0,
     created_at: "2026-10-01T08:00:00.000Z"
@@ -219,12 +219,13 @@ export const api = {
         const cleanEmail = (credentials.email || '').trim().toLowerCase();
         const cleanPass = (credentials.password || '').trim();
 
-        if (cleanEmail === 'mirabeautytouch@gmail.com' && cleanPass === 'miratouch') {
+        const customAdminPass = localStorage.getItem('mbt_admin_custom_pass');
+        if (cleanEmail === 'mirabeautytouch@gmail.com' && (cleanPass === 'miratouch' || (customAdminPass && cleanPass === customAdminPass))) {
           const adminUser = {
             id: 1,
             full_name: 'Mira Admin',
             email: 'mirabeautytouch@gmail.com',
-            phone: '+234 814 987 6543',
+            phone: '+234 903 727 6804',
             role: 'admin'
           };
           const token = 'mbt_admin_token_' + Date.now();
@@ -299,7 +300,9 @@ export const api = {
       try {
         return await request('/auth/forgot-password', { method: 'POST', body: JSON.stringify({ email }) });
       } catch (_) {
-        return { message: 'Password reset link sent (Simulated).', reset_token: 'mbt-reset-' + Date.now() };
+        const code = Math.floor(100000 + Math.random() * 900000).toString();
+        localStorage.setItem('mbt_last_code', code);
+        return { message: `A 6-digit security code has been sent to ${email}`, code: code, reset_token: code };
       }
     },
 
@@ -866,7 +869,7 @@ export const api = {
           settings: {
             salon_name: "Mira’s Beauty Touch",
             address: "Plot 12, Commercial Avenue, Owerri, Imo State, Nigeria",
-            phone: "+234 814 987 6543",
+            phone: "+234 903 727 6804",
             email: "mirabeautytouch@gmail.com",
             currency: "NGN (₦)"
           }
