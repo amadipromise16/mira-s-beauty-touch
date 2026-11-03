@@ -39,7 +39,7 @@ export const initialServicesData = [
     image_url: "./media/club_de_nuit_affection_service.jpg",
     description: "An iconic luxury fragrance pairing combining legendary masculine smoky pineapple, birch, and blackcurrant from Club de Nuit Intense Man with the intoxicating sweet berries, spun marshmallow vanilla, and floral musk of Affection Love by Amazon Pride.",
     detailed_notes: "Club de Nuit: 105ml Eau de Parfum (Lemon, Birch, Ambergris) | Affection Love: 55ml Eau de Parfum (Sweet Berries, Jasmine, Marshmallow Vanilla). Available for purchase at our salon fragrance bar or WhatsApp order.",
-    price_ngn: 18500,
+    price_ngn: 15000,
     duration_mins: 30,
     is_perfume: true,
     perfume_details: {
@@ -118,7 +118,7 @@ export const initialServicesData = [
     image_url: "./media/lash_extensions_wispy.jpg",
     description: "Textured, multidimensional lash fans tailored to client eye geometry. Alternating lengths with delicate spikes that deliver high-fashion flutter without heavy weight.",
     detailed_notes: "Custom eye mapping to accentuate natural eye lift. Medical-grade, hypoallergenic adhesive for sensitive eyes.",
-    price_ngn: 26000,
+    price_ngn: 7000,
     duration_mins: 80,
     is_featured: false
   },
@@ -132,7 +132,7 @@ export const initialServicesData = [
     image_url: "./media/lash_extensions_classic.jpg",
     description: "Individual one-by-one single lash extension application designed to accentuate your natural eye shape with timeless elegance, paired with gentle brow sculpting.",
     detailed_notes: "Soft silk lash fibers providing weightless curl, gentle separation, and natural everyday eye brightening.",
-    price_ngn: 12000,
+    price_ngn: 6000,
     duration_mins: 60,
     is_featured: false
   },

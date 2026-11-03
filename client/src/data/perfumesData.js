@@ -70,7 +70,7 @@ export const initialPerfumesData = [
     description: "An iconic duo of legendary masculine seduction and sweet romantic allure. Club de Nuit Intense Man brings world-famous smoky pineapple, birch, and blackcurrant, while Affection Love enchants with sweet spun sugar, delicate jasmine, and creamy vanilla.",
     fragrance_notes: "Club de Nuit: Lemon, Blackcurrant, Apple, Birch, Ambergris | Affection Love: Sweet Berries, Jasmine Sambac, Marshmallow Vanilla, Tonka",
     size: "105ml + 55ml Fragrance Pair",
-    price_ngn: 18500,
+    price_ngn: 15000,
     stock_quantity: 14,
     image_url: "./media/club_de_nuit_intense_affection_love.jpg",
     is_featured: 1
@@ -82,7 +82,7 @@ export const initialPerfumesData = [
     description: "An authentic, deep woody-oriental elixir celebrating noble woods and resinous agarwood. Just Oud & Wood delivers a rich, commanding scent trail of smokey sandalwood, dark vetiver, cardamom, and warm amberwood crafted for lovers of distinguished, long-lasting fragrances.",
     fragrance_notes: "Top: Rosewood, Cardamom, Chinese Pepper | Heart: Rare Oud Wood, Sandalwood, Vetiver | Base: Tonka Bean, Vanilla, Golden Amber",
     size: "100ml Eau de Parfum (3.4 Fl. Oz.)",
-    price_ngn: 17500,
+    price_ngn: 26000,
     stock_quantity: 20,
     image_url: "./media/just_oud_and_wood.jpg",
     is_featured: 1
@@ -94,7 +94,7 @@ export const initialPerfumesData = [
     description: "An energetic, magnetic aromatic fragrance with undeniable confidence. Rage by Rave explodes with fresh iced citrus, crushed mint, aromatic sage, and crisp green apple, melting into a powerful base of cedarwood, tonka bean, and sensual ambroxan.",
     fragrance_notes: "Top: Crisp Green Apple, Iced Bergamot, Mint | Heart: Lavender, Clary Sage, Geranium | Base: Virginia Cedar, Tonka Bean, Ambroxan, White Musk",
     size: "100ml Eau de Parfum",
-    price_ngn: 16500,
+    price_ngn: 36000,
     stock_quantity: 22,
     image_url: "./media/rave_rage_eau_de_parfum.jpg",
     is_featured: 1
