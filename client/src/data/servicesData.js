@@ -90,7 +90,7 @@ export const initialServicesData = [
     image_url: "./media/pedicure_nails_luxury.jpg",
     description: "Warm marble foot basin soak with soothing eucalyptus, organic sea salt scrub, rose petal therapy, callused skin smoothing, cuticle refinement, hot towel wrap, and glossy nude gel finish.",
     detailed_notes: "Deeply restorative foot care treatment utilizing Dead Sea mineral salts, invigorating peppermint scrub, and intensely hydrating foot massage.",
-    price_ngn: 18000,
+    price_ngn: 12000,
     duration_mins: 60,
     is_featured: false
   },
@@ -132,7 +132,7 @@ export const initialServicesData = [
     image_url: "./media/lash_extensions_classic.jpg",
     description: "Individual one-by-one single lash extension application designed to accentuate your natural eye shape with timeless elegance, paired with gentle brow sculpting.",
     detailed_notes: "Soft silk lash fibers providing weightless curl, gentle separation, and natural everyday eye brightening.",
-    price_ngn: 20000,
+    price_ngn: 12000,
     duration_mins: 60,
     is_featured: false
   },
@@ -146,7 +146,7 @@ export const initialServicesData = [
     image_url: "./media/mira_hair_braids_video_7.mp4",
     description: "Precision geometric stitch cornrows crafted with symmetrical feed-in technique, paired with protective plaits in the back for royal poise.",
     detailed_notes: "Clean parting lines, scalp hydration, and protective longevity styling.",
-    price_ngn: 20000,
+    price_ngn: 10000,
     duration_mins: 120,
     is_featured: false
   }

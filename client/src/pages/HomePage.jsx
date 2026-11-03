@@ -215,7 +215,7 @@ export function HomePage({ onNavigate, onSelectServiceForBooking }) {
               </p>
             </div>
             <div className="mt-3 flex items-center justify-between border-t border-[#F2E5DC] pt-2">
-              <span className="text-[11px] sm:text-xs font-bold text-[#B87D65]">From ₦15,000</span>
+              <span className="text-[11px] sm:text-xs font-bold text-[#B87D65]">From ₦10,000</span>
               <span className="text-[10px] sm:text-[11px] font-semibold text-[#2C2420] group-hover:underline">Explore →</span>
             </div>
           </div>
@@ -246,7 +246,7 @@ export function HomePage({ onNavigate, onSelectServiceForBooking }) {
               </p>
             </div>
             <div className="mt-3 flex items-center justify-between border-t border-[#F2E5DC] pt-2">
-              <span className="text-[11px] sm:text-xs font-bold text-[#B87D65]">From ₦14,000</span>
+              <span className="text-[11px] sm:text-xs font-bold text-[#B87D65]">From ₦12,000</span>
               <span className="text-[10px] sm:text-[11px] font-semibold text-[#2C2420] group-hover:underline">Explore →</span>
             </div>
           </div>
@@ -289,7 +289,7 @@ export function HomePage({ onNavigate, onSelectServiceForBooking }) {
               </p>
             </div>
             <div className="mt-3 flex items-center justify-between border-t border-[#F2E5DC] pt-2">
-              <span className="text-[11px] sm:text-xs font-bold text-[#B87D65]">From ₦20,000</span>
+              <span className="text-[11px] sm:text-xs font-bold text-[#B87D65]">From ₦12,000</span>
               <span className="text-[10px] sm:text-[11px] font-semibold text-[#2C2420] group-hover:underline">Explore →</span>
             </div>
           </div>
@@ -325,7 +325,7 @@ export function HomePage({ onNavigate, onSelectServiceForBooking }) {
               </p>
             </div>
             <div className="mt-3 flex items-center justify-between border-t border-[#F2E5DC] pt-2">
-              <span className="text-[11px] sm:text-xs font-bold text-[#B87D65]">From ₦15,000</span>
+              <span className="text-[11px] sm:text-xs font-bold text-[#B87D65]">From ₦18,000</span>
               <span className="text-[10px] sm:text-[11px] font-semibold text-[#2C2420] group-hover:underline">Explore →</span>
             </div>
           </div>

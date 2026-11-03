@@ -176,6 +176,42 @@ function setLocal(key, value) {
   }
 }
 
+function getLocalPerfumes() {
+  const stored = getLocal(KEYS.PERFUMES, initialPerfumesData);
+  const updated = stored.map(item => {
+    const base = initialPerfumesData.find(p => p.id === item.id);
+    if (base) {
+      return { ...item, price_ngn: base.price_ngn, size: base.size };
+    }
+    return item;
+  });
+  initialPerfumesData.forEach(base => {
+    if (!updated.some(p => p.id === base.id)) {
+      updated.push(base);
+    }
+  });
+  setLocal(KEYS.PERFUMES, updated);
+  return updated;
+}
+
+function getLocalServices() {
+  const stored = getLocal(KEYS.SERVICES, initialServicesData);
+  const updated = stored.map(item => {
+    const base = initialServicesData.find(s => s.id === item.id);
+    if (base) {
+      return { ...item, price_ngn: base.price_ngn };
+    }
+    return item;
+  });
+  initialServicesData.forEach(base => {
+    if (!updated.some(s => s.id === base.id)) {
+      updated.push(base);
+    }
+  });
+  setLocal(KEYS.SERVICES, updated);
+  return updated;
+}
+
 function emitDataChange(type, detail) {
   try {
     window.dispatchEvent(new CustomEvent('mbt_data_change', { detail: { type, detail } }));
@@ -342,7 +378,7 @@ export const api = {
         const q = new URLSearchParams(params).toString();
         return await request(`/services${q ? `?${q}` : ''}`);
       } catch (_) {
-        const services = getLocal(KEYS.SERVICES, initialServicesData);
+        const services = getLocalServices();
         let list = [...services];
         if (params.category && params.category !== 'All') {
           list = list.filter(s => s.category === params.category);
@@ -355,7 +391,7 @@ export const api = {
       try {
         return await request('/services/categories');
       } catch (_) {
-        const services = getLocal(KEYS.SERVICES, initialServicesData);
+        const services = getLocalServices();
         const cats = Array.from(new Set(services.map(s => s.category)));
         return { categories: cats };
       }
@@ -365,7 +401,7 @@ export const api = {
       try {
         return await request(`/services/${id}`);
       } catch (_) {
-        const services = getLocal(KEYS.SERVICES, initialServicesData);
+        const services = getLocalServices();
         const item = services.find(s => s.id == id);
         return { service: item };
       }
@@ -375,7 +411,7 @@ export const api = {
       try {
         return await request('/services', { method: 'POST', body: JSON.stringify(serviceData) });
       } catch (_) {
-        const services = getLocal(KEYS.SERVICES, initialServicesData);
+        const services = getLocalServices();
         const newItem = {
           id: Date.now(),
           ...serviceData,
@@ -394,7 +430,7 @@ export const api = {
       try {
         return await request(`/services/${id}`, { method: 'PUT', body: JSON.stringify(serviceData) });
       } catch (_) {
-        const services = getLocal(KEYS.SERVICES, initialServicesData);
+        const services = getLocalServices();
         const idx = services.findIndex(s => s.id == id);
         if (idx !== -1) {
           services[idx] = { ...services[idx], ...serviceData };
@@ -409,7 +445,7 @@ export const api = {
       try {
         return await request(`/services/${id}`, { method: 'DELETE' });
       } catch (_) {
-        let services = getLocal(KEYS.SERVICES, initialServicesData);
+        let services = getLocalServices();
         services = services.filter(s => s.id != id);
         setLocal(KEYS.SERVICES, services);
         emitDataChange('service_deleted', id);
@@ -425,7 +461,7 @@ export const api = {
         const q = new URLSearchParams(params).toString();
         return await request(`/perfumes${q ? `?${q}` : ''}`);
       } catch (_) {
-        const perfumes = getLocal(KEYS.PERFUMES, initialPerfumesData);
+        const perfumes = getLocalPerfumes();
         let list = [...perfumes];
         if (params.featured === 'true') {
           list = list.filter(p => p.is_featured);
@@ -438,7 +474,7 @@ export const api = {
       try {
         return await request('/perfumes/brands');
       } catch (_) {
-        const perfumes = getLocal(KEYS.PERFUMES, initialPerfumesData);
+        const perfumes = getLocalPerfumes();
         const brands = Array.from(new Set(perfumes.map(p => p.brand).filter(Boolean)));
         return { brands };
       }
@@ -448,7 +484,7 @@ export const api = {
       try {
         return await request(`/perfumes/${id}`);
       } catch (_) {
-        const perfumes = getLocal(KEYS.PERFUMES, initialPerfumesData);
+        const perfumes = getLocalPerfumes();
         const item = perfumes.find(p => p.id == id);
         return { perfume: item };
       }
@@ -458,7 +494,7 @@ export const api = {
       try {
         return await request('/perfumes', { method: 'POST', body: JSON.stringify(data) });
       } catch (_) {
-        const perfumes = getLocal(KEYS.PERFUMES, initialPerfumesData);
+        const perfumes = getLocalPerfumes();
         const newItem = {
           id: Date.now(),
           ...data,
@@ -477,7 +513,7 @@ export const api = {
       try {
         return await request(`/perfumes/${id}`, { method: 'PUT', body: JSON.stringify(data) });
       } catch (_) {
-        const perfumes = getLocal(KEYS.PERFUMES, initialPerfumesData);
+        const perfumes = getLocalPerfumes();
         const idx = perfumes.findIndex(p => p.id == id);
         if (idx !== -1) {
           perfumes[idx] = { ...perfumes[idx], ...data };
@@ -492,7 +528,7 @@ export const api = {
       try {
         return await request(`/perfumes/${id}`, { method: 'DELETE' });
       } catch (_) {
-        let perfumes = getLocal(KEYS.PERFUMES, initialPerfumesData);
+        let perfumes = getLocalPerfumes();
         perfumes = perfumes.filter(p => p.id != id);
         setLocal(KEYS.PERFUMES, perfumes);
         emitDataChange('perfume_deleted', id);

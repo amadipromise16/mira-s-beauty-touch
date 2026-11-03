@@ -95,7 +95,7 @@ function seedDatabase() {
         name: 'Deluxe Herbal Spa Pedicure & Scrub',
         category: 'Nails & Foot Care',
         description: 'Warm marble foot basin soak with soothing eucalyptus, organic sea salt scrub, rose petal therapy, callused skin smoothing, cuticle refinement, hot towel wrap, and glossy nude gel finish.',
-        price_ngn: 18000,
+        price_ngn: 12000,
         duration_mins: 60,
         image_url: './media/pedicure_nails_luxury.jpg'
       },
@@ -119,7 +119,7 @@ function seedDatabase() {
         name: 'Classic Natural Flutter Lashes & Brow Framing',
         category: 'Eyelash Extensions',
         description: 'Individual one-by-one single lash extension application designed to accentuate your natural eye shape with timeless elegance, paired with gentle brow sculpting.',
-        price_ngn: 20000,
+        price_ngn: 12000,
         duration_mins: 60,
         image_url: './media/lash_extensions_classic.jpg'
       },
@@ -127,7 +127,7 @@ function seedDatabase() {
         name: 'Intricate Fulani & Stitch Cornrow Artistry',
         category: 'Hair Braiding',
         description: 'Precision geometric stitch cornrows crafted with symmetrical feed-in technique, paired with protective plaits in the back for royal poise.',
-        price_ngn: 20000,
+        price_ngn: 10000,
         duration_mins: 120,
         image_url: './media/mira_hair_braids_video_7.mp4'
       }
@@ -151,13 +151,25 @@ function seedDatabase() {
 
     const perfumes = [
       {
+        id: 14,
+        name: "Al Faris (Arabiyat)",
+        brand: "Arabiyat by My Perfumes",
+        description: "An aristocratic, noble oriental fragrance celebrating chivalry and charisma. Opens with sparkling iced citrus and invigorating herbal zest, unfolding into a rich heart of spices, golden amber, patchouli, and noble agarwood (oud). Presented in a magnificent midnight flacon crowned with a silver equestrian emblem.",
+        fragrance_notes: "Top: Italian Bergamot, Crisp Apple, Fresh Citrus | Heart: Aromatic Spices, Lavender, Geranium | Base: Warm Golden Amber, Patchouli, Noble Oud, White Musk",
+        size: "100ml Eau de Parfum (3.4 Fl. Oz.)",
+        price_ngn: 18000,
+        stock_quantity: 20,
+        image_url: "./media/al_faris_arabiyat_perfume.jpg",
+        is_featured: 1
+      },
+      {
         id: 1,
         name: "Queen of Arabia (Luxury Gift Set)",
         brand: "Lattafa Pride",
         description: "An opulent royal Arabian gift set crafted with imperial distinction. Featuring rich notes of velvety Damask rose, warm golden amber, regal agarwood (oud), and sweet bourbon vanilla. Comes complete with a luxury 100ml flacon, travel miniature, pocket atomizer, and perfumed spray.",
         fragrance_notes: "Top: Sweet Bergamot, Royal Saffron | Heart: Taif Rose, Golden Amber, Incense | Base: Madagascar Vanilla, Royal Oud, Cashmere Musk",
-        size: "4-in-1 Luxury Gift Set",
-        price_ngn: 20000,
+        size: "4-Piece Luxury Gift Set",
+        price_ngn: 60000,
         stock_quantity: 12,
         image_url: "./media/lattafa_queen_of_arabia_gift_set.jpg",
         is_featured: 1
@@ -168,8 +180,8 @@ function seedDatabase() {
         brand: "French Avenue",
         description: "A decadent, modern gourmand masterpiece. Liquid Brun delivers a rich, seductive aura of roasted cinnamon, caramelized praline, smooth bourbon vanilla, and spiced tonka bean over a creamy amberwood foundation.",
         fragrance_notes: "Top: Cinnamon Bark, Spiced Orange, Nutmeg | Heart: Praline Caramel, Dates, Tonka Bean | Base: Bourbon Vanilla, Benzoin, Akigalawood, Amber",
-        size: "100ml Eau de Parfum",
-        price_ngn: 18000,
+        size: "50ml Eau de Parfum",
+        price_ngn: 10000,
         stock_quantity: 18,
         image_url: "./media/liquid_brun_french_avenue.jpg",
         is_featured: 1
@@ -180,8 +192,8 @@ function seedDatabase() {
         brand: "Lattafa Parfums",
         description: "The quintessential 'Date Night' luxury duo. Lattafa Angham brings sweet melodic notes of candied ginger, white floral petals, praline, and silky vanilla, while Qaa'ed Intense delivers smoldering roasted tobacco, rich cinnamon, honeyed amber, and smooth patchouli in a serpent-crowned flacon.",
         fragrance_notes: "Angham: Candied Ginger, Mandarin, Jasmine, Vanilla, Amber | Qaa'ed Intense: Cinnamon, Nutmeg, Roasted Tobacco, Honey Amber, Vanilla",
-        size: "100ml Date Night Flacon",
-        price_ngn: 19500,
+        size: "100ml Both (Set of 2 Flacons)",
+        price_ngn: 85000,
         stock_quantity: 15,
         image_url: "./media/lattafa_angham_qaaed_intense_date_night.jpg",
         is_featured: 1
@@ -252,8 +264,8 @@ function seedDatabase() {
         brand: "Rayhaan & Lattafa (Duo Set)",
         description: "An intoxicating harmony of feminine floral radiance and oriental opulence. Rayhaan Floriana unfolds with sparkling nectarine, star jasmine, and soft white musk, while Bade'e Al Oud Sublime enchants with sweet crisp apple, juicy plum, velvet rose, and smoky sweet oud.",
         fragrance_notes: "Floriana: Juicy Nectar, Jasmine Sambac, White Amber | Sublime: Crisp Apple, Wild Plum, Moss, Sweet Woods, Patchouli",
-        size: "2x 100ml Luxury Duo",
-        price_ngn: 18000,
+        size: "2x 100ml (Both Flacons Set)",
+        price_ngn: 17000,
         stock_quantity: 10,
         image_url: "./media/rayhaan_floriana_badee_al_oud_sublime.jpg",
         is_featured: 1
