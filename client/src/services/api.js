@@ -212,6 +212,35 @@ function getLocalServices() {
   return updated;
 }
 
+function getLocalGallery() {
+  const stored = getLocal(KEYS.GALLERY, initialGalleryData);
+  const updated = [...stored];
+  initialGalleryData.forEach(base => {
+    const existingIdx = updated.findIndex(g => g.id === base.id || g.media_url === base.media_url);
+    if (existingIdx !== -1) {
+      updated[existingIdx] = {
+        ...base,
+        ...updated[existingIdx],
+        title: base.title,
+        description: base.description,
+        hair_summary: base.hair_summary,
+        hair_style_name: base.hair_style_name,
+        category: base.category,
+        media_type: base.media_type,
+        media_url: base.media_url,
+        booking_service: base.booking_service,
+        display_order: base.display_order,
+        tags: base.tags,
+        like_count: Math.max(updated[existingIdx].like_count || 0, base.like_count || 0)
+      };
+    } else {
+      updated.push(base);
+    }
+  });
+  setLocal(KEYS.GALLERY, updated);
+  return updated;
+}
+
 function emitDataChange(type, detail) {
   try {
     window.dispatchEvent(new CustomEvent('mbt_data_change', { detail: { type, detail } }));
@@ -558,8 +587,15 @@ export const api = {
         const q = new URLSearchParams(params).toString();
         return await request(`/gallery${q ? `?${q}` : ''}`);
       } catch (_) {
-        const gallery = getLocal(KEYS.GALLERY, initialGalleryData);
-        return { gallery };
+        const gallery = getLocalGallery();
+        let list = [...gallery];
+        if (params.category && params.category !== 'All') {
+          list = list.filter(g => g.category === params.category);
+        }
+        if (params.type && params.type !== 'All') {
+          list = list.filter(g => g.media_type === params.type);
+        }
+        return { gallery: list };
       }
     },
 
@@ -567,7 +603,7 @@ export const api = {
       try {
         return await request(`/gallery/${id}/like`, { method: 'POST' });
       } catch (_) {
-        const gallery = getLocal(KEYS.GALLERY, initialGalleryData);
+        const gallery = getLocalGallery();
         const item = gallery.find(g => g.id == id);
         if (item) {
           item.liked = !item.liked;
@@ -584,7 +620,7 @@ export const api = {
       try {
         return await request('/gallery', { method: 'POST', body: JSON.stringify(data) });
       } catch (_) {
-        const gallery = getLocal(KEYS.GALLERY, initialGalleryData);
+        const gallery = getLocalGallery();
         const newItem = {
           id: Date.now(),
           ...data,
@@ -603,7 +639,7 @@ export const api = {
       try {
         return await request(`/gallery/${id}`, { method: 'DELETE' });
       } catch (_) {
-        let gallery = getLocal(KEYS.GALLERY, initialGalleryData);
+        let gallery = getLocalGallery();
         gallery = gallery.filter(g => g.id != id);
         setLocal(KEYS.GALLERY, gallery);
         emitDataChange('gallery_deleted', id);

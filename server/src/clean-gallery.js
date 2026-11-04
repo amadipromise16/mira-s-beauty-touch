@@ -79,6 +79,56 @@ function populateCleanGallery() {
       display_order: 7
     },
 
+    // 10. User Uploaded Hair Photo 1: Signature Bohemian Island Curl Braids
+    {
+      title: "Signature Bohemian Island Curl Braids",
+      category: "Hair Braiding",
+      media_type: "image",
+      media_url: "./media/mira_hair_boho_curls_portrait.jpg",
+      description: "Styled right inside Mira's Beauty Touch salon in Owerri, this hairstyle combines gentle, painless knotless scalp parting with bouncy, silky-soft bohemian island curls. Designed to keep your natural hairline protected while offering effortless glamour, hydration, and natural movement for every occasion.",
+      display_order: 8
+    },
+
+    // 11. User Uploaded Hair Photo 2: Sculpted Stitch Cornrows & Dual Buns
+    {
+      title: "Sculpted Stitch Cornrows & Dual High Buns",
+      category: "Hair Braiding",
+      media_type: "image",
+      media_url: "./media/mira_hair_stitch_cornrows_buns.jpg",
+      description: "Crafted with immaculate precision, these stitch cornrows feature clean geometric lines that flow seamlessly into two sleek braided buns. Perfect for formal celebrations, weddings, and everyday elegance. Created with tension-free parting to maintain scalp wellness and healthy edges.",
+      display_order: 9
+    },
+
+    // 12. User Uploaded Hair Photo 3: S-Wave Curved Cornrows & Bouncy Spiral Curls
+    {
+      title: "S-Wave Curved Cornrows & Bouncy Spiral Curls",
+      category: "Hair Braiding",
+      media_type: "image",
+      media_url: "./media/mira_hair_wave_cornrows_curled_ends.jpg",
+      description: "A show-stopping blend of intricate artistry and luxury texture. Featuring elegant wave-parted cornrows that cascade into voluminous, bouncy spiral curl ends, finished with gentle edge control styling. Lightweight, long-lasting, and tailored to frame the face with timeless grace.",
+      display_order: 10
+    },
+
+    // 13. User Uploaded Hair Video 3: Salon Hair Braiding Motion Showcase I
+    {
+      title: "Mira’s Salon Hair Braiding Motion Showcase I",
+      category: "Hair Braiding",
+      media_type: "video",
+      media_url: "./media/mira_hair_braids_video_8.mp4",
+      description: "Experience the fluidity and lightweight grace of our hair styling at Mira’s Beauty Touch. Watch our specialized tension-free braiding in motion—featuring ultra-neat parting, lustrous finish, and comfortable all-day wear.",
+      display_order: 11
+    },
+
+    // 14. User Uploaded Hair Video 4: Salon Hair Braiding Motion Showcase II
+    {
+      title: "Mira’s Salon Hair Braiding Motion Showcase II",
+      category: "Hair Braiding",
+      media_type: "video",
+      media_url: "./media/mira_hair_braids_video_9.mp4",
+      description: "An up-close look at our master braiding craftsmanship. Every plait is woven with precise tension control to protect the hair follicle, stimulate healthy growth, and give our clients confidence and royalty.",
+      display_order: 12
+    },
+
     // 8. User's First Uploaded Photo: Signature Sculpted Stiletto Nails (Kept as instructed: "just only keep the first i sent to you to put")
     {
       title: "Signature Sculpted Stiletto Nails & Art",
@@ -86,7 +136,7 @@ function populateCleanGallery() {
       media_type: "image",
       media_url: "./media/mira_nails_stiletto.jpg",
       description: "Stunning nail extensions, creative designs, and flawless glossy finishes. Expert nail and foot care for a polished, refreshed look.",
-      display_order: 8
+      display_order: 13
     },
 
     // 9. User's Salon & Scent Experience Video (LAST VIDEO IN THE GALLERY PAGE)
