@@ -136,6 +136,57 @@ export function ContactPage() {
             </div>
           </div>
 
+          {/* Card 5: Social Media Channels */}
+          <div className="bg-white rounded-2xl p-6 border border-[#EBDCD4] shadow-warm-sm flex items-start space-x-4">
+            <div className="w-12 h-12 rounded-xl bg-[#FAF4F0] text-[#B87D65] flex items-center justify-center shrink-0 border border-[#DFC7B9]">
+              <Sparkles className="w-6 h-6" />
+            </div>
+            <div>
+              <h4 className="font-serif text-base font-bold text-[#2C2420]">Connect on Social Media</h4>
+              <p className="text-xs text-[#6E5D53] mt-1">
+                Follow our official social pages for salon transformations, hair styling videos, and reviews.
+              </p>
+              <div className="flex flex-wrap gap-2 mt-3">
+                <a
+                  href="https://www.instagram.com/carmi_rah?exln=b2prYzVhZm41MXp5&utm_source=qr"
+                  target="_blank"
+                  rel="noreferrer"
+                  className="inline-flex items-center space-x-1.5 px-3 py-1.5 bg-[#E1306C] text-white text-xs font-semibold rounded-full shadow-xs hover:bg-[#c9245c] transition-colors"
+                  title="Instagram (@carmi_rah)"
+                >
+                  <svg className="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24">
+                    <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
+                  </svg>
+                  <span>Instagram</span>
+                </a>
+                <a
+                  href="https://www.facebook.com/share/1CBjspKvBm/?mibextid=wwXIfr"
+                  target="_blank"
+                  rel="noreferrer"
+                  className="inline-flex items-center space-x-1.5 px-3 py-1.5 bg-[#1877F2] text-white text-xs font-semibold rounded-full shadow-xs hover:bg-[#166fe5] transition-colors"
+                  title="Facebook"
+                >
+                  <svg className="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24">
+                    <path d="M9 8H6v4h3v12h5V12h3.642L18 8h-4V6.333C14 5.374 14.5 5 15.5 5H18V0h-3.808C10.592 0 9 1.583 9 4.615V8z"/>
+                  </svg>
+                  <span>Facebook</span>
+                </a>
+                <a
+                  href="https://www.tiktok.com/@mirachukwu1?_r=1&_t=ZS-9B5bMiq2VKH"
+                  target="_blank"
+                  rel="noreferrer"
+                  className="inline-flex items-center space-x-1.5 px-3 py-1.5 bg-black text-white text-xs font-semibold rounded-full shadow-xs hover:bg-neutral-800 transition-colors"
+                  title="TikTok (@mirachukwu1)"
+                >
+                  <svg className="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24">
+                    <path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-2.88 2.88 2.89 2.89 0 0 1-2.89-2.88 2.89 2.89 0 0 1 2.89-2.88c.31 0 .62.05.9.14V9.42a6.34 6.34 0 0 0-.9-.06A6.34 6.34 0 0 0 3 15.69 6.34 6.34 0 0 0 9.34 22a6.34 6.34 0 0 0 6.34-6.34V9.08a8.28 8.28 0 0 0 4.81 1.52V7.15c-.32 0-.62-.16-.9-.46z"/>
+                  </svg>
+                  <span>TikTok</span>
+                </a>
+              </div>
+            </div>
+          </div>
+
         </div>
 
         {/* Right Column: Send Message Form */}
