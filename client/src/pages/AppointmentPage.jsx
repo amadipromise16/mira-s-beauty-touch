@@ -218,29 +218,46 @@ export function AppointmentPage({ preselectedService, onBookingSuccess, onNaviga
 
   // Submit Appointment
   const handleSubmitBooking = async (e) => {
-    e.preventDefault();
+    if (e && e.preventDefault) e.preventDefault();
     setError('');
 
-    // Master Prompt Requirement: Customer must sign in or register before submitting
+    // If customer is not signed in yet, open modal and automatically continue booking upon sign-in/register
     if (!user) {
       openAuth('login', () => {
-        // Will continue after sign-in
+        setTimeout(() => {
+          executeBookingSubmission();
+        }, 300);
       });
       return;
     }
 
+    executeBookingSubmission();
+  };
+
+  const executeBookingSubmission = async () => {
     if (!selectedService) {
       setError('Please choose a salon service.');
       return;
     }
 
-    const fullName = `${clientDetails.first_name} ${clientDetails.last_name}`.trim();
-    if (!fullName || !clientDetails.phone) {
-      setError('Please provide your full name and contact phone number.');
+    const currentSavedUser = (() => {
+      try {
+        return JSON.parse(localStorage.getItem('mbt_user') || 'null');
+      } catch (_) { return null; }
+    })();
+    const activeUser = user || currentSavedUser;
+
+    const fullName = `${clientDetails.first_name || ''} ${clientDetails.last_name || ''}`.trim() || activeUser?.full_name || 'Valued Client';
+    const email = (clientDetails.email || activeUser?.email || '').trim().toLowerCase();
+    const phone = (clientDetails.phone || activeUser?.phone || '+234 903 727 6804').trim();
+
+    if (!fullName) {
+      setError('Please provide your name.');
       return;
     }
 
     setLoading(true);
+    setError('');
 
     try {
       const payload = {
@@ -248,12 +265,12 @@ export function AppointmentPage({ preselectedService, onBookingSuccess, onNaviga
         service_name: selectedService.name,
         stylist_name: 'Mira’s Beauty Touch Specialist',
         customer_name: fullName,
-        customer_email: clientDetails.email || user.email,
-        customer_phone: clientDetails.phone,
+        customer_email: email,
+        customer_phone: phone,
         requested_date: selectedDate,
         requested_time: selectedTime,
         price_ngn: selectedService.price_ngn || 18000,
-        customer_notes: clientDetails.notes
+        customer_notes: clientDetails.notes || ''
       };
 
       const res = await api.appointments.create(payload);
@@ -612,10 +629,9 @@ export function AppointmentPage({ preselectedService, onBookingSuccess, onNaviga
                   />
                 </div>
                 <div>
-                  <label className="block text-xs font-medium text-[#4A3C35] mb-1">Last Name *</label>
+                  <label className="block text-xs font-medium text-[#4A3C35] mb-1">Last Name</label>
                   <input
                     type="text"
-                    required
                     value={clientDetails.last_name}
                     onChange={(e) => setClientDetails({ ...clientDetails, last_name: e.target.value })}
                     placeholder="e.g. Nwosu"
@@ -671,6 +687,7 @@ export function AppointmentPage({ preselectedService, onBookingSuccess, onNaviga
               {/* BOOK APPOINTMENT CTA BUTTON (Matching Reference Layout) */}
               <div className="pt-2">
                 <button
+                  id="mbt-submit-booking-btn"
                   type="submit"
                   disabled={loading}
                   className="w-full py-4 bg-[#B87D65] hover:bg-[#A36B53] text-white font-semibold text-xs tracking-widest uppercase rounded-2xl shadow-warm-md hover:shadow-warm-lg transition-all duration-300 disabled:opacity-50"

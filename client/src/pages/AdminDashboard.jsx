@@ -40,6 +40,8 @@ export function AdminDashboard({ onNavigate }) {
 
   const [feedback, setFeedback] = useState('');
 
+  const [allAppointments, setAllAppointments] = useState([]);
+
   useEffect(() => {
     if (isAdmin) {
       loadAllData();
@@ -57,21 +59,23 @@ export function AdminDashboard({ onNavigate }) {
       window.removeEventListener('mbt_data_change', handleDataEvent);
       window.removeEventListener('storage', handleDataEvent);
     };
-  }, [isAdmin]);
+  }, [isAdmin, activeTab]);
 
   const loadAllData = async () => {
     setLoading(true);
     try {
       const [sRes, aRes, srvRes, pRes, gRes, uRes] = await Promise.all([
         api.admin.getStats(),
-        api.admin.getAppointments({ status: aptStatusFilter, search: aptSearch }),
+        api.admin.getAppointments({ status: 'all' }),
         api.services.getAll(),
         api.perfumes.getAll(),
         api.gallery.getAll(),
         api.admin.getUsers()
       ]);
       setStats(sRes.stats);
-      setAppointments(aRes.appointments || []);
+      const fetchedApts = aRes.appointments || [];
+      setAllAppointments(fetchedApts);
+      setAppointments(fetchedApts);
       setServices(srvRes.services || []);
       setPerfumes(pRes.perfumes || []);
       setGallery(gRes.gallery || []);
@@ -83,15 +87,33 @@ export function AdminDashboard({ onNavigate }) {
     }
   };
 
-  const handleFilterAppointments = async (status) => {
+  const handleFilterAppointments = (status) => {
     setAptStatusFilter(status);
-    try {
-      const res = await api.admin.getAppointments({ status, search: aptSearch });
-      setAppointments(res.appointments || []);
-    } catch (e) {
-      console.error(e);
-    }
   };
+
+  const displayAppointments = allAppointments.filter(a => {
+    if (aptStatusFilter !== 'all') {
+      const st = (a.status || '').toLowerCase();
+      if (aptStatusFilter === 'approved') {
+        if (st !== 'approved' && st !== 'confirmed') return false;
+      } else if (aptStatusFilter === 'rejected') {
+        if (st !== 'rejected' && st !== 'cancelled') return false;
+      } else if (st !== aptStatusFilter) {
+        return false;
+      }
+    }
+    if (aptSearch.trim()) {
+      const s = aptSearch.trim().toLowerCase();
+      const match =
+        (a.customer_name || '').toLowerCase().includes(s) ||
+        (a.customer_email || '').toLowerCase().includes(s) ||
+        (a.customer_phone || '').toLowerCase().includes(s) ||
+        (a.booking_ref || '').toLowerCase().includes(s) ||
+        (a.service_name || '').toLowerCase().includes(s);
+      if (!match) return false;
+    }
+    return true;
+  });
 
   // Appointment Actions
   const handleApprove = async () => {
@@ -243,10 +265,11 @@ export function AdminDashboard({ onNavigate }) {
         <div className="flex items-center space-x-3">
           <button
             onClick={loadAllData}
-            className="p-2.5 rounded-full bg-white/10 hover:bg-white/20 text-white transition-colors"
+            className="flex items-center space-x-1.5 px-3.5 py-2 rounded-full bg-white/10 hover:bg-white/20 text-white text-xs font-semibold transition-colors"
             title="Refresh All"
           >
-            <RefreshCw className="w-4 h-4" />
+            <RefreshCw className={`w-3.5 h-3.5 ${loading ? 'animate-spin' : ''}`} />
+            <span>{loading ? 'Refreshing...' : 'Refresh Data'}</span>
           </button>
           <button
             onClick={() => onNavigate('home')}
@@ -339,13 +362,18 @@ export function AdminDashboard({ onNavigate }) {
 
             <div className="bg-white p-5 rounded-2xl border border-[#EBDCD4] shadow-warm-sm">
               <span className="text-[10px] uppercase font-bold text-[#8E766B] block">Approved Bookings</span>
-              <p className="text-3xl font-bold text-emerald-600 mt-1">{stats?.approved_appointments || 0}</p>
+              <p className="text-3xl font-bold text-emerald-600 mt-1">
+                {stats?.approved_appointments || stats?.confirmed_appointments || allAppointments.filter(a => {
+                  const s = (a.status || '').toLowerCase();
+                  return s === 'approved' || s === 'confirmed';
+                }).length}
+              </p>
               <p className="text-[11px] text-[#7A6B63] mt-1">Confirmed appointments</p>
             </div>
 
             <div className="bg-white p-5 rounded-2xl border border-[#EBDCD4] shadow-warm-sm">
               <span className="text-[10px] uppercase font-bold text-[#8E766B] block">Total Clients</span>
-              <p className="text-3xl font-bold text-[#2C2420] mt-1">{stats?.total_clients || 0}</p>
+              <p className="text-3xl font-bold text-[#2C2420] mt-1">{stats?.total_clients || stats?.total_customers || customers.length || 0}</p>
               <p className="text-[11px] text-[#7A6B63] mt-1">Registered customer accounts</p>
             </div>
 
@@ -375,7 +403,7 @@ export function AdminDashboard({ onNavigate }) {
             </div>
 
             <div className="divide-y divide-[#F2E5DC]">
-              {appointments.filter(a => a.status === 'pending').slice(0, 5).map(apt => (
+              {allAppointments.filter(a => (a.status || '').toLowerCase() === 'pending').slice(0, 5).map(apt => (
                 <div key={apt.id} className="py-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                   <div>
                     <div className="flex items-center space-x-2">
@@ -412,7 +440,7 @@ export function AdminDashboard({ onNavigate }) {
                   </div>
                 </div>
               ))}
-              {appointments.filter(a => a.status === 'pending').length === 0 && (
+              {allAppointments.filter(a => (a.status || '').toLowerCase() === 'pending').length === 0 && (
                 <p className="text-xs text-[#8E766B] py-6 text-center">No pending appointments right now. All caught up!</p>
               )}
             </div>
@@ -433,21 +461,30 @@ export function AdminDashboard({ onNavigate }) {
               </p>
             </div>
 
-            {/* Status Pills */}
-            <div className="flex flex-wrap items-center gap-1.5">
-              {['pending', 'approved', 'completed', 'rejected', 'all'].map((st) => (
-                <button
-                  key={st}
-                  onClick={() => handleFilterAppointments(st)}
-                  className={`px-3 py-1.5 rounded-full text-xs font-semibold uppercase tracking-wider transition-all ${
-                    aptStatusFilter === st
-                      ? 'bg-[#B87D65] text-white shadow-xs'
-                      : 'bg-[#FAF7F2] text-[#5A4D45] hover:bg-[#F2E5DC]'
-                  }`}
-                >
-                  {st}
-                </button>
-              ))}
+            {/* Search Input & Status Filter Pills */}
+            <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5">
+              <input
+                type="text"
+                value={aptSearch}
+                onChange={(e) => setAptSearch(e.target.value)}
+                placeholder="Search name, phone, ref..."
+                className="px-3 py-1.5 bg-[#FAF7F2] border border-[#DFC7B9] rounded-full text-xs text-[#2C2420] focus:outline-none focus:border-[#B87D65] placeholder:text-[#8E766B]"
+              />
+              <div className="flex flex-wrap items-center gap-1.5">
+                {['pending', 'approved', 'completed', 'rejected', 'all'].map((st) => (
+                  <button
+                    key={st}
+                    onClick={() => handleFilterAppointments(st)}
+                    className={`px-3 py-1.5 rounded-full text-xs font-semibold uppercase tracking-wider transition-all ${
+                      aptStatusFilter === st
+                        ? 'bg-[#B87D65] text-white shadow-xs'
+                        : 'bg-[#FAF7F2] text-[#5A4D45] hover:bg-[#F2E5DC]'
+                    }`}
+                  >
+                    {st}
+                  </button>
+                ))}
+              </div>
             </div>
           </div>
 
@@ -465,93 +502,107 @@ export function AdminDashboard({ onNavigate }) {
                 </tr>
               </thead>
               <tbody className="divide-y divide-[#F2E5DC]">
-                {appointments.map((apt) => (
-                  <tr key={apt.id} className="hover:bg-[#FAF7F2]/60 transition-colors">
-                    <td className="py-3 px-4">
-                      <p className="font-mono font-bold text-[#944E2E]">{apt.booking_ref}</p>
-                      <p className="font-semibold text-[#2C2420] mt-0.5">{apt.customer_name}</p>
-                      <p className="text-[11px] text-[#8E766B]">{apt.customer_phone}</p>
-                    </td>
+                {displayAppointments.map((apt) => {
+                  const s = (apt.status || '').toLowerCase();
+                  const isApproved = s === 'approved' || s === 'confirmed';
+                  const isPending = s === 'pending';
+                  const isRejected = s === 'rejected' || s === 'cancelled';
 
-                    <td className="py-3 px-4 font-medium text-[#2C2420]">
-                      {apt.service_name}
-                      {apt.customer_notes && (
-                        <p className="text-[10px] text-[#7A6B63] italic mt-0.5">"{apt.customer_notes}"</p>
-                      )}
-                    </td>
+                  return (
+                    <tr key={apt.id} className="hover:bg-[#FAF7F2]/60 transition-colors">
+                      <td className="py-3 px-4">
+                        <p className="font-mono font-bold text-[#944E2E]">{apt.booking_ref}</p>
+                        <p className="font-semibold text-[#2C2420] mt-0.5">{apt.customer_name}</p>
+                        <p className="text-[11px] text-[#8E766B]">{apt.customer_phone}</p>
+                      </td>
 
-                    <td className="py-3 px-4 text-[#5A4D45]">
-                      {apt.stylist_name}
-                    </td>
+                      <td className="py-3 px-4 font-medium text-[#2C2420]">
+                        {apt.service_name}
+                        {apt.customer_notes && (
+                          <p className="text-[10px] text-[#7A6B63] italic mt-0.5">"{apt.customer_notes}"</p>
+                        )}
+                      </td>
 
-                    <td className="py-3 px-4">
-                      <p className="font-semibold text-[#2C2420]">{apt.requested_date}</p>
-                      <p className="text-[#8E766B]">{apt.requested_time}</p>
-                    </td>
+                      <td className="py-3 px-4 text-[#5A4D45]">
+                        {apt.stylist_name}
+                      </td>
 
-                    <td className="py-3 px-4">
-                      <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider ${
-                        apt.status === 'approved'
-                          ? 'bg-emerald-100 text-emerald-800'
-                          : apt.status === 'pending'
-                            ? 'bg-amber-100 text-amber-800'
-                            : apt.status === 'rejected'
-                              ? 'bg-rose-100 text-rose-800'
-                              : 'bg-gray-100 text-gray-700'
-                      }`}>
-                        {apt.status}
-                      </span>
-                    </td>
+                      <td className="py-3 px-4">
+                        <p className="font-semibold text-[#2C2420]">{apt.requested_date}</p>
+                        <p className="text-[#8E766B]">{apt.requested_time}</p>
+                      </td>
 
-                    <td className="py-3 px-4 text-right space-x-1.5 whitespace-nowrap">
-                      {apt.status === 'pending' && (
-                        <>
-                          <button
-                            onClick={() => {
-                              setActionApt(apt);
-                              setActionType('approve');
-                              setModalData({ date: apt.requested_date, time: apt.requested_time, notes: '' });
-                            }}
-                            className="px-2.5 py-1 bg-emerald-600 hover:bg-emerald-700 text-white rounded text-[11px] font-semibold"
-                          >
-                            Approve
-                          </button>
-                          <button
-                            onClick={() => {
-                              setActionApt(apt);
-                              setActionType('reject');
-                              setModalData({ date: '', time: '', notes: '' });
-                            }}
-                            className="px-2 py-1 bg-rose-50 text-rose-700 border border-rose-200 rounded text-[11px]"
-                          >
-                            Decline
-                          </button>
-                        </>
-                      )}
+                      <td className="py-3 px-4">
+                        <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider ${
+                          isApproved
+                            ? 'bg-emerald-100 text-emerald-800'
+                            : isPending
+                              ? 'bg-amber-100 text-amber-800'
+                              : isRejected
+                                ? 'bg-rose-100 text-rose-800'
+                                : 'bg-gray-100 text-gray-700'
+                        }`}>
+                          {isApproved ? 'approved' : (isRejected ? 'declined' : apt.status)}
+                        </span>
+                      </td>
 
-                      {apt.status === 'approved' && (
-                        <>
-                          <button
-                            onClick={() => handleComplete(apt.id)}
-                            className="px-2.5 py-1 bg-blue-600 hover:bg-blue-700 text-white rounded text-[11px] font-semibold"
-                          >
-                            Mark Completed
-                          </button>
-                          <button
-                            onClick={() => {
-                              setActionApt(apt);
-                              setActionType('reschedule');
-                              setModalData({ date: apt.requested_date, time: apt.requested_time, notes: '' });
-                            }}
-                            className="px-2 py-1 bg-[#F2E5DC] text-[#944E2E] rounded text-[11px]"
-                          >
-                            Reschedule
-                          </button>
-                        </>
-                      )}
+                      <td className="py-3 px-4 text-right space-x-1.5 whitespace-nowrap">
+                        {isPending && (
+                          <>
+                            <button
+                              onClick={() => {
+                                setActionApt(apt);
+                                setActionType('approve');
+                                setModalData({ date: apt.requested_date, time: apt.requested_time, notes: '' });
+                              }}
+                              className="px-2.5 py-1 bg-emerald-600 hover:bg-emerald-700 text-white rounded text-[11px] font-semibold"
+                            >
+                              Approve
+                            </button>
+                            <button
+                              onClick={() => {
+                                setActionApt(apt);
+                                setActionType('reject');
+                                setModalData({ date: '', time: '', notes: '' });
+                              }}
+                              className="px-2 py-1 bg-rose-50 text-rose-700 border border-rose-200 rounded text-[11px]"
+                            >
+                              Decline
+                            </button>
+                          </>
+                        )}
+
+                        {isApproved && (
+                          <>
+                            <button
+                              onClick={() => handleComplete(apt.id)}
+                              className="px-2.5 py-1 bg-blue-600 hover:bg-blue-700 text-white rounded text-[11px] font-semibold"
+                            >
+                              Mark Completed
+                            </button>
+                            <button
+                              onClick={() => {
+                                setActionApt(apt);
+                                setActionType('reschedule');
+                                setModalData({ date: apt.requested_date, time: apt.requested_time, notes: '' });
+                              }}
+                              className="px-2 py-1 bg-[#F2E5DC] text-[#944E2E] rounded text-[11px]"
+                            >
+                              Reschedule
+                            </button>
+                          </>
+                        )}
+                      </td>
+                    </tr>
+                  );
+                })}
+                {displayAppointments.length === 0 && (
+                  <tr>
+                    <td colSpan={6} className="py-10 text-center text-xs text-[#8E766B]">
+                      No {aptStatusFilter === 'all' ? '' : aptStatusFilter} appointments found.
                     </td>
                   </tr>
-                ))}
+                )}
               </tbody>
             </table>
           </div>
@@ -958,9 +1009,18 @@ export function AdminDashboard({ onNavigate }) {
       {/* TAB 6: CUSTOMERS DIRECTORY */}
       {activeTab === 'users' && (
         <div className="bg-white rounded-3xl p-6 border border-[#EBDCD4] shadow-warm-sm space-y-6">
-          <div className="border-b border-[#F2E5DC] pb-4">
-            <h3 className="font-serif text-2xl font-bold text-[#2C2420]">Customer Directory</h3>
-            <p className="text-xs text-[#7A6B63]">Registered clients and booking frequency. (Passwords are fully hashed and securely hidden).</p>
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-[#F2E5DC] pb-4">
+            <div>
+              <h3 className="font-serif text-2xl font-bold text-[#2C2420]">Customer Directory</h3>
+              <p className="text-xs text-[#7A6B63]">Registered clients and booking frequency. (Passwords are securely protected).</p>
+            </div>
+            <button
+              onClick={loadAllData}
+              className="px-4 py-2 bg-[#FAF7F2] hover:bg-[#F2E5DC] text-[#2C2420] border border-[#DFC7B9] text-xs font-semibold rounded-full flex items-center space-x-1.5 self-start sm:self-auto"
+            >
+              <RefreshCw className={`w-3.5 h-3.5 text-[#B87D65] ${loading ? 'animate-spin' : ''}`} />
+              <span>Refresh Directory</span>
+            </button>
           </div>
 
           <div className="overflow-x-auto">
@@ -972,12 +1032,12 @@ export function AdminDashboard({ onNavigate }) {
                   <th className="py-3 px-4">Phone</th>
                   <th className="py-3 px-4">Role</th>
                   <th className="py-3 px-4">Total Bookings</th>
-                  <th className="py-3 px-4">Joined</th>
+                  <th className="py-3 px-4">Joined / Status</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-[#F2E5DC]">
                 {customers.map((c) => (
-                  <tr key={c.id} className="hover:bg-[#FAF7F2]/50">
+                  <tr key={c.id || c.email} className="hover:bg-[#FAF7F2]/50">
                     <td className="py-3 px-4 font-semibold text-[#2C2420]">{c.full_name}</td>
                     <td className="py-3 px-4 text-[#5A4D45]">{c.email}</td>
                     <td className="py-3 px-4 text-[#5A4D45]">{c.phone || '—'}</td>
@@ -985,13 +1045,22 @@ export function AdminDashboard({ onNavigate }) {
                       <span className={`px-2 py-0.5 rounded text-[10px] font-bold uppercase ${
                         c.role === 'admin' ? 'bg-[#F2E5DC] text-[#944E2E]' : 'bg-gray-100 text-gray-700'
                       }`}>
-                        {c.role}
+                        {c.role || 'client'}
                       </span>
                     </td>
-                    <td className="py-3 px-4 font-bold text-[#B87D65]">{c.total_appointments}</td>
-                    <td className="py-3 px-4 text-[#8E766B]">{new Date(c.created_at).toLocaleDateString()}</td>
+                    <td className="py-3 px-4 font-bold text-[#B87D65]">{c.total_appointments || 0}</td>
+                    <td className="py-3 px-4 text-[#8E766B]">
+                      {c.created_at ? new Date(c.created_at).toLocaleDateString() : 'Active Client'}
+                    </td>
                   </tr>
                 ))}
+                {customers.length === 0 && (
+                  <tr>
+                    <td colSpan={6} className="py-8 text-center text-xs text-[#8E766B]">
+                      No customers registered yet.
+                    </td>
+                  </tr>
+                )}
               </tbody>
             </table>
           </div>

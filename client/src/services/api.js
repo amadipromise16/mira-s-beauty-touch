@@ -294,24 +294,38 @@ export const api = {
         return await request('/auth/register', { method: 'POST', body: JSON.stringify(userData) });
       } catch (err) {
         const cleanEmail = (userData.email || '').trim().toLowerCase();
+        const cleanName = (userData.full_name || 'Valued Client').trim();
+        const cleanPhone = (userData.phone || '+234 800 000 0000').trim();
+
         const newClient = {
           id: Date.now(),
-          full_name: userData.full_name || 'Client',
+          full_name: cleanName,
           email: cleanEmail,
-          phone: userData.phone || '+234 800 000 0000',
+          phone: cleanPhone,
           role: 'client',
           total_appointments: 0,
           created_at: new Date().toISOString()
         };
 
-        // Save into client accounts list (for login auth)
+        // 1. Save into client accounts list (for login credentials)
         const accounts = getLocal(KEYS.CLIENT_ACCOUNTS, []);
-        accounts.push({ ...newClient, password: (userData.password || '').trim() });
+        const accIdx = accounts.findIndex(a => (a.email || '').toLowerCase() === cleanEmail);
+        const accRecord = { ...newClient, password: (userData.password || '').trim() };
+        if (accIdx !== -1) {
+          accounts[accIdx] = { ...accounts[accIdx], ...accRecord };
+        } else {
+          accounts.push(accRecord);
+        }
         setLocal(KEYS.CLIENT_ACCOUNTS, accounts);
 
-        // Save into users directory (for admin dashboard table)
+        // 2. Save into users directory (for admin dashboard table)
         const allUsers = getLocal(KEYS.USERS, SEED_USERS);
-        allUsers.push(newClient);
+        const userIdx = allUsers.findIndex(u => (u.email || '').toLowerCase() === cleanEmail);
+        if (userIdx !== -1) {
+          allUsers[userIdx] = { ...allUsers[userIdx], ...newClient };
+        } else {
+          allUsers.push(newClient);
+        }
         setLocal(KEYS.USERS, allUsers);
 
         const token = 'mbt_client_token_' + Date.now();
@@ -605,6 +619,10 @@ export const api = {
         return await request('/appointments', { method: 'POST', body: JSON.stringify(data) });
       } catch (_) {
         const randomRef = 'MBT-' + Math.floor(100000 + Math.random() * 900000);
+        const cleanEmail = (data.customer_email || '').trim().toLowerCase();
+        const cleanName = (data.customer_name || 'Valued Client').trim();
+        const cleanPhone = (data.customer_phone || '+234 903 727 6804').trim();
+
         const newAppointment = {
           id: 'apt_' + Date.now(),
           booking_ref: randomRef,
@@ -612,9 +630,9 @@ export const api = {
           service_id: data.service_id,
           service_name: data.service_name || 'Bespoke Salon Experience',
           stylist_name: data.stylist_name || "Mira's Beauty Touch Specialist",
-          customer_name: data.customer_name,
-          customer_email: (data.customer_email || '').toLowerCase(),
-          customer_phone: data.customer_phone,
+          customer_name: cleanName,
+          customer_email: cleanEmail,
+          customer_phone: cleanPhone,
           requested_date: data.requested_date,
           requested_time: data.requested_time,
           confirmed_date: null,
@@ -633,15 +651,21 @@ export const api = {
 
         // 2. Track or update customer in registered clients list
         const users = getLocal(KEYS.USERS, SEED_USERS);
-        const userIdx = users.findIndex(u => u.email.toLowerCase() === newAppointment.customer_email);
+        const userIdx = users.findIndex(u => (u.email || '').toLowerCase() === cleanEmail);
         if (userIdx !== -1) {
           users[userIdx].total_appointments = (users[userIdx].total_appointments || 0) + 1;
+          if (cleanName && (!users[userIdx].full_name || users[userIdx].full_name === 'Client')) {
+            users[userIdx].full_name = cleanName;
+          }
+          if (cleanPhone && !users[userIdx].phone) {
+            users[userIdx].phone = cleanPhone;
+          }
         } else {
           users.push({
             id: Date.now(),
-            full_name: data.customer_name,
-            email: newAppointment.customer_email,
-            phone: data.customer_phone,
+            full_name: cleanName,
+            email: cleanEmail,
+            phone: cleanPhone,
             role: 'client',
             total_appointments: 1,
             created_at: new Date().toISOString()
@@ -649,7 +673,18 @@ export const api = {
         }
         setLocal(KEYS.USERS, users);
 
-        // 3. Emit live notification event across windows/tabs
+        // 3. Add to notifications list for admin & client
+        const notifs = getLocal(KEYS.NOTIFICATIONS, []);
+        notifs.unshift({
+          id: Date.now(),
+          title: `New Booking: ${cleanName}`,
+          message: `${cleanName} booked "${newAppointment.service_name}" for ${newAppointment.requested_date} at ${newAppointment.requested_time} (Ref: ${randomRef}).`,
+          read: false,
+          created_at: new Date().toISOString()
+        });
+        setLocal(KEYS.NOTIFICATIONS, notifs);
+
+        // 4. Emit live notification event across windows/tabs
         emitDataChange('appointment_created', newAppointment);
 
         return {
@@ -745,23 +780,32 @@ export const api = {
         return await request('/admin/stats');
       } catch (_) {
         const appointments = getLocal(KEYS.APPOINTMENTS, SEED_APPOINTMENTS);
-        const users = getLocal(KEYS.USERS, SEED_USERS);
+        const usersRes = await api.admin.getUsers();
+        const users = usersRes.users || [];
+        const gallery = getLocal(KEYS.GALLERY, initialGalleryData);
 
         const totalApts = appointments.length;
-        const pendingApts = appointments.filter(a => a.status === 'pending').length;
-        const confirmedApts = appointments.filter(a => a.status === 'confirmed').length;
-        const completedApts = appointments.filter(a => a.status === 'completed').length;
+        const pendingApts = appointments.filter(a => (a.status || '').toLowerCase() === 'pending').length;
+        const confirmedApts = appointments.filter(a => {
+          const s = (a.status || '').toLowerCase();
+          return s === 'approved' || s === 'confirmed';
+        }).length;
+        const completedApts = appointments.filter(a => (a.status || '').toLowerCase() === 'completed').length;
         const revenue = appointments.reduce((sum, a) => sum + (Number(a.price_ngn) || 0), 0);
         const clientCount = users.filter(u => u.role !== 'admin').length;
+        const totalLikes = gallery.reduce((sum, g) => sum + (Number(g.like_count) || 0), 0);
 
         return {
           stats: {
             total_appointments: totalApts,
             pending_appointments: pendingApts,
             confirmed_appointments: confirmedApts,
+            approved_appointments: confirmedApts,
             completed_appointments: completedApts,
             total_revenue_ngn: revenue,
-            total_customers: clientCount || users.length
+            total_clients: clientCount || users.length,
+            total_customers: clientCount || users.length,
+            total_gallery_likes: totalLikes
           }
         };
       }
@@ -776,7 +820,17 @@ export const api = {
         let list = [...appointments];
 
         if (params.status && params.status !== 'all') {
-          list = list.filter(a => a.status === params.status);
+          const filterSt = params.status.toLowerCase();
+          list = list.filter(a => {
+            const st = (a.status || '').toLowerCase();
+            if (filterSt === 'approved' || filterSt === 'confirmed') {
+              return st === 'approved' || st === 'confirmed';
+            }
+            if (filterSt === 'rejected' || filterSt === 'cancelled') {
+              return st === 'rejected' || st === 'cancelled';
+            }
+            return st === filterSt;
+          });
         }
 
         if (params.search) {
@@ -801,7 +855,7 @@ export const api = {
         const appointments = getLocal(KEYS.APPOINTMENTS, SEED_APPOINTMENTS);
         const apt = appointments.find(a => a.id == id || a.booking_ref == id);
         if (apt) {
-          apt.status = 'confirmed';
+          apt.status = 'approved';
           apt.confirmed_date = payload.confirmed_date || apt.requested_date;
           apt.confirmed_time = payload.confirmed_time || apt.requested_time;
           if (payload.admin_notes) apt.admin_notes = payload.admin_notes;
@@ -819,7 +873,7 @@ export const api = {
         const appointments = getLocal(KEYS.APPOINTMENTS, SEED_APPOINTMENTS);
         const apt = appointments.find(a => a.id == id || a.booking_ref == id);
         if (apt) {
-          apt.status = 'cancelled';
+          apt.status = 'rejected';
           if (payload.admin_notes) apt.admin_notes = payload.admin_notes;
           setLocal(KEYS.APPOINTMENTS, appointments);
           emitDataChange('appointment_rejected', apt);
@@ -835,7 +889,7 @@ export const api = {
         const appointments = getLocal(KEYS.APPOINTMENTS, SEED_APPOINTMENTS);
         const apt = appointments.find(a => a.id == id || a.booking_ref == id);
         if (apt) {
-          apt.status = 'confirmed';
+          apt.status = 'approved';
           apt.requested_date = payload.new_date || apt.requested_date;
           apt.requested_time = payload.new_time || apt.requested_time;
           apt.confirmed_date = payload.new_date || apt.confirmed_date;
@@ -880,10 +934,70 @@ export const api = {
         return await request('/admin/users');
       } catch (_) {
         const users = getLocal(KEYS.USERS, SEED_USERS);
+        const clientAccounts = getLocal(KEYS.CLIENT_ACCOUNTS, []);
         const appointments = getLocal(KEYS.APPOINTMENTS, SEED_APPOINTMENTS);
 
+        const map = new Map();
+
+        // 1. Seed users
+        SEED_USERS.forEach(u => {
+          if (u.email) map.set(u.email.toLowerCase(), { ...u });
+        });
+
+        // 2. Stored directory users
+        users.forEach(u => {
+          if (u.email) {
+            const key = u.email.toLowerCase();
+            const existing = map.get(key) || {};
+            map.set(key, { ...existing, ...u });
+          }
+        });
+
+        // 3. Registered client accounts (from client sign-up)
+        clientAccounts.forEach(a => {
+          if (a.email) {
+            const key = a.email.toLowerCase();
+            const existing = map.get(key) || {};
+            map.set(key, {
+              id: a.id || existing.id || Date.now(),
+              full_name: a.full_name || existing.full_name || 'Valued Client',
+              email: a.email,
+              phone: a.phone || existing.phone || '+234 903 727 6804',
+              role: a.role || existing.role || 'client',
+              created_at: a.created_at || existing.created_at || new Date().toISOString(),
+              ...existing
+            });
+          }
+        });
+
+        // 4. Any customer who ever booked an appointment
+        appointments.forEach(apt => {
+          if (apt.customer_email) {
+            const key = apt.customer_email.toLowerCase();
+            const existing = map.get(key);
+            if (!existing) {
+              map.set(key, {
+                id: Date.now() + Math.random(),
+                full_name: apt.customer_name || 'Valued Client',
+                email: apt.customer_email,
+                phone: apt.customer_phone || '+234 903 727 6804',
+                role: 'client',
+                total_appointments: 1,
+                created_at: apt.created_at || new Date().toISOString()
+              });
+            } else {
+              if (apt.customer_name && (!existing.full_name || existing.full_name === 'Client')) {
+                existing.full_name = apt.customer_name;
+              }
+              if (apt.customer_phone && (!existing.phone || existing.phone === '+234 800 000 0000')) {
+                existing.phone = apt.customer_phone;
+              }
+            }
+          }
+        });
+
         // Recalculate live total_appointments for each user
-        const enriched = users.map(u => {
+        const enriched = Array.from(map.values()).map(u => {
           const userCount = appointments.filter(a => 
             (a.customer_email || '').toLowerCase() === (u.email || '').toLowerCase()
           ).length;

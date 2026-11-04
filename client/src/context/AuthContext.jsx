@@ -72,8 +72,9 @@ export function AuthProvider({ children }) {
         setUser(res.user);
         setAuthModalOpen(false);
         if (authRedirectAction) {
-          authRedirectAction();
+          const cb = authRedirectAction;
           setAuthRedirectAction(null);
+          try { cb(); } catch (_) {}
         }
         return res.user;
       }
@@ -100,8 +101,9 @@ export function AuthProvider({ children }) {
         setUser(adminUser);
         setAuthModalOpen(false);
         if (authRedirectAction) {
-          authRedirectAction();
+          const cb = authRedirectAction;
           setAuthRedirectAction(null);
+          try { cb(); } catch (_) {}
         }
         return adminUser;
       } else {
@@ -129,8 +131,9 @@ export function AuthProvider({ children }) {
           setUser(clientUser);
           setAuthModalOpen(false);
           if (authRedirectAction) {
-            authRedirectAction();
+            const cb = authRedirectAction;
             setAuthRedirectAction(null);
+            try { cb(); } catch (_) {}
           }
           return clientUser;
         } else {
@@ -157,8 +160,9 @@ export function AuthProvider({ children }) {
         setUser(res.user);
         setAuthModalOpen(false);
         if (authRedirectAction) {
-          authRedirectAction();
+          const cb = authRedirectAction;
           setAuthRedirectAction(null);
+          try { cb(); } catch (_) {}
         }
         return res.user;
       }
@@ -195,8 +199,9 @@ export function AuthProvider({ children }) {
     setUser(newClientUser);
     setAuthModalOpen(false);
     if (authRedirectAction) {
-      authRedirectAction();
+      const cb = authRedirectAction;
       setAuthRedirectAction(null);
+      try { cb(); } catch (_) {}
     }
     return newClientUser;
   };
