@@ -781,16 +781,25 @@ export const api = {
       try {
         return await request('/notifications');
       } catch (_) {
+        const user = getLocal(KEYS.USER, null);
         const notifs = getLocal(KEYS.NOTIFICATIONS, [
           {
             id: 1,
-            title: "Welcome to Mira's Beauty Touch (Owerri)",
+            title: "Welcome to Mira's Beauty Touch",
             message: "Your beauty sanctuary where elegance meets confidence. Book appointments or explore our signature fragrances.",
             read: false,
             created_at: new Date().toISOString()
           }
         ]);
-        return { notifications: notifs };
+        const userNotifs = notifs.filter(n => {
+          if (!n.user_id && !n.user_email) return true;
+          if (user && user.id && n.user_id === user.id) return true;
+          if (user && user.email && n.user_email && n.user_email.toLowerCase() === user.email.toLowerCase()) return true;
+          if (user && user.role === 'admin') return true;
+          return false;
+        });
+        const unreadCount = userNotifs.filter(n => !n.read && !n.is_read).length;
+        return { notifications: userNotifs, unread_count: unreadCount };
       }
     },
     markAsRead: async (id) => {
@@ -896,9 +905,24 @@ export const api = {
           apt.confirmed_time = payload.confirmed_time || apt.requested_time;
           if (payload.admin_notes) apt.admin_notes = payload.admin_notes;
           setLocal(KEYS.APPOINTMENTS, appointments);
+
+          // Add notification for the customer
+          const notifs = getLocal(KEYS.NOTIFICATIONS, []);
+          notifs.unshift({
+            id: Date.now(),
+            user_id: apt.user_id,
+            user_email: apt.customer_email,
+            type: 'appointment_approved',
+            title: 'Appointment Approved',
+            message: `Your appointment for "${apt.service_name}" on ${apt.confirmed_date} at ${apt.confirmed_time} has been approved and confirmed.`,
+            read: false,
+            created_at: new Date().toISOString()
+          });
+          setLocal(KEYS.NOTIFICATIONS, notifs);
+
           emitDataChange('appointment_approved', apt);
         }
-        return { message: 'Appointment approved and confirmed successfully.', appointment: apt };
+        return { message: 'Appointment approved and customer notified successfully.', appointment: apt };
       }
     },
 
@@ -912,6 +936,20 @@ export const api = {
           apt.status = 'rejected';
           if (payload.admin_notes) apt.admin_notes = payload.admin_notes;
           setLocal(KEYS.APPOINTMENTS, appointments);
+
+          const notifs = getLocal(KEYS.NOTIFICATIONS, []);
+          notifs.unshift({
+            id: Date.now(),
+            user_id: apt.user_id,
+            user_email: apt.customer_email,
+            type: 'appointment_rejected',
+            title: 'Appointment Update',
+            message: `Your appointment request for "${apt.service_name}" on ${apt.requested_date} could not be confirmed. ${payload.admin_notes || ''}`,
+            read: false,
+            created_at: new Date().toISOString()
+          });
+          setLocal(KEYS.NOTIFICATIONS, notifs);
+
           emitDataChange('appointment_rejected', apt);
         }
         return { message: 'Appointment declined.', appointment: apt };
@@ -932,6 +970,20 @@ export const api = {
           apt.confirmed_time = payload.new_time || apt.confirmed_time;
           if (payload.admin_notes) apt.admin_notes = payload.admin_notes;
           setLocal(KEYS.APPOINTMENTS, appointments);
+
+          const notifs = getLocal(KEYS.NOTIFICATIONS, []);
+          notifs.unshift({
+            id: Date.now(),
+            user_id: apt.user_id,
+            user_email: apt.customer_email,
+            type: 'appointment_rescheduled',
+            title: 'Appointment Rescheduled',
+            message: `Your appointment for "${apt.service_name}" has been rescheduled to ${apt.confirmed_date} at ${apt.confirmed_time}.`,
+            read: false,
+            created_at: new Date().toISOString()
+          });
+          setLocal(KEYS.NOTIFICATIONS, notifs);
+
           emitDataChange('appointment_rescheduled', apt);
         }
         return { message: 'Appointment rescheduled successfully.', appointment: apt };

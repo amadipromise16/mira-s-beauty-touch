@@ -49,16 +49,25 @@ class AppointmentsController
 
     public function create(): void
     {
-        $user = AuthMiddleware::requireAuth();
+        // 1. Try to get authenticated user if present (optional auth for guest bookings)
+        $user = null;
+        try {
+            $token = Request::getBearerToken();
+            if ($token) {
+                $user = AuthMiddleware::requireAuth();
+            }
+        } catch (Exception $e) {
+            $user = null;
+        }
 
         try {
             $body = Request::getBody();
             $serviceId = !empty($body['service_id']) ? (int) $body['service_id'] : null;
             $serviceName = isset($body['service_name']) ? trim((string) $body['service_name']) : '';
             $stylistName = isset($body['stylist_name']) ? trim((string) $body['stylist_name']) : 'Any Available Specialist';
-            $customerName = isset($body['customer_name']) ? trim((string) $body['customer_name']) : '';
-            $customerEmail = isset($body['customer_email']) ? trim((string) $body['customer_email']) : $user['email'];
-            $customerPhone = isset($body['customer_phone']) ? trim((string) $body['customer_phone']) : '';
+            $customerName = isset($body['customer_name']) ? trim((string) $body['customer_name']) : ($user['full_name'] ?? '');
+            $customerEmail = isset($body['customer_email']) ? trim((string) $body['customer_email']) : ($user['email'] ?? '');
+            $customerPhone = isset($body['customer_phone']) ? trim((string) $body['customer_phone']) : ($user['phone'] ?? '');
             $requestedDate = isset($body['requested_date']) ? trim((string) $body['requested_date']) : '';
             $requestedTime = isset($body['requested_time']) ? trim((string) $body['requested_time']) : '';
             $customerNotes = isset($body['customer_notes']) ? trim((string) $body['customer_notes']) : null;
@@ -94,6 +103,26 @@ class AppointmentsController
                 Response::error('The requested time slot is already fully booked. Please choose an alternative time slot.', 409);
             }
 
+            // Determine user_id: link to authenticated user or lookup/create by email
+            $userId = $user ? (int) $user['id'] : null;
+            if ($userId === null && !empty($customerEmail)) {
+                $stmt = $pdo->prepare('SELECT id FROM users WHERE LOWER(email) = LOWER(?)');
+                $stmt->execute([strtolower($customerEmail)]);
+                $existing = $stmt->fetch();
+                if ($existing) {
+                    $userId = (int) $existing['id'];
+                } else {
+                    $randomPass = 'mbt' . rand(1000, 9999);
+                    $hash = password_hash($randomPass, PASSWORD_BCRYPT);
+                    $insUser = $pdo->prepare('
+                        INSERT INTO users (full_name, email, phone, password_hash, role)
+                        VALUES (?, ?, ?, ?, "client")
+                    ');
+                    $insUser->execute([$customerName, strtolower($customerEmail), $customerPhone, $hash]);
+                    $userId = (int) $pdo->lastInsertId();
+                }
+            }
+
             $bookingRef = self::generateBookingRef();
 
             $insertStmt = $pdo->prepare('
@@ -106,7 +135,7 @@ class AppointmentsController
 
             $insertStmt->execute([
                 $bookingRef,
-                (int) $user['id'],
+                $userId,
                 $serviceId,
                 $serviceName,
                 $stylistName,
@@ -120,13 +149,15 @@ class AppointmentsController
 
             $appointmentId = (int) $pdo->lastInsertId();
 
-            // Create in-app notification
-            $notifStmt = $pdo->prepare('
-                INSERT INTO notifications (user_id, type, title, message, appointment_id)
-                VALUES (?, "system", "Appointment Request Submitted", ?, ?)
-            ');
-            $notifMsg = "Your booking request for \"{$serviceName}\" on {$requestedDate} at {$requestedTime} has been submitted (Ref: {$bookingRef}). It is currently pending salon administrator approval.";
-            $notifStmt->execute([(int) $user['id'], $notifMsg, $appointmentId]);
+            // Create in-app notification for the customer
+            if ($userId) {
+                $notifStmt = $pdo->prepare('
+                    INSERT INTO notifications (user_id, type, title, message, appointment_id)
+                    VALUES (?, "system", "Appointment Request Submitted", ?, ?)
+                ');
+                $notifMsg = "Your booking request for \"{$serviceName}\" on {$requestedDate} at {$requestedTime} has been submitted (Ref: {$bookingRef}). It is currently pending salon administrator approval.";
+                $notifStmt->execute([$userId, $notifMsg, $appointmentId]);
+            }
 
             $fetchStmt = $pdo->prepare('SELECT * FROM appointments WHERE id = ?');
             $fetchStmt->execute([$appointmentId]);

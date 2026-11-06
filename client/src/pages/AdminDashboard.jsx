@@ -574,6 +574,17 @@ export function AdminDashboard({ onNavigate }) {
 
                         {isApproved && (
                           <>
+                            {apt.customer_phone && (
+                              <a
+                                href={`https://wa.me/${apt.customer_phone.replace(/[^0-9]/g, '')}?text=${encodeURIComponent(`Hello ${apt.customer_name}, your appointment at Mira’s Beauty Touch for "${apt.service_name}" on ${apt.confirmed_date || apt.requested_date} at ${apt.confirmed_time || apt.requested_time} has been approved and confirmed (Ref: ${apt.booking_ref}). We look forward to welcoming you to our salon palace!`)}`}
+                                target="_blank"
+                                rel="noreferrer"
+                                className="px-2.5 py-1 bg-emerald-100 hover:bg-emerald-200 text-emerald-800 rounded text-[11px] font-semibold inline-flex items-center space-x-1 transition-colors"
+                                title="Send instant WhatsApp confirmation to client"
+                              >
+                                <span>WhatsApp Client</span>
+                              </a>
+                            )}
                             <button
                               onClick={() => handleComplete(apt.id)}
                               className="px-2.5 py-1 bg-blue-600 hover:bg-blue-700 text-white rounded text-[11px] font-semibold"

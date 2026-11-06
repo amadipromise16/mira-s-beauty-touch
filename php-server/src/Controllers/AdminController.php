@@ -181,12 +181,27 @@ class AdminController
             $updateStmt->execute([$dateToConfirm, $timeToConfirm, $confirmedDateTimeStr, $adminNotes, (int) $id]);
 
             // Mandatory customer notification
-            $notifMsg = "Your Mira’s Beauty Touch appointment has been approved. Your confirmed appointment is scheduled for {$dateToConfirm} at {$timeToConfirm}.";
-            $notifStmt = $pdo->prepare('
-                INSERT INTO notifications (user_id, type, title, message, appointment_id)
-                VALUES (?, "appointment_approved", "Appointment Approved 🎉", ?, ?)
-            ');
-            $notifStmt->execute([(int) $apt['user_id'], $notifMsg, (int) $apt['id']]);
+            $targetUserId = (int) ($apt['user_id'] ?? 0);
+            if ($targetUserId <= 0 && !empty($apt['customer_email'])) {
+                $userLookup = $pdo->prepare('SELECT id FROM users WHERE LOWER(email) = LOWER(?)');
+                $userLookup->execute([trim((string) $apt['customer_email'])]);
+                $foundUser = $userLookup->fetch();
+                if ($foundUser) {
+                    $targetUserId = (int) $foundUser['id'];
+                    $pdo->prepare('UPDATE appointments SET user_id = ? WHERE id = ?')->execute([$targetUserId, (int) $id]);
+                }
+            }
+
+            $serviceName = $apt['service_name'] ?? 'Salon Service';
+            $notifMsg = "Your appointment for \"{$serviceName}\" at Mira’s Beauty Touch has been approved! Scheduled for {$dateToConfirm} at {$timeToConfirm}. We look forward to pampering you.";
+            
+            if ($targetUserId > 0) {
+                $notifStmt = $pdo->prepare('
+                    INSERT INTO notifications (user_id, type, title, message, appointment_id)
+                    VALUES (?, "appointment_approved", "Appointment Approved", ?, ?)
+                ');
+                $notifStmt->execute([$targetUserId, $notifMsg, (int) $apt['id']]);
+            }
 
             $fetchUpdated = $pdo->prepare('
                 SELECT a.*, u.email as user_email, u.full_name as user_name 
