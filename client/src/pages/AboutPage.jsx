@@ -1,18 +1,18 @@
 import React from 'react';
-import { Sparkles, Heart, Award, CheckCircle2 } from 'lucide-react';
+import { CheckCircle2 } from 'lucide-react';
 
 export function AboutPage({ onNavigate }) {
+
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 space-y-16">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 space-y-16 pb-24">
       
       {/* Title Header */}
       <div className="text-center max-w-3xl mx-auto space-y-3">
         <div className="inline-flex items-center space-x-1.5 px-3.5 py-1 rounded-full bg-[#F2E5DC] text-[#944E2E] text-xs font-semibold uppercase tracking-wider">
-          <Sparkles className="w-3.5 h-3.5 text-[#B87D65]" />
           <span>Mira’s Beauty Touch | Beauty • Elegance • Confidence</span>
         </div>
         <h1 className="font-serif text-3xl sm:text-5xl text-[#2C2420] font-normal uppercase tracking-wide">
-          MIRA’S BEAUTY TOUCH – WHERE BEAUTY MEETS ELEGANCE
+          MIRA’S BEAUTY TOUCH, WHERE BEAUTY MEETS ELEGANCE
         </h1>
         <p className="text-xs sm:text-sm text-[#7A6B63] max-w-2xl mx-auto leading-relaxed">
           Mira’s Beauty Touch is a premier beauty salon dedicated to enhancing your natural beauty with elegance, style, and exceptional care.
@@ -36,7 +36,7 @@ export function AboutPage({ onNavigate }) {
               Where Beauty Meets Elegance
             </h3>
             <p className="text-xs sm:text-sm text-[#6E5D53] leading-relaxed">
-              At Mira’s Beauty Touch, beauty is more than an appearance — it’s an expression of confidence, elegance, and individuality. We believe every woman deserves to look beautiful, feel confident, and radiate elegance.
+              At Mira’s Beauty Touch, beauty is more than an appearance, it’s an expression of confidence, elegance, and individuality. We believe every woman deserves to look beautiful, feel confident, and radiate elegance.
             </p>
             <p className="text-xs font-bold uppercase tracking-wider text-[#944E2E]">
               We offer a luxurious range of beauty services, including:
@@ -94,8 +94,8 @@ export function AboutPage({ onNavigate }) {
             <p className="text-xs text-[#6E5D53] mt-3 leading-relaxed">
               Welcome to Mira’s Beauty Touch, where every detail is designed to bring out the beauty in you! From gorgeous braids and flawless nails to glamorous makeup, stunning lashes, relaxing pedicures, and irresistible fragrances, we’ve got your beauty needs covered.
             </p>
-            <p className="text-xs text-[#B87D65] font-semibold mt-2.5">
-              ✨ LOOK BEAUTIFUL. FEEL CONFIDENT. SHINE EFFORTLESSLY. ✨
+            <p className="text-xs text-[#B87D65] font-semibold mt-2.5 tracking-wider uppercase">
+              LOOK BEAUTIFUL. FEEL CONFIDENT. SHINE EFFORTLESSLY.
             </p>
             <p className="text-xs text-[#6E5D53] mt-2 leading-relaxed">
               Our passion is to help every client look radiant, feel confident, and leave with a touch of elegance.
@@ -104,7 +104,7 @@ export function AboutPage({ onNavigate }) {
 
           <div className="pt-6 border-t border-[#F2E5DC] mt-4 flex items-center justify-between">
             <span className="font-serif italic text-xs text-[#8E766B]">
-              Mira’s Beauty Touch — Your Beauty, Our Passion. Your Elegance, Our Signature.
+              Mira’s Beauty Touch, Your Beauty, Our Passion. Your Elegance, Our Signature.
             </span>
             <button
               onClick={() => onNavigate('book')}
@@ -117,7 +117,7 @@ export function AboutPage({ onNavigate }) {
 
       </div>
 
-      {/* The Mira Difference (3 Columns matching Image 3 Reference) */}
+      {/* The Mira Difference (3 Columns with authentic photos) */}
       <section className="bg-[#FAF4F0] rounded-3xl p-8 sm:p-12 border border-[#EBDCD4] shadow-warm-sm">
         <div className="text-center max-w-xl mx-auto mb-10">
           <span className="text-xs font-bold uppercase tracking-widest text-[#B87D65]">Our Pillars</span>
@@ -128,9 +128,13 @@ export function AboutPage({ onNavigate }) {
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           
-          <div className="text-center space-y-3 p-4">
-            <div className="w-12 h-12 rounded-2xl bg-white shadow-warm-sm flex items-center justify-center text-[#B87D65] mx-auto border border-[#EBDCD4]">
-              <Sparkles className="w-6 h-6" />
+          <div className="bg-white rounded-2xl p-5 shadow-warm-sm border border-[#EBDCD4] text-center space-y-3 group hover:border-[#B87D65] transition-all duration-300">
+            <div className="h-48 rounded-xl overflow-hidden mb-3 border border-[#F2E5DC]">
+              <img
+                src="./media/mira_hair_boho_curls_portrait.jpg"
+                alt="Hair Braiding Artistry"
+                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+              />
             </div>
             <h4 className="font-serif text-lg font-bold text-[#2C2420]">Beauty • Elegance • Confidence</h4>
             <p className="text-xs text-[#6E5D53] leading-relaxed">
@@ -138,23 +142,31 @@ export function AboutPage({ onNavigate }) {
             </p>
           </div>
 
-          <div className="text-center space-y-3 p-4">
-            <div className="w-12 h-12 rounded-2xl bg-white shadow-warm-sm flex items-center justify-center text-[#B87D65] mx-auto border border-[#EBDCD4]">
-              <Award className="w-6 h-6" />
+          <div className="bg-white rounded-2xl p-5 shadow-warm-sm border border-[#EBDCD4] text-center space-y-3 group hover:border-[#B87D65] transition-all duration-300">
+            <div className="h-48 rounded-xl overflow-hidden mb-3 border border-[#F2E5DC]">
+              <img
+                src="./media/lattafa_queen_of_arabia_gift_set.jpg"
+                alt="Luxury Perfumes & Salon Elegance"
+                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+              />
             </div>
             <h4 className="font-serif text-lg font-bold text-[#2C2420]">Where Beauty Meets Elegance</h4>
             <p className="text-xs text-[#6E5D53] leading-relaxed">
-              At Mira’s Beauty Touch, beauty is more than an appearance — it’s an expression of confidence, elegance, and individuality. We also offer an exquisite collection of perfumes to complete your signature look.
+              At Mira’s Beauty Touch, beauty is more than an appearance, it’s an expression of confidence, elegance, and individuality. We also offer an exquisite collection of perfumes to complete your signature look.
             </p>
           </div>
 
-          <div className="text-center space-y-3 p-4">
-            <div className="w-12 h-12 rounded-2xl bg-white shadow-warm-sm flex items-center justify-center text-[#B87D65] mx-auto border border-[#EBDCD4]">
-              <Heart className="w-6 h-6" />
+          <div className="bg-white rounded-2xl p-5 shadow-warm-sm border border-[#EBDCD4] text-center space-y-3 group hover:border-[#B87D65] transition-all duration-300">
+            <div className="h-48 rounded-xl overflow-hidden mb-3 border border-[#F2E5DC]">
+              <img
+                src="./media/mira_nails_stiletto.jpg"
+                alt="Nail Care & Beauty Sanctuary"
+                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+              />
             </div>
             <h4 className="font-serif text-lg font-bold text-[#2C2420]">Because You Deserve to Be Beautiful!</h4>
             <p className="text-xs text-[#6E5D53] leading-relaxed">
-              💖 Mira’s Beauty Touch — Because You Deserve to Be Beautiful! At Mira’s Beauty Touch, we believe every woman deserves to look beautiful, feel confident, and radiate elegance.
+              At Mira’s Beauty Touch, we believe every woman deserves to look beautiful, feel confident, and radiate elegance.
             </p>
           </div>
 

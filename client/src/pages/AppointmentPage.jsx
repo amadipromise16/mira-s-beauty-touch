@@ -130,7 +130,7 @@ export function AppointmentPage({ preselectedService, onBookingSuccess, onNaviga
     try {
       localStorage.setItem('mbt_reviews', JSON.stringify(updated));
     } catch (_) {}
-    setReviewSuccess('✨ Thank you for your wonderful testimony! Your review has been added to the site.');
+    setReviewSuccess('Thank you for your wonderful testimony! Your review has been added to the site.');
     setShowReviewForm(false);
     setNewReview({
       name: user?.full_name || '',

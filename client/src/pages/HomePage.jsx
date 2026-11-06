@@ -52,8 +52,7 @@ export function HomePage({ onNavigate, onSelectServiceForBooking }) {
             <div className="lg:col-span-7 space-y-6 order-2 lg:order-1">
               
               <div className="inline-flex items-center space-x-2 px-3.5 py-1.5 rounded-full bg-[#32201C] border border-[#644237] text-[#E6C687] text-xs font-semibold uppercase tracking-wider">
-                <Sparkles className="w-3.5 h-3.5 text-[#E6C687]" />
-                <span>👑 WELCOME TO MIRA’S BEAUTY PALACE</span>
+                <span>WELCOME TO MIRA’S BEAUTY PALACE</span>
               </div>
 
               <div className="space-y-2">
@@ -133,7 +132,7 @@ export function HomePage({ onNavigate, onSelectServiceForBooking }) {
                       <Sparkles className="w-5 h-5" />
                     </div>
                     <div>
-                      <p className="text-[10px] uppercase tracking-wider text-[#E6C687] font-bold">📍 Owerri, Imo State</p>
+                      <p className="text-[10px] uppercase tracking-wider text-[#E6C687] font-bold">Owerri, Imo State</p>
                       <p className="text-xs font-serif font-bold text-white">Mira’s Beauty Palace</p>
                       <p className="text-[11px] font-semibold text-[#D8A48F]">Beauty • Elegance • Royalty</p>
                     </div>
@@ -162,7 +161,7 @@ export function HomePage({ onNavigate, onSelectServiceForBooking }) {
               Beauty Services Fit for a Queen
             </h2>
             <p className="text-xs text-[#7A6B63] mt-2 max-w-xl">
-              At Mira’s Beauty Touch, beauty is more than an appearance — it’s an expression of confidence, elegance, and individuality.
+              At Mira’s Beauty Touch, beauty is more than an appearance, it’s an expression of confidence, elegance, and individuality.
             </p>
           </div>
           <button
@@ -350,7 +349,7 @@ export function HomePage({ onNavigate, onSelectServiceForBooking }) {
                 More Than a Salon, A Luxury Sanctuary
               </h3>
               <p className="text-xs text-[#F2D7CB] mt-1.5 hidden sm:block leading-relaxed">
-                Step into our opulent salon sanctuary in the heart of Owerri, Imo State — crafted for your absolute comfort, privacy, and royal treatment.
+                Step into our opulent salon sanctuary in the heart of Owerri, Imo State, crafted for your absolute comfort, privacy, and royal treatment.
               </p>
               <div className="mt-3 flex items-center space-x-3">
                 <button
@@ -436,13 +435,13 @@ export function HomePage({ onNavigate, onSelectServiceForBooking }) {
             <Sparkles className="w-5 h-5" />
           </span>
           <h2 className="font-serif text-3xl sm:text-4xl text-[#2C2420] font-normal">
-            💖 Mira’s Beauty Touch — Because You Deserve to Be Beautiful!
+            Mira’s Beauty Touch, Because You Deserve to Be Beautiful!
           </h2>
           <p className="text-xs sm:text-sm text-[#7A6B63] max-w-2xl mx-auto leading-relaxed">
             Your destination for exceptional beauty and personal care. We specialize in professional hair braiding, manicures, pedicures, nail enhancements, makeup artistry, and eyelash extensions. We also offer an exquisite collection of perfumes to complete your signature look.
           </p>
           <p className="text-xs font-semibold text-[#944E2E] tracking-wider uppercase">
-            Mira’s Beauty Touch — Enhancing Beauty, Inspiring Confidence.
+            Mira’s Beauty Touch, Enhancing Beauty, Inspiring Confidence.
           </p>
           <div className="pt-2">
             <button

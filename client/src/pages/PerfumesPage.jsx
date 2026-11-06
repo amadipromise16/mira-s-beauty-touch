@@ -133,7 +133,7 @@ export function PerfumesPage() {
       `${idx + 1}. ${item.name} (${item.brand}) - Qty: ${item.quantity} × ₦${item.price_ngn.toLocaleString()} = ₦${(item.price_ngn * item.quantity).toLocaleString()}`
     ).join('\n');
 
-    const message = `✨ *MIRA’S BEAUTY TOUCH — PERFUME ORDER* ✨\n\nHello, I would like to place an order for the following perfumes in my cart:\n\n${itemsText}\n\n*Total Items:* ${totalCartCount}\n*Total Amount:* ₦${totalCartAmount.toLocaleString()}\n\nPlease confirm availability and delivery payment details. Thank you!`;
+    const message = `*MIRA’S BEAUTY TOUCH, PERFUME ORDER*\n\nHello, I would like to place an order for the following perfumes in my cart:\n\n${itemsText}\n\n*Total Items:* ${totalCartCount}\n*Total Amount:* ₦${totalCartAmount.toLocaleString()}\n\nPlease confirm availability and delivery payment details. Thank you!`;
 
     window.open(`https://wa.me/${phone}?text=${encodeURIComponent(message)}`, '_blank');
   };

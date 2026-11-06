@@ -245,7 +245,7 @@ export const initialGalleryData = [
     media_url: "./media/mira_hair_braids_video_8.mp4",
     hair_style_name: "Salon Hair Braiding Showcase I",
     hair_summary: "Live video demonstration of silky braid motion, lightweight feel, and painless scalp technique.",
-    description: "Experience the fluidity and lightweight grace of our hair styling at Mira’s Beauty Touch. Watch our specialized tension-free braiding in motion—featuring ultra-neat parting, lustrous finish, and comfortable all-day wear.",
+    description: "Experience the fluidity and lightweight grace of our hair styling at Mira’s Beauty Touch. Watch our specialized tension-free braiding in motion, featuring ultra-neat parting, lustrous finish, and comfortable all-day wear.",
     tags: ["Hair Motion", "Salon Showcase", "Knotless Plaits", "Silky Braids"],
     booking_service: {
       id: 1,

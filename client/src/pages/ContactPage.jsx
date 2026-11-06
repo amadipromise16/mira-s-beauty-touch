@@ -293,7 +293,7 @@ export function ContactPage() {
               <span>Visit Us In Owerri</span>
             </div>
             <h3 className="font-serif text-2xl font-bold text-[#2C2420]">
-              Interactive Salon Map — Owerri, Imo State
+              Interactive Salon Map, Owerri, Imo State
             </h3>
             <p className="text-xs text-[#6E5D53] mt-1">
               Plot 12, Commercial Avenue, Owerri, Imo State, Nigeria. Pan and zoom around Owerri to easily find our salon palace.

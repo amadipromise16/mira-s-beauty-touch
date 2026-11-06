@@ -619,7 +619,7 @@ export function GalleryPage({ onNavigate, onBookService }) {
                 </h3>
                 {activeModalItem.hair_summary && (
                   <p className="text-xs text-[#E8D4C8] leading-relaxed">
-                    ✨ {activeModalItem.hair_summary}
+                    {activeModalItem.hair_summary}
                   </p>
                 )}
                 {activeModalItem.description && !activeModalItem.hair_summary && (

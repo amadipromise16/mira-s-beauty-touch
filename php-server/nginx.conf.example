@@ -1,0 +1,48 @@
+# Nginx Server Block Configuration for Mira's Beauty Touch PHP Backend
+server {
+    listen 5000;
+    server_name localhost;
+    root /path/to/php-server/public;
+
+    index index.php index.html;
+
+    # CORS Headers
+    add_header Access-Control-Allow-Origin * always;
+    add_header Access-Control-Allow-Methods "GET, POST, PUT, DELETE, OPTIONS" always;
+    add_header Access-Control-Allow-Headers "Authorization, Content-Type, X-Requested-With, Accept" always;
+
+    location / {
+        try_files $uri $uri/ /index.php?$query_string;
+    }
+
+    # Pass PHP scripts to FastCGI server
+    location ~ \.php$ {
+        include fastcgi_params;
+        fastcgi_pass 127.0.0.1:9000; # or unix:/var/run/php/php8.2-fpm.sock
+        fastcgi_index index.php;
+        fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+        fastcgi_param HTTP_AUTHORIZATION $http_authorization;
+    }
+
+    # Static media files
+    location /media/ {
+        alias /path/to/client/public/media/;
+        expires 30d;
+        add_header Cache-Control "public, no-transform";
+    }
+
+    location /uploads/ {
+        alias /path/to/php-server/uploads/;
+        expires 30d;
+        add_header Cache-Control "public, no-transform";
+    }
+
+    # Prevent access to hidden files or SQLite database
+    location ~ /\.(?!well-known).* {
+        deny all;
+    }
+    location ~ \.db$ {
+        deny all;
+    }
+}
+
