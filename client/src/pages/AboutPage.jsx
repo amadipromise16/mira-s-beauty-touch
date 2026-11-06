@@ -1,5 +1,5 @@
 import React from 'react';
-import { CheckCircle2 } from 'lucide-react';
+import { CheckCircle2, ArrowRight } from 'lucide-react';
 
 export function AboutPage({ onNavigate }) {
 
@@ -128,46 +128,100 @@ export function AboutPage({ onNavigate }) {
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           
-          <div className="bg-white rounded-2xl p-5 shadow-warm-sm border border-[#EBDCD4] text-center space-y-3 group hover:border-[#B87D65] transition-all duration-300">
-            <div className="h-48 rounded-xl overflow-hidden mb-3 border border-[#F2E5DC]">
-              <img
-                src="./media/mira_hair_boho_curls_portrait.jpg"
-                alt="Hair Braiding Artistry"
-                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-              />
+          {/* Card 1: Hair Braiding & Services */}
+          <div 
+            onClick={() => onNavigate('services')}
+            className="bg-white rounded-2xl p-5 shadow-warm-sm border border-[#EBDCD4] text-center space-y-3.5 group hover:border-[#B87D65] hover:shadow-warm-md hover:-translate-y-1 transition-all duration-300 cursor-pointer flex flex-col justify-between"
+            role="button"
+            tabIndex={0}
+            onKeyDown={(e) => e.key === 'Enter' && onNavigate('services')}
+          >
+            <div className="space-y-3">
+              <div className="h-48 rounded-xl overflow-hidden border border-[#F2E5DC] relative">
+                <img
+                  src="./media/mira_hair_boho_curls_portrait.jpg"
+                  alt="Hair Braiding Artistry"
+                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                />
+                <span className="absolute bottom-2 right-2 px-2.5 py-1 rounded-full bg-[#2C2420]/80 backdrop-blur-xs text-[10px] text-white font-medium">
+                  Tap to view
+                </span>
+              </div>
+              <h4 className="font-serif text-lg font-bold text-[#2C2420] group-hover:text-[#944E2E] transition-colors">
+                Beauty • Elegance • Confidence
+              </h4>
+              <p className="text-xs text-[#6E5D53] leading-relaxed">
+                Your destination for exceptional beauty and personal care. We specialize in professional hair braiding, manicures, pedicures, nail enhancements, makeup artistry, and eyelash extensions.
+              </p>
             </div>
-            <h4 className="font-serif text-lg font-bold text-[#2C2420]">Beauty • Elegance • Confidence</h4>
-            <p className="text-xs text-[#6E5D53] leading-relaxed">
-              Your destination for exceptional beauty and personal care. We specialize in professional hair braiding, manicures, pedicures, nail enhancements, makeup artistry, and eyelash extensions.
-            </p>
+            <div className="pt-2 border-t border-[#F2E5DC] flex items-center justify-center space-x-1.5 text-xs font-bold text-[#B87D65] group-hover:text-[#944E2E] uppercase tracking-wider">
+              <span>Explore Services</span>
+              <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
+            </div>
           </div>
 
-          <div className="bg-white rounded-2xl p-5 shadow-warm-sm border border-[#EBDCD4] text-center space-y-3 group hover:border-[#B87D65] transition-all duration-300">
-            <div className="h-48 rounded-xl overflow-hidden mb-3 border border-[#F2E5DC]">
-              <img
-                src="./media/lattafa_queen_of_arabia_gift_set.jpg"
-                alt="Luxury Perfumes & Salon Elegance"
-                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-              />
+          {/* Card 2: Luxury Perfumes */}
+          <div 
+            onClick={() => onNavigate('perfumes')}
+            className="bg-white rounded-2xl p-5 shadow-warm-sm border border-[#EBDCD4] text-center space-y-3.5 group hover:border-[#B87D65] hover:shadow-warm-md hover:-translate-y-1 transition-all duration-300 cursor-pointer flex flex-col justify-between"
+            role="button"
+            tabIndex={0}
+            onKeyDown={(e) => e.key === 'Enter' && onNavigate('perfumes')}
+          >
+            <div className="space-y-3">
+              <div className="h-48 rounded-xl overflow-hidden border border-[#F2E5DC] relative">
+                <img
+                  src="./media/lattafa_queen_of_arabia_gift_set.jpg"
+                  alt="Luxury Perfumes & Salon Elegance"
+                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                />
+                <span className="absolute bottom-2 right-2 px-2.5 py-1 rounded-full bg-[#2C2420]/80 backdrop-blur-xs text-[10px] text-white font-medium">
+                  Tap to view
+                </span>
+              </div>
+              <h4 className="font-serif text-lg font-bold text-[#2C2420] group-hover:text-[#944E2E] transition-colors">
+                Where Beauty Meets Elegance
+              </h4>
+              <p className="text-xs text-[#6E5D53] leading-relaxed">
+                At Mira’s Beauty Touch, beauty is more than an appearance, it’s an expression of confidence, elegance, and individuality. We also offer an exquisite collection of perfumes to complete your signature look.
+              </p>
             </div>
-            <h4 className="font-serif text-lg font-bold text-[#2C2420]">Where Beauty Meets Elegance</h4>
-            <p className="text-xs text-[#6E5D53] leading-relaxed">
-              At Mira’s Beauty Touch, beauty is more than an appearance, it’s an expression of confidence, elegance, and individuality. We also offer an exquisite collection of perfumes to complete your signature look.
-            </p>
+            <div className="pt-2 border-t border-[#F2E5DC] flex items-center justify-center space-x-1.5 text-xs font-bold text-[#B87D65] group-hover:text-[#944E2E] uppercase tracking-wider">
+              <span>Explore Perfumes</span>
+              <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
+            </div>
           </div>
 
-          <div className="bg-white rounded-2xl p-5 shadow-warm-sm border border-[#EBDCD4] text-center space-y-3 group hover:border-[#B87D65] transition-all duration-300">
-            <div className="h-48 rounded-xl overflow-hidden mb-3 border border-[#F2E5DC]">
-              <img
-                src="./media/mira_nails_stiletto.jpg"
-                alt="Nail Care & Beauty Sanctuary"
-                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-              />
+          {/* Card 3: Appointments / Bookings */}
+          <div 
+            onClick={() => onNavigate('book')}
+            className="bg-white rounded-2xl p-5 shadow-warm-sm border border-[#EBDCD4] text-center space-y-3.5 group hover:border-[#B87D65] hover:shadow-warm-md hover:-translate-y-1 transition-all duration-300 cursor-pointer flex flex-col justify-between"
+            role="button"
+            tabIndex={0}
+            onKeyDown={(e) => e.key === 'Enter' && onNavigate('book')}
+          >
+            <div className="space-y-3">
+              <div className="h-48 rounded-xl overflow-hidden border border-[#F2E5DC] relative">
+                <img
+                  src="./media/mira_nails_stiletto.jpg"
+                  alt="Nail Care & Beauty Sanctuary"
+                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                />
+                <span className="absolute bottom-2 right-2 px-2.5 py-1 rounded-full bg-[#2C2420]/80 backdrop-blur-xs text-[10px] text-white font-medium">
+                  Tap to view
+                </span>
+              </div>
+              <h4 className="font-serif text-lg font-bold text-[#2C2420] group-hover:text-[#944E2E] transition-colors">
+                Because You Deserve to Be Beautiful!
+              </h4>
+              <p className="text-xs text-[#6E5D53] leading-relaxed">
+                At Mira’s Beauty Touch, we believe every woman deserves to look beautiful, feel confident, and radiate elegance.
+              </p>
             </div>
-            <h4 className="font-serif text-lg font-bold text-[#2C2420]">Because You Deserve to Be Beautiful!</h4>
-            <p className="text-xs text-[#6E5D53] leading-relaxed">
-              At Mira’s Beauty Touch, we believe every woman deserves to look beautiful, feel confident, and radiate elegance.
-            </p>
+            <div className="pt-2 border-t border-[#F2E5DC] flex items-center justify-center space-x-1.5 text-xs font-bold text-[#B87D65] group-hover:text-[#944E2E] uppercase tracking-wider">
+              <span>Book Appointment</span>
+              <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
+            </div>
           </div>
 
         </div>

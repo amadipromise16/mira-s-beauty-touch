@@ -106,31 +106,20 @@ function MainLayout() {
       {/* Global Floating Sticky CTA that follows user on scroll */}
       {currentPage !== 'book' && currentPage !== 'admin' && (
         <div
-          className={`fixed bottom-5 left-1/2 -translate-x-1/2 z-40 w-[94%] max-w-lg transition-all duration-500 transform ${
+          className={`fixed bottom-5 left-1/2 -translate-x-1/2 z-40 transition-all duration-500 transform ${
             showStickyCta
               ? 'opacity-100 translate-y-0 scale-100 pointer-events-auto'
               : 'opacity-0 translate-y-8 scale-95 pointer-events-none'
           }`}
         >
-          <div className="bg-[#2C2420]/95 backdrop-blur-md border border-[#E6C687]/40 text-white rounded-full px-4 sm:px-5 py-2.5 sm:py-3 shadow-2xl flex items-center justify-between gap-3">
-            <div className="flex items-center space-x-2.5 min-w-0">
-              <Calendar className="w-4 h-4 text-[#E6C687] shrink-0" />
-              <div className="truncate">
-                <p className="font-serif italic text-xs text-white truncate">
-                  Mira’s Beauty Touch, Your Beauty, Our Passion.
-                </p>
-                <p className="text-[10px] text-[#E6C687] truncate tracking-wider uppercase font-semibold">
-                  Your Elegance, Our Signature
-                </p>
-              </div>
-            </div>
-            <button
-              onClick={() => navigateTo('book')}
-              className="px-4 sm:px-5 py-2 bg-[#B87D65] hover:bg-[#A36B53] text-white text-xs font-bold rounded-full shadow-md transition-colors shrink-0 uppercase tracking-wider whitespace-nowrap"
-            >
-              Book Appointment
-            </button>
-          </div>
+          <button
+            onClick={() => navigateTo('book')}
+            className="flex items-center space-x-2 px-5 py-2.5 bg-[#B87D65] hover:bg-[#A36B53] active:scale-95 text-white text-xs font-bold rounded-full shadow-xl shadow-[#2C2420]/30 border border-white/20 transition-all uppercase tracking-wider whitespace-nowrap"
+            aria-label="Book Appointment"
+          >
+            <Calendar className="w-3.5 h-3.5 text-white/90 shrink-0" />
+            <span>Book Appointment</span>
+          </button>
         </div>
       )}
 
