@@ -147,7 +147,7 @@ export function Footer({ onNavigate }) {
             <div className="space-y-3 text-xs text-[#F2D7CB]">
               <div className="flex items-start space-x-2">
                 <MapPin className="w-4 h-4 text-[#FAD5C5] mt-0.5 shrink-0" />
-                <span>Plot 12, Commercial Avenue, Owerri, Imo State, Nigeria</span>
+                <span>Imo Paradise, Amawire, Orji, Owerri, Imo State, Nigeria</span>
               </div>
               <div className="flex items-center space-x-2">
                 <Phone className="w-4 h-4 text-[#FAD5C5] shrink-0" />
@@ -157,8 +157,8 @@ export function Footer({ onNavigate }) {
               </div>
               <div className="flex items-center space-x-2">
                 <Mail className="w-4 h-4 text-[#FAD5C5] shrink-0" />
-                <a href="mailto:info@mirasbeautytouch.com" className="hover:text-white transition-colors">
-                  info@mirasbeautytouch.com
+                <a href="mailto:mirabeautytouch@gmail.com" className="hover:text-white transition-colors">
+                  mirabeautytouch@gmail.com
                 </a>
               </div>
               <div className="pt-2">

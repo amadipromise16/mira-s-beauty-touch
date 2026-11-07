@@ -13,13 +13,27 @@ export function UserDashboard({ onNavigate }) {
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState('bookings'); // 'bookings' | 'notifications' | 'profile'
 
+  const resolveInitialName = (u) => {
+    if (!u) return '';
+    if (u.email === 'mirabeautytouch@gmail.com' && (u.full_name === 'Mira Admin' || u.full_name === 'Mira Johnson (Admin)' || !u.full_name)) {
+      return 'Mira Ochu';
+    }
+    return u.full_name || '';
+  };
+
   const [profileData, setProfileData] = useState({
-    full_name: user?.full_name || '',
+    full_name: resolveInitialName(user),
     phone: user?.phone || ''
   });
   const [profileMessage, setProfileMessage] = useState('');
 
   useEffect(() => {
+    if (user) {
+      setProfileData({
+        full_name: resolveInitialName(user),
+        phone: user.phone || ''
+      });
+    }
     fetchDashboardData();
   }, [user]);
 

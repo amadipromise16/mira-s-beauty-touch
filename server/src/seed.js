@@ -18,14 +18,14 @@ function seedDatabase() {
   if (!checkAdmin) {
     const insertAdmin = db.prepare(`
       INSERT INTO users (full_name, email, phone, password_hash, role)
-      VALUES ('Mira Johnson (Admin)', 'mirabeautytouch@gmail.com', '+234 903 727 6804', ?, 'admin')
+      VALUES ('Mira Ochu', 'mirabeautytouch@gmail.com', '+234 903 727 6804', ?, 'admin')
     `);
     const res = insertAdmin.run(adminPasswordHash);
     adminId = res.lastInsertRowid;
     console.log('Created Admin user: mirabeautytouch@gmail.com');
   } else {
-    // Update password to miratouch
-    db.prepare("UPDATE users SET password_hash = ? WHERE email = 'mirabeautytouch@gmail.com'").run(adminPasswordHash);
+    // Update admin full name and password to miratouch
+    db.prepare("UPDATE users SET full_name = 'Mira Ochu', password_hash = ? WHERE email = 'mirabeautytouch@gmail.com'").run(adminPasswordHash);
   }
 
   const checkClient = db.prepare("SELECT id FROM users WHERE email = 'client@example.com'").get();
@@ -415,9 +415,9 @@ function seedDatabase() {
       ['brand_name', "Mira's Beauty Touch"],
       ['tagline', "Where Beauty Meets Elegance"],
       ['phone', "+234 903 727 6804"],
-      ['whatsapp', "+2348031234567"],
-      ['email', "info@mirasbeautytouch.com"],
-      ['address', "Plot 12, Commercial Avenue, Owerri, Imo State, Nigeria"],
+      ['whatsapp', "+2349037276804"],
+      ['email', "mirabeautytouch@gmail.com"],
+      ['address', "Imo Paradise, Amawire, Orji, Owerri, Imo State, Nigeria"],
       ['hours_weekdays', "Monday – Saturday: 9:00 AM – 7:30 PM"],
       ['hours_sunday', "Sunday: 1:00 PM – 6:00 PM (By Appointment)"]
     ];

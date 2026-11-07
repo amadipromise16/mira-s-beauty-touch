@@ -25,14 +25,14 @@ class Seeder
         if (!$checkAdmin) {
             $insertAdmin = $pdo->prepare("
                 INSERT INTO users (full_name, email, phone, password_hash, role)
-                VALUES ('Mira Johnson (Admin)', 'mirabeautytouch@gmail.com', '+234 903 727 6804', ?, 'admin')
+                VALUES ('Mira Ochu', 'mirabeautytouch@gmail.com', '+234 903 727 6804', ?, 'admin')
             ");
             $insertAdmin->execute([$adminHash]);
             $adminId = (int) $pdo->lastInsertId();
             echo "Created Admin user: mirabeautytouch@gmail.com\n";
         } else {
             $adminId = (int) $checkAdmin['id'];
-            $pdo->prepare("UPDATE users SET password_hash = ? WHERE email = 'mirabeautytouch@gmail.com'")->execute([$adminHash]);
+            $pdo->prepare("UPDATE users SET full_name = 'Mira Ochu', password_hash = ? WHERE email = 'mirabeautytouch@gmail.com'")->execute([$adminHash]);
         }
 
         $checkClient = $pdo->query("SELECT id FROM users WHERE email = 'client@example.com'")->fetch();
@@ -556,9 +556,9 @@ class Seeder
                 ['brand_name', "Mira's Beauty Touch"],
                 ['tagline', "Where Beauty Meets Elegance"],
                 ['phone', "+234 903 727 6804"],
-                ['whatsapp', "+2348031234567"],
-                ['email', "info@mirasbeautytouch.com"],
-                ['address', "Plot 12, Commercial Avenue, Owerri, Imo State, Nigeria"],
+                ['whatsapp', "+2349037276804"],
+                ['email', "mirabeautytouch@gmail.com"],
+                ['address', "Imo Paradise, Amawire, Orji, Owerri, Imo State, Nigeria"],
                 ['hours_weekdays', "Monday – Saturday: 9:00 AM – 7:30 PM"],
                 ['hours_sunday', "Sunday: 1:00 PM – 6:00 PM (By Appointment)"],
             ];

@@ -26,6 +26,10 @@ try {
     $userCount = (int) $pdo->query('SELECT COUNT(*) FROM users')->fetchColumn();
     if ($userCount === 0) {
         Seeder::run($pdo);
+    } else {
+        // Ensure admin user has updated official name and site address is updated
+        $pdo->exec("UPDATE users SET full_name = 'Mira Ochu' WHERE email = 'mirabeautytouch@gmail.com' AND (full_name != 'Mira Ochu' OR full_name IS NULL)");
+        $pdo->exec("UPDATE settings SET value = 'Imo Paradise, Amawire, Orji, Owerri, Imo State, Nigeria' WHERE key = 'address'");
     }
 } catch (Throwable $e) {
     error_log('Database initialization / seed notice: ' . $e->getMessage());

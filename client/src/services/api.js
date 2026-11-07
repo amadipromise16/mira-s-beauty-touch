@@ -24,7 +24,7 @@ const KEYS = {
 const SEED_USERS = [
   {
     id: 1,
-    full_name: "Mira Admin",
+    full_name: "Mira Ochu",
     email: "mirabeautytouch@gmail.com",
     phone: "+234 903 727 6804",
     role: "admin",
@@ -288,7 +288,7 @@ export const api = {
         if (cleanEmail === 'mirabeautytouch@gmail.com' && (cleanPass === 'miratouch' || (customAdminPass && cleanPass === customAdminPass))) {
           const adminUser = {
             id: 1,
-            full_name: 'Mira Admin',
+            full_name: 'Mira Ochu',
             email: 'mirabeautytouch@gmail.com',
             phone: '+234 903 727 6804',
             role: 'admin'
@@ -1167,7 +1167,7 @@ export const api = {
         return {
           settings: {
             salon_name: "Mira’s Beauty Touch",
-            address: "Plot 12, Commercial Avenue, Owerri, Imo State, Nigeria",
+            address: "Imo Paradise, Amawire, Orji, Owerri, Imo State, Nigeria",
             phone: "+234 903 727 6804",
             email: "mirabeautytouch@gmail.com",
             currency: "NGN (₦)"

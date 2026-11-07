@@ -74,10 +74,10 @@ export function ContactPage() {
             <div>
               <h4 className="font-serif text-base font-bold text-[#2C2420]">Salon Location</h4>
               <p className="text-xs text-[#6E5D53] mt-1 leading-relaxed">
-                Plot 12, Commercial Avenue, Owerri, Imo State, Nigeria
+                Imo Paradise, Amawire, Orji, Owerri, Imo State, Nigeria
               </p>
               <p className="text-[11px] text-[#B87D65] font-semibold mt-2">
-                Convenient on-site parking available • Heart of Owerri
+                Convenient on-site parking available • Imo Paradise, Amawire, Orji
               </p>
             </div>
           </div>
@@ -293,14 +293,14 @@ export function ContactPage() {
               <span>Visit Us In Owerri</span>
             </div>
             <h3 className="font-serif text-2xl font-bold text-[#2C2420]">
-              Interactive Salon Map, Owerri, Imo State
+              Interactive Salon Map, Imo Paradise, Amawire, Orji
             </h3>
             <p className="text-xs text-[#6E5D53] mt-1">
-              Plot 12, Commercial Avenue, Owerri, Imo State, Nigeria. Pan and zoom around Owerri to easily find our salon palace.
+              Imo Paradise, Amawire, Orji, Owerri, Imo State, Nigeria. Pan and zoom around Owerri to easily find our salon palace.
             </p>
           </div>
           <a
-            href="https://www.google.com/maps/search/?api=1&query=Owerri,+Imo+State,+Nigeria"
+            href="https://www.google.com/maps/search/?api=1&query=Amawire+Orji+Owerri+Imo+State+Nigeria"
             target="_blank"
             rel="noreferrer"
             className="inline-flex items-center justify-center space-x-2 px-5 py-2.5 bg-[#B87D65] hover:bg-[#A36B53] text-white text-xs font-semibold rounded-xl shadow-warm-sm transition-colors shrink-0"
@@ -311,8 +311,8 @@ export function ContactPage() {
 
         <div className="relative w-full h-[380px] sm:h-[450px] rounded-2xl overflow-hidden border border-[#DFC7B9] shadow-inner">
           <iframe
-            title="Mira's Beauty Touch - Owerri Imo State Google Map"
-            src="https://maps.google.com/maps?q=Owerri,+Imo+State,+Nigeria&t=&z=14&ie=UTF8&iwloc=&output=embed"
+            title="Mira's Beauty Touch - Imo Paradise Amawire Orji Owerri Google Map"
+            src="https://maps.google.com/maps?q=Amawire,+Orji,+Owerri,+Imo+State,+Nigeria&t=&z=14&ie=UTF8&iwloc=&output=embed"
             className="w-full h-full border-0"
             allowFullScreen=""
             loading="lazy"

@@ -120,5 +120,10 @@ db.exec(`
   CREATE INDEX IF NOT EXISTS idx_notifications_user_unread ON notifications(user_id, is_read);
 `);
 
+try {
+  db.exec(`UPDATE users SET full_name = 'Mira Ochu' WHERE email = 'mirabeautytouch@gmail.com' AND (full_name != 'Mira Ochu' OR full_name IS NULL);`);
+  db.exec(`UPDATE site_settings SET value = 'Imo Paradise, Amawire, Orji, Owerri, Imo State, Nigeria' WHERE key = 'address';`);
+} catch (_) {}
+
 module.exports = db;
 

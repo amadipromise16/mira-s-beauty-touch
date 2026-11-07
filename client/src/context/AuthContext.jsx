@@ -25,6 +25,9 @@ export function AuthProvider({ children }) {
     try {
       const res = await api.auth.me();
       if (res && res.user) {
+        if (res.user.email === 'mirabeautytouch@gmail.com' && (res.user.full_name === 'Mira Admin' || res.user.full_name === 'Mira Johnson (Admin)')) {
+          res.user.full_name = 'Mira Ochu';
+        }
         setUser(res.user);
         localStorage.setItem('mbt_user', JSON.stringify(res.user));
         setUnreadCount(res.unread_notifications || 0);
@@ -37,6 +40,10 @@ export function AuthProvider({ children }) {
       if (savedUserStr) {
         try {
           const parsed = JSON.parse(savedUserStr);
+          if (parsed.email === 'mirabeautytouch@gmail.com' && (parsed.full_name === 'Mira Admin' || parsed.full_name === 'Mira Johnson (Admin)')) {
+            parsed.full_name = 'Mira Ochu';
+            localStorage.setItem('mbt_user', JSON.stringify(parsed));
+          }
           setUser(parsed);
           setLoading(false);
           return;
@@ -89,7 +96,7 @@ export function AuthProvider({ children }) {
       if (cleanPass === 'miratouch' || (customAdminPass && cleanPass === customAdminPass)) {
         const adminUser = {
           id: 1,
-          full_name: 'Mira Admin',
+          full_name: 'Mira Ochu',
           email: 'mirabeautytouch@gmail.com',
           phone: '+234 903 727 6804',
           role: 'admin'
