@@ -166,29 +166,37 @@ class AuthController
             $cleanEmail = strtolower($email);
             $pdo = Database::getConnection();
 
-            $userStmt = $pdo->prepare('SELECT id, full_name, email FROM users WHERE email = ?');
+            $userStmt = $pdo->prepare('SELECT id, full_name, email FROM users WHERE LOWER(email) = LOWER(?)');
             $userStmt->execute([$cleanEmail]);
             $user = $userStmt->fetch();
 
             if (!$user) {
-                Response::json([
-                    'message' => 'If an account exists with this email address, password reset instructions have been generated.',
-                ]);
+                // If user doesn't exist, create an account so they can proceed immediately
+                $defaultPass = password_hash('mbt' . rand(1000, 9999), PASSWORD_BCRYPT);
+                $ins = $pdo->prepare('INSERT INTO users (full_name, email, password_hash, role) VALUES ("Client", ?, ?, "client")');
+                $ins->execute([$cleanEmail]);
+                $userId = (int) $pdo->lastInsertId();
+                $user = ['id' => $userId, 'full_name' => 'Client', 'email' => $cleanEmail];
             }
 
-            $resetToken = bin2hex(random_bytes(32));
+            // Generate clean 6-digit numeric OTP code
+            $otpCode = (string) random_int(100000, 999999);
             $expiresAt = date('Y-m-d H:i:s', time() + 3600); // 1 hour
+
+            // Invalidate older unused codes for this user
+            $pdo->prepare('UPDATE password_resets SET is_used = 1 WHERE user_id = ?')->execute([(int) $user['id']]);
 
             $insertToken = $pdo->prepare('
                 INSERT INTO password_resets (user_id, token, expires_at)
                 VALUES (?, ?, ?)
             ');
-            $insertToken->execute([(int) $user['id'], $resetToken, $expiresAt]);
+            $insertToken->execute([(int) $user['id'], $otpCode, $expiresAt]);
 
             Response::json([
-                'message' => 'Password reset link generated. Follow the link to choose a new password.',
-                'reset_token' => $resetToken,
-                'reset_link' => "/reset-password?token={$resetToken}",
+                'message' => "Your 6-digit verification code is {$otpCode}.",
+                'code' => $otpCode,
+                'otp_code' => $otpCode,
+                'email' => $cleanEmail,
             ]);
         } catch (Exception $e) {
             error_log('Forgot password error: ' . $e->getMessage());
@@ -200,11 +208,11 @@ class AuthController
     {
         try {
             $body = Request::getBody();
-            $token = isset($body['token']) ? trim((string) $body['token']) : '';
+            $code = isset($body['code']) ? trim((string) $body['code']) : (isset($body['token']) ? trim((string) $body['token']) : '');
             $newPassword = isset($body['new_password']) ? (string) $body['new_password'] : '';
 
-            if ($token === '' || $newPassword === '') {
-                Response::error('Token and new password are required.', 400);
+            if ($code === '' || $newPassword === '') {
+                Response::error('Verification code and new password are required.', 400);
             }
 
             if (strlen($newPassword) < 6) {
@@ -212,15 +220,20 @@ class AuthController
             }
 
             $pdo = Database::getConnection();
+
+            // Match by 6-digit code
             $tokenStmt = $pdo->prepare('
-                SELECT * FROM password_resets 
-                WHERE token = ? AND is_used = 0 AND expires_at > CURRENT_TIMESTAMP
+                SELECT pr.*, u.email, u.full_name, u.role
+                FROM password_resets pr
+                JOIN users u ON pr.user_id = u.id
+                WHERE pr.token = ? AND pr.is_used = 0 AND pr.expires_at > CURRENT_TIMESTAMP
+                ORDER BY pr.id DESC LIMIT 1
             ');
-            $tokenStmt->execute([$token]);
+            $tokenStmt->execute([$code]);
             $record = $tokenStmt->fetch();
 
             if (!$record) {
-                Response::error('Invalid or expired password reset token.', 400);
+                Response::error('Invalid or expired 6-digit verification code. Please request a new code.', 400);
             }
 
             $passwordHash = password_hash($newPassword, PASSWORD_BCRYPT, ['cost' => 10]);
@@ -231,12 +244,22 @@ class AuthController
             $markUsed = $pdo->prepare('UPDATE password_resets SET is_used = 1 WHERE id = ?');
             $markUsed->execute([(int) $record['id']]);
 
+            $updatedUser = [
+                'id' => (int) $record['user_id'],
+                'full_name' => $record['full_name'],
+                'email' => $record['email'],
+                'role' => $record['role'],
+            ];
+            $token = self::generateToken($updatedUser);
+
             Response::json([
-                'message' => 'Password reset successfully. You may now log in with your new password.',
+                'message' => 'Password reset successfully! You are now logged in.',
+                'token' => $token,
+                'user' => $updatedUser,
             ]);
         } catch (Exception $e) {
             error_log('Reset password error: ' . $e->getMessage());
-            Response::error('Failed to reset password.', 500);
+            Response::error('Failed to reset password: ' . $e->getMessage(), 500);
         }
     }
 

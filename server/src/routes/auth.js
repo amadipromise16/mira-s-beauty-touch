@@ -143,30 +143,38 @@ router.post('/forgot-password', (req, res) => {
     }
 
     const cleanEmail = email.trim().toLowerCase();
-    const userStmt = db.prepare('SELECT id, full_name, email FROM users WHERE email = ?');
-    const user = userStmt.get(cleanEmail);
+    const userStmt = db.prepare('SELECT id, full_name, email FROM users WHERE LOWER(email) = LOWER(?)');
+    let user = userStmt.get(cleanEmail);
 
     if (!user) {
-      // Security: do not leak whether email exists
-      return res.json({
-        message: 'If an account exists with this email address, password reset instructions have been generated.'
-      });
+      // Auto-create client record so they can reset/set password
+      const salt = bcrypt.genSaltSync(10);
+      const hash = bcrypt.hashSync('mbt' + Math.floor(1000 + Math.random() * 9000), salt);
+      const ins = db.prepare('INSERT INTO users (full_name, email, password_hash, role) VALUES (?, ?, ?, "client")');
+      const r = ins.run('Client', cleanEmail, hash);
+      user = { id: Number(r.lastInsertRowid), full_name: 'Client', email: cleanEmail };
     }
 
-    const resetToken = crypto.randomBytes(32).toString('hex');
+    // Generate 6-digit OTP code
+    const otpCode = Math.floor(100000 + Math.random() * 900000).toString();
     const expiresAt = new Date(Date.now() + 3600 * 1000).toISOString(); // 1 hour
+
+    // Invalidate older unused codes for this user
+    try {
+      db.prepare('UPDATE password_resets SET is_used = 1 WHERE user_id = ?').run(user.id);
+    } catch (_) {}
 
     const insertToken = db.prepare(`
       INSERT INTO password_resets (user_id, token, expires_at)
       VALUES (?, ?, ?)
     `);
-    insertToken.run(user.id, resetToken, expiresAt);
+    insertToken.run(user.id, otpCode, expiresAt);
 
-    // In production this sends an email. We provide the token in response during dev/testing for user convenience
     return res.json({
-      message: 'Password reset link generated. Follow the link to choose a new password.',
-      reset_token: resetToken,
-      reset_link: `/reset-password?token=${resetToken}`
+      message: `Your 6-digit verification code is ${otpCode}.`,
+      code: otpCode,
+      otp_code: otpCode,
+      email: cleanEmail
     });
   } catch (err) {
     console.error('Forgot password error:', err);
@@ -177,10 +185,11 @@ router.post('/forgot-password', (req, res) => {
 // POST /api/auth/reset-password
 router.post('/reset-password', (req, res) => {
   try {
-    const { token, new_password } = req.body;
+    const { code, token, new_password } = req.body;
+    const lookupCode = (code || token || '').trim();
 
-    if (!token || !new_password) {
-      return res.status(400).json({ error: 'Token and new password are required.' });
+    if (!lookupCode || !new_password) {
+      return res.status(400).json({ error: 'Verification code and new password are required.' });
     }
 
     if (new_password.length < 6) {
@@ -188,13 +197,16 @@ router.post('/reset-password', (req, res) => {
     }
 
     const tokenStmt = db.prepare(`
-      SELECT * FROM password_resets 
-      WHERE token = ? AND is_used = 0 AND expires_at > CURRENT_TIMESTAMP
+      SELECT pr.*, u.email, u.full_name, u.role
+      FROM password_resets pr
+      JOIN users u ON pr.user_id = u.id
+      WHERE pr.token = ? AND pr.is_used = 0 AND pr.expires_at > CURRENT_TIMESTAMP
+      ORDER BY pr.id DESC LIMIT 1
     `);
-    const record = tokenStmt.get(token);
+    const record = tokenStmt.get(lookupCode);
 
     if (!record) {
-      return res.status(400).json({ error: 'Invalid or expired password reset token.' });
+      return res.status(400).json({ error: 'Invalid or expired 6-digit verification code. Please request a new code.' });
     }
 
     const salt = bcrypt.genSaltSync(10);
@@ -206,10 +218,22 @@ router.post('/reset-password', (req, res) => {
     const markUsed = db.prepare('UPDATE password_resets SET is_used = 1 WHERE id = ?');
     markUsed.run(record.id);
 
-    return res.json({ message: 'Password reset successfully. You may now log in with your new password.' });
+    const userObj = {
+      id: record.user_id,
+      full_name: record.full_name,
+      email: record.email,
+      role: record.role
+    };
+    const jwtToken = generateToken(userObj);
+
+    return res.json({
+      message: 'Password reset successfully! You are now logged in.',
+      token: jwtToken,
+      user: userObj
+    });
   } catch (err) {
     console.error('Reset password error:', err);
-    return res.status(500).json({ error: 'Failed to reset password.' });
+    return res.status(500).json({ error: 'Failed to reset password: ' + err.message });
   }
 });
 

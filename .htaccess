@@ -30,7 +30,11 @@
     RewriteCond %{DOCUMENT_ROOT}/client/dist/$1 -f
     RewriteRule ^(.*)$ client/dist/$1 [L]
 
-    # 7. Single Page Application (SPA) client routing fallback
+    # 7. Check client/public static assets (media, images, videos)
+    RewriteCond %{DOCUMENT_ROOT}/client/public/$1 -f
+    RewriteRule ^(.*)$ client/public/$1 [L]
+
+    # 8. Single Page Application (SPA) client routing fallback
     RewriteCond %{DOCUMENT_ROOT}/client/dist/index.html -f
     RewriteRule ^ client/dist/index.html [L]
 
@@ -48,3 +52,4 @@
     ExpiresByType text/css "access plus 1 week"
     ExpiresByType application/javascript "access plus 1 week"
 </IfModule>
+

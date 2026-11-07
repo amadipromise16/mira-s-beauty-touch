@@ -1,7 +1,9 @@
 const express = require('express');
 const crypto = require('crypto');
+const jwt = require('jsonwebtoken');
+const bcrypt = require('bcryptjs');
 const db = require('../db');
-const { requireAuth, requireAdmin } = require('../middleware/auth');
+const { requireAuth, requireAdmin, JWT_SECRET } = require('../middleware/auth');
 
 const router = express.Router();
 
@@ -12,8 +14,8 @@ function generateBookingRef() {
   return `MBT-${year}-${random}`;
 }
 
-// POST /api/appointments - Customer creates booking
-router.post('/', requireAuth, (req, res) => {
+// POST /api/appointments - Customer creates booking (supports both logged-in and guest clients)
+router.post('/', (req, res) => {
   try {
     const {
       service_id,
@@ -40,7 +42,6 @@ router.post('/', requireAuth, (req, res) => {
     }
 
     // Availability / Double-booking protection:
-    // Check if an approved appointment already exists for this date, time and stylist
     const conflictStmt = db.prepare(`
       SELECT id FROM appointments 
       WHERE requested_date = ? 
@@ -59,6 +60,30 @@ router.post('/', requireAuth, (req, res) => {
       });
     }
 
+    // Determine user_id
+    let userId = null;
+    const authHeader = req.headers.authorization;
+    if (authHeader && authHeader.startsWith('Bearer ')) {
+      try {
+        const decoded = jwt.verify(authHeader.split(' ')[1], JWT_SECRET);
+        userId = decoded.id;
+      } catch (_) {}
+    }
+
+    const cleanEmail = (customer_email || '').trim().toLowerCase();
+    if (!userId && cleanEmail) {
+      const u = db.prepare('SELECT id FROM users WHERE LOWER(email) = LOWER(?)').get(cleanEmail);
+      if (u) {
+        userId = u.id;
+      } else {
+        const salt = bcrypt.genSaltSync(10);
+        const hash = bcrypt.hashSync('mbt' + Math.floor(1000 + Math.random() * 9000), salt);
+        const ins = db.prepare('INSERT INTO users (full_name, email, phone, password_hash, role) VALUES (?, ?, ?, ?, "client")');
+        const r = ins.run(customer_name.trim(), cleanEmail, customer_phone.trim(), hash);
+        userId = Number(r.lastInsertRowid);
+      }
+    }
+
     const booking_ref = generateBookingRef();
 
     const insertStmt = db.prepare(`
@@ -71,12 +96,12 @@ router.post('/', requireAuth, (req, res) => {
 
     const result = insertStmt.run(
       booking_ref,
-      req.user.id,
+      userId,
       service_id ? Number(service_id) : null,
       service_name.trim(),
       stylist_name ? stylist_name.trim() : 'Any Available Specialist',
       customer_name.trim(),
-      customer_email ? customer_email.trim() : req.user.email,
+      cleanEmail,
       customer_phone.trim(),
       requested_date,
       requested_time,
@@ -85,26 +110,27 @@ router.post('/', requireAuth, (req, res) => {
 
     const appointmentId = Number(result.lastInsertRowid);
 
-    // Create confirmation in-app notification for the customer
-    const notifStmt = db.prepare(`
-      INSERT INTO notifications (user_id, type, title, message, appointment_id)
-      VALUES (?, 'system', 'Appointment Request Submitted', ?, ?)
-    `);
-    notifStmt.run(
-      req.user.id,
-      `Your booking request for "${service_name}" on ${requested_date} at ${requested_time} has been submitted (Ref: ${booking_ref}). It is currently pending salon administrator approval.`,
-      appointmentId
-    );
+    // Create confirmation in-app notification if user account exists
+    if (userId) {
+      const notifStmt = db.prepare(`
+        INSERT INTO notifications (user_id, type, title, message, appointment_id)
+        VALUES (?, 'system', 'Appointment Request Submitted', ?, ?)
+      `);
+      notifStmt.run(
+        userId,
+        `Your booking request for "${service_name}" on ${requested_date} at ${requested_time} has been submitted (Ref: ${booking_ref}). It is currently pending salon administrator approval.`,
+        appointmentId
+      );
+    }
 
     const newAppointment = db.prepare('SELECT * FROM appointments WHERE id = ?').get(appointmentId);
-
     return res.status(201).json({
       message: 'Appointment submitted successfully. Awaiting salon administrator confirmation.',
       appointment: newAppointment
     });
   } catch (err) {
     console.error('Create appointment error:', err);
-    return res.status(500).json({ error: 'Failed to submit appointment.' });
+    return res.status(500).json({ error: 'Failed to create appointment: ' + err.message });
   }
 });
 

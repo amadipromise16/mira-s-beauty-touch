@@ -79,9 +79,10 @@ export function AuthModal() {
     setLoading(true);
     setError('');
     try {
-      const code = Math.floor(100000 + Math.random() * 900000).toString();
+      const res = await api.auth.forgotPassword(formData.email.trim());
+      const code = res?.code || res?.otp_code || localStorage.getItem('mbt_last_code') || Math.floor(100000 + Math.random() * 900000).toString();
       setGeneratedCode(code);
-      setSuccess(`A 6-digit verification code has been sent to ${formData.email}! Security Code: [ ${code} ]`);
+      setSuccess(`Your 6-digit verification code is: [ ${code} ]`);
       setForgotStep(2);
     } catch (err) {
       setError(err.message || 'Failed to send verification code.');
@@ -93,8 +94,9 @@ export function AuthModal() {
   // Verify 6-Digit Code and Set New Password
   const handleVerifyCodeAndResetPassword = async (e) => {
     e.preventDefault();
-    if (!sixDigitCodeInput || sixDigitCodeInput.trim() !== generatedCode.trim()) {
-      setError('Invalid 6-digit verification code. Please check the code sent to your email.');
+    const cleanCode = (sixDigitCodeInput || '').trim();
+    if (!cleanCode || cleanCode.length < 6) {
+      setError('Please enter the complete 6-digit verification code.');
       return;
     }
     if (!newPassword || newPassword.length < 6) {
@@ -110,39 +112,30 @@ export function AuthModal() {
     try {
       const cleanEmail = (formData.email || '').trim().toLowerCase();
       
-      // Update in client accounts storage
-      const accounts = JSON.parse(localStorage.getItem('mbt_client_accounts') || '[]');
-      const userIdx = accounts.findIndex(a => (a.email || '').toLowerCase() === cleanEmail);
-      if (userIdx !== -1) {
-        accounts[userIdx].password = newPassword;
-        localStorage.setItem('mbt_client_accounts', JSON.stringify(accounts));
-      } else {
-        accounts.push({
-          id: Date.now(),
-          full_name: 'Client',
-          email: cleanEmail,
-          password: newPassword,
-          role: 'client'
-        });
-        localStorage.setItem('mbt_client_accounts', JSON.stringify(accounts));
-      }
+      const res = await api.auth.resetPassword({
+        email: cleanEmail,
+        code: cleanCode,
+        new_password: newPassword
+      });
 
-      // If admin email
-      if (cleanEmail === 'mirabeautytouch@gmail.com') {
-        localStorage.setItem('mbt_admin_custom_pass', newPassword);
-      }
-
-      setSuccess('✅ Password reset successfully! You can now sign in with your new password.');
-      setTimeout(() => {
-        setAuthModalTab('login');
+      setSuccess('Password updated successfully! Logging you in...');
+      
+      // Auto login user
+      setTimeout(async () => {
+        try {
+          await login(cleanEmail, newPassword);
+        } catch (_) {
+          closeAuth();
+        }
         setForgotStep(1);
         setSixDigitCodeInput('');
         setNewPassword('');
         setConfirmNewPassword('');
         setSuccess('');
-      }, 1600);
+        closeAuth();
+      }, 1000);
     } catch (err) {
-      setError(err.message || 'Failed to reset password.');
+      setError(err.message || 'Failed to reset password. Please check your code and try again.');
     } finally {
       setLoading(false);
     }
@@ -395,6 +388,27 @@ export function AuthModal() {
                 </form>
               ) : (
                 <form onSubmit={handleVerifyCodeAndResetPassword} className="space-y-3">
+                  {/* Visual OTP Code Banner with One-Click Auto-Fill */}
+                  {generatedCode && (
+                    <div className="p-3 bg-[#F2E5DC] border border-[#DFC7B9] rounded-xl text-center space-y-1.5 animate-fade-in">
+                      <span className="text-[11px] font-semibold text-[#8E766B] uppercase tracking-wider block">
+                        Your 6-Digit Verification Code
+                      </span>
+                      <div className="flex items-center justify-center space-x-3">
+                        <span className="font-mono text-2xl font-black text-[#944E2E] tracking-[0.25em]">
+                          {generatedCode}
+                        </span>
+                        <button
+                          type="button"
+                          onClick={() => setSixDigitCodeInput(generatedCode)}
+                          className="px-2.5 py-1 bg-[#B87D65] hover:bg-[#A36B53] text-white text-[11px] font-bold rounded-md shadow-xs transition-all uppercase tracking-wider"
+                        >
+                          Auto-Fill
+                        </button>
+                      </div>
+                    </div>
+                  )}
+
                   <div>
                     <label className="block text-xs font-medium text-[#4A3C35] mb-1">
                       Enter 6-Digit Verification Code

@@ -36,4 +36,5 @@ Thumbs.db
 *.zip
 hostinger-build/
 nodejs-deploy/
+/media/
 
